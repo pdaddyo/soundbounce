@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!-- this is the main application once the user is logged in.  i.e. home page & room page so far -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Soundbounce</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.6/css/ripples.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.6/css/material-wfont.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.6/js/ripples.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.6/js/material.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/noUiSlider/6.2.0/jquery.nouislider.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.1/JSXTransformer.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react-with-addons.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.js"></script>
+
+    <script src="js/perfect-scrollbar.js"></script>
+    <script src="js/jquery.simplecolorpicker.js"></script>
+    <script src="js/reconnecting-websocket.js"></script>
+    <!--<script &lt;!&ndash;&ndash;&gt;src="js/transition.js"></script>-->
+    <script src="js/shared.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/jquery.simplecolorpicker.css">
+
+    <script>
+        // all our custom events travel through this bus
+        window.eventbus = _.extend({}, Backbone.Events);
+
+        window.palette = ["f44336", "e53935", "d32f2f", "c62828", "b71c1c", "ff5252", "ff1744", "d50000", "e91e63", "e91e63", "d81b60", "c2185b", "ad1457", "880e4f", "ff4081", "f50057", "c51162", "9c27b0", "ba68c8", "ab47bc", "9c27b0", "8e24aa", "7b1fa2", "6a1b9a", "4a148c", "e040fb", "d500f9", "aa00ff", "673ab7", "9575cd", "7e57c2", "673ab7", "5e35b1", "512da8", "4527a0", "311b92", "7c4dff", "651fff", "6200ea", "3f51b5", "7986cb", "5c6bc0", "3f51b5", "3949ab", "303f9f", "283593", "1a237e", "536dfe", "3d5afe", "304ffe", "2196f3", "2196f3", "1e88e5", "1976d2", "1565c0", "0d47a1", "448aff", "2979ff", "2962ff", "03a9f4", "03a9f4", "039be5", "0288d1", "0277bd", "01579b", "0091ea", "00bcd4", "00bcd4", "00acc1", "0097a7", "00838f", "006064", "009688", "009688", "00897b", "00796b", "00695c", "004d40", "4caf50", "4caf50", "43a047", "388e3c", "2e7d32", "1b5e20", "8bc34a", "8bc34a", "7cb342", "689f38", "558b2f", "33691e", "cddc39", "afb42b", "9e9d24", "827717", "ffeb3b", "f57f17", "ffc107", "ffa000", "ff8f00", "ff6f00", "ff9800", "ff9800", "fb8c00", "f57c00", "ef6c00", "e65100", "ff6d00", "ff5722", "ff5722", "f4511e", "e64a19", "d84315", "bf360c", "ff3d00", "dd2c00", "795548", "a1887f", "8d6e63", "795548", "6d4c41", "5d4037", "4e342e", "3e2723", "9e9e9e", "9e9e9e", "757575", "616161", "424242", "212121", "607d8b", "78909c", "607d8b", "546e7a", "455a64", "37474f", "263238", "000000"];
+        /* no light strong: "f44336", "c62828", "b71c1c", "e91e63", "c2185b", "ad1457", "880e4f", "9c27b0", "9c27b0", "8e24aa", "7b1fa2", "6a1b9a", "4a148c", "673ab7", "673ab7", "5e35b1", "512da8", "4527a0", "311b92", "651fff", "6200ea", "3f51b5", "3f51b5", "3949ab", "303f9f", "283593", "1a237e", "304ffe", "2196f3", "1565c0", "0d47a1", "03a9f4", "01579b", "00bcd4", "006064", "009688", "00695c", "004d40", "4caf50", "2e7d32", "1b5e20", "8bc34a", "8bc34a", "7cb342", "689f38", "cddc39", "afb42b", "9e9d24", "ffeb3b", "f57f17", "ffc107", "ffa000", "ff8f00", "ff6f00", "ff9800", "ff9800", "fb8c00", "f57c00", "ff6d00", "ff5722", "795548", "795548", "6d4c41", "5d4037", "4e342e", "3e2723", "9e9e9e", "9e9e9e", "757575", "616161", "424242", "212121", "607d8b", "546e7a", "455a64", "37474f", "263238", "000000"*/
+
+    </script>
+
+    <!-- JSX components -->
+    <script src="jsx/home/roomlist.jsx" type="text/jsx"></script>
+    <script src="jsx/home/home.jsx" type="text/jsx"></script>
+    <script src="jsx/room/chatpanel.jsx" type="text/jsx"></script>
+
+    <script src="jsx/room/room.jsx" type="text/jsx"></script>
+    <script src="jsx/room/nowplaying.jsx" type="text/jsx"></script>
+    <script src="jsx/room/trackvotedisplay.jsx" type="text/jsx"></script>
+    <script src="jsx/room/playlistitem.jsx" type="text/jsx"></script>
+    <script src="jsx/room/edit.jsx" type="text/jsx"></script>
+    <script src="jsx/app.jsx" type="text/jsx"></script>
+
+</head>
+<body >
+<div id="pt-main" class="pt-perspective">
+    <div class="pt-page home-page pt-page-current">
+
+    </div>
+    <div class="pt-page room-page">
+
+    </div>
+</div>
+
+<div id="modal-holder"></div>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments);
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-56980923-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

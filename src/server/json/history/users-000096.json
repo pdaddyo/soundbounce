@@ -1,0 +1,24 @@
+[
+	{
+		"id": "7JXNLU9Z",
+		"spotifyUsername": "ma_maracas",
+		"social": "none",
+		"joinedDate": "2014-12-10T10:18:32.854Z"
+	},
+	{
+		"id": "Xk28yK9Z",
+		"spotifyUsername": "kl07a",
+		"social": "twitter",
+		"joinedDate": "2014-12-10T13:14:10.694Z",
+		"img": "https://pbs.twimg.com/profile_images/2755718785/75165bc9321de8c4df3543a189706010_normal.png",
+		"name": "Karen Anderton"
+	},
+	{
+		"id": "Q11rWo9W",
+		"spotifyUsername": "pdaddyo",
+		"social": "facebook",
+		"joinedDate": "2014-12-10T15:38:45.231Z",
+		"img": "https://graph.facebook.com/10154884254545457/picture",
+		"name": "Paul Barrass"
+	}
+]

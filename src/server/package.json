@@ -1,0 +1,11 @@
+{
+  "name": "soundbounce-server",
+  "version": "0.0.1",
+  "dependencies": {
+    "crypto": "0.0.3",
+    "fs": "0.0.2",
+    "moment": "^2.8.4",
+    "spotify-web-api-node": "^1.1.0",
+    "underscore": "^1.7.0"
+  }
+}

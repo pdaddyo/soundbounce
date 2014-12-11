@@ -1,0 +1,101 @@
+[
+  {
+    "name": "Liquifaction",
+    "id": 1,
+    "locked": false,
+    "currentTrackStartedAt": "2014-11-20T18:02:24.477Z",
+    "currentTrackPosition": 0,
+    "tracks":[],
+    "creator": {
+      "id": "spotifyUsernameHash",
+      "name": "Paul Barrass",
+      "img": "http://facebookimage/"
+    },
+    "admins": [
+      {
+        "id": "spotifyUsernameHash",
+        "name": "Paul Barrass",
+        "img": "http://facebookimage/"
+      }
+    ],
+    "listeners": [
+      {
+        "id": "spotifyUsernameHash",
+        "name": "Paul Barrass",
+        "img": "http://facebookimage/"
+      },
+      {
+        "id": "spotifyUsernameHash2",
+        "name": "Paul Barrass2",
+        "img": "http://facebookimage/"
+      }
+    ],
+    "bans": [
+      "spotifyUsernameHash1",
+      "spotifyUsernameHash2"
+    ],
+    "chat": [
+      {
+        "type": "chat",
+        "message": "testing testing 123",
+        "timestamp": "2014-11-20T12:02:24.477Z",
+        "user": {
+          "id": "spotifyUsernameHash",
+          "name": "Paul Barrass",
+          "img": "http://facebookimage/"
+        },
+        "context": {
+          "id": "2D32Fn4E6Us3e8n8byHr4P",
+          "name": "Airport Lounge",
+          "img": "https://i.scdn.co/image/642c90f79eb1d83d12078bd7dc3e0de69e507b75",
+          "artists": [
+            {
+              "name": "Tali",
+              "id": "artistId"
+            }
+          ]
+        }
+      },
+      {
+        "type": "vote",
+        "timestamp": "2014-11-20T18:02:24.477Z",
+        "user": {
+          "id": "spotifyUsernameHash",
+          "name": "Paul Barrass",
+          "img": "http://facebookimage/"
+        },
+        "track": {
+          "id": "2D32Fn4E6Us3e8n8byHr4P",
+          "name": "Airport Lounge",
+          "img": "https://i.scdn.co/image/642c90f79eb1d83d12078bd7dc3e0de69e507b75",
+          "artists": [
+            {
+              "name": "Tali",
+              "id": "artistId"
+            }
+          ]
+        }
+      },
+      {
+        "type": "add",
+        "timestamp": "2014-11-20T17:02:24.477Z",
+        "user": {
+          "id": "spotifyUsernameHash",
+          "name": "Paul Barrass",
+          "img": "http://facebookimage/"
+        },
+        "track": {
+          "id": "2D32Fn4E6Us3e8n8byHr4P",
+          "name": "Airport Lounge",
+          "img": "https://i.scdn.co/image/642c90f79eb1d83d12078bd7dc3e0de69e507b75",
+          "artists": [
+            {
+              "name": "Tali",
+              "id": "artistId"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
