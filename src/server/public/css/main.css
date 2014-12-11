@@ -615,7 +615,7 @@ h1 {
     margin-top: 97px;
     /*height: calc(100% - 97px);*/
     height: 100%;
-    width: 70%;
+    width: 65%;
 }
 
 #playlistcontainer .ps-scrollbar-y-rail {
@@ -649,7 +649,7 @@ h1 {
     overflow-y: hidden;
     background-color: #eee;
     border-left: 1px solid #eee;
-    width:30%;
+    width:35%;
 }
 
 .chat-panel .messagescontainer {
