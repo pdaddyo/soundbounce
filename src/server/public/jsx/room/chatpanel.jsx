@@ -87,7 +87,7 @@ var ChatPanel = React.createClass({
                         <div className="messages" title={msg.context?"Sent during '"+msg.context.name+"' by "+msg.context.artists[0].name:""}>
                         {albumArt} {icon}
                             <p> {text}</p>
-                            <time>{msg.user.name} • <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title={msg.context?'<img style="width:90px;height:90px;" src='+msg.context.img+' /><br/>'+msg.context.name+' by '+msg.context.artists[0].name:''} data-html="true">{moment(msg.timestamp).fromNow()}</span></time>
+                            <time>{msg.user.name} • <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context?'<img style="width:90px;height:90px;" src='+msg.context.img+' /><br/>'+msg.context.name+' by '+msg.context.artists[0].name:''} data-html="true">{moment(msg.timestamp).fromNow()}</span></time>
                         </div>
                     </li>;
 

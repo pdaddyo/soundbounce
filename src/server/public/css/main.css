@@ -625,9 +625,11 @@ h1 {
     overflow-y: scroll;
     overflow-x: visible;
     margin-top: 0;
-    height: calc(100% - 145px);
+    height: calc(100% - 22px);
+
     width: 65%;
-    top: -20px;
+    top: -144px;
+    padding-top:130px;
     z-index:1;
 }
 
