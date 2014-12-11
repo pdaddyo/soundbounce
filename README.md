@@ -20,9 +20,13 @@ Features
 - Auto top-up with existing Spotify playlist
 - Create / edit your own room
 
+Download
+========
+
 Installation instructions
 =============
-Unzip to a new folder, then run Soundbounce.exe
+- Download latest release: https://github.com/pdaddyo/soundbounce/releases
+- Unzip to a new folder, then run Soundbounce.exe
 
 Known issues
 ==========
