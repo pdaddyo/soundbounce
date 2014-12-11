@@ -28,3 +28,8 @@ Known issues
 ==========
 - If you get spotify credentials wrong, you'll have to re-launch app
 - Your clock must be correct, ish.  Different timezones is fine.  This will be addressed in a future update
+
+
+Todo list
+=========
+https://trello.com/b/aEfpqOvD/soundbounce
