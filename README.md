@@ -20,9 +20,6 @@ Features
 - Auto top-up with existing Spotify playlist
 - Create / edit your own room
 
-Download
-========
-
 Installation instructions
 =============
 - Download latest release: https://github.com/pdaddyo/soundbounce/releases
@@ -32,7 +29,7 @@ Known issues
 ==========
 - If you get spotify credentials wrong, you'll have to re-launch app
 - Your clock must be correct, ish.  Different timezones is fine.  This will be addressed in a future update
-
+- Room list scrollbar can misbehave
 
 Todo list
 =========
