@@ -398,7 +398,20 @@ var soundbounceServer = {
 
                             // spotify:user:1118412559:playlist:41Uf61JyNjhkETfVqI3Jjm
                             var uriSplit = room.topUpURI.split(':');
-                            server.spotify.getPlaylistTracks(uriSplit[2], uriSplit[4])
+                            var userId = uriSplit[2];
+                            var playlistId = uriSplit[4];
+
+                            if(room.topUpURI.indexOf("https://")==0)
+                            {
+
+                                // this is an http, not spotify playlist URI, so split differently
+                                var httpSplit =  room.topUpURI.split('/');
+                                userId = httpSplit[4];
+                                playlistId =  httpSplit[6];
+                                console.log("[top-up] ".green,userId,playlistId);
+
+                            }
+                            server.spotify.getPlaylistTracks(userId, playlistId)
                                 .then(function (data) {
                                     var offset = 0;
                                     if (data.total > 100) {
@@ -409,7 +422,7 @@ var soundbounceServer = {
                                         limit: 100
                                     }).then(function (data) {
 
-                                        console.log("[top-up] ".green, room.name.blue, " from ", data.name.blue, data.tracks.items.length, "offset=", offset);
+                                        console.log("[top-up] ".green, room.name.yellow, " from ", data.name, data.tracks.items.length);
 
                                         var simpleUser = {id: "1", name: "SoundBounce", img: '/img/soundbounce.png'};
 
@@ -480,7 +493,7 @@ var soundbounceServer = {
         // remove querystrings e.g. ?action=browse
         trackIds = trackIds.map(function(t){ return t.split("?")[0];});
 
-        console.log(user.name + " added/voted " + trackIds.length + " tracks in " + room.name, trackIds);
+        //console.log(user.name + " added/voted " + trackIds.length + " tracks in " + room.name, trackIds);
 
         var voteList = [], ROOM_MAX_TRACKS = 1000;
 
