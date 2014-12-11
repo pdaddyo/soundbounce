@@ -78,7 +78,7 @@ var ChatPanel = React.createClass({
                         'info': msg.type != "chat"
                     });
 
-                    return <li className={"other " + msg.type} key={index++}  >
+                    return <li className={"other " + msg.type}   >
 
                         <div className="avatar">
                             <img className="circle" src={msg.user.img} />

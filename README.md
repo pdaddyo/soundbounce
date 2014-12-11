@@ -1,4 +1,30 @@
-## Synopsis
 
-An attempt at a Windows client for Spotify using libspotify, and a web application attempting to recreate similar functionality to that featured in the Soundrop app, as it is shutting down at the end of 2014.
+Soundbounce 
+=========================
+Music sounds better together.
 
+Synchronised, social Spotify client, currently for Windows.
+
+Requirements
+==========
+- Windows 7+
+- Spotify Premium account
+- .NET Framework 4
+
+Features
+=======
+- Public listening rooms
+- High bitrate, normalized audio
+- Basic social features (chat)
+- Dragging and dropping to add tracks from Spotify
+- Auto top-up with existing Spotify playlist
+- Create / edit your own room
+
+Installation instructions
+=============
+Unzip to a new folder, then run Soundbounce.exe
+
+Known issues
+==========
+- If you get spotify credentials wrong, you'll have to re-launch app
+- Your clock must be correct, ish.  Different timezones is fine.  This will be addressed in a future update

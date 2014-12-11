@@ -6,6 +6,12 @@
 Keys.cs
 config.js
 
+#webstorm
+.idea
+
+#builds
+builds/
+
 # User-specific files
 *.suo
 *.user

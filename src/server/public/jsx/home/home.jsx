@@ -21,6 +21,10 @@ HomePage = React.createClass({
         return {rooms: [], search: ""};
     },
 
+    componentDidUpdate: function (prevProps, prevState) {
+        //this.updateRoomListHeight();
+    },
+
     updateScrollbars: function () {
         var $roomlistcontainer = $('#roomlistcontainer');
         $roomlistcontainer.perfectScrollbar('update');
@@ -63,7 +67,7 @@ HomePage = React.createClass({
                 search: search
             });
         }
-        this.updateRoomListHeight();
+
         this.updateScrollbars();
     },
 

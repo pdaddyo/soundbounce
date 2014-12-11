@@ -449,7 +449,8 @@ var soundbounceServer = {
 
         console.log(user.name + ": " + payload.message);
 
-        room.chat.push(chatmsg);
+        soundbounceShared.addChatToRoom(room, chatmsg);
+        //room.chat.push(chatmsg);
 
         soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
     },

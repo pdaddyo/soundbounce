@@ -123,6 +123,7 @@ var soundbounceShared = {
         {
             // remove from the start of the array
             room.chat.shift( room.chat.length - this.MAX_CHAT_HISTORY);
+
         }
     },
 
