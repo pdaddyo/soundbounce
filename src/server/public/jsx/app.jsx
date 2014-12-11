@@ -90,6 +90,7 @@ $(function () {
             _.defer(function () {
                 $.material.input();
             });
+            ga('send', 'pageview');
         },
 
         room: function (id, color) {
@@ -103,6 +104,7 @@ $(function () {
             _.defer(function () {
                 $.material.input();
             });
+            ga('send', 'pageview');
         },
 
         showModal: function (component) {
