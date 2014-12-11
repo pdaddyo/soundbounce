@@ -1,6 +1,7 @@
 Soundbounce 
 =========================
 *Music sounds better together.*
+
 A synchronised, collaborative Spotify client, now available for Windows users with Spotify Premium accounts.
 
 Features
