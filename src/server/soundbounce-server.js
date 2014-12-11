@@ -472,10 +472,12 @@ var soundbounceServer = {
 
         var chatmsg = {
             type: "chat",
+            id:shortId(),
             message: payload.message,
             timestamp: (new Date()),
             user: this.simpleUser(user),
             context: nowPlaying
+
         };
 
         console.log(user.name + ": " + payload.message);
