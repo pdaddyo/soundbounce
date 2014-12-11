@@ -40,6 +40,11 @@ var soundbounceServer = {
     loadFromDisk: function () {
         this.users = JSON.parse(fs.readFileSync(this.userStoreFileName, {encoding: 'utf8'}));
         this.rooms = JSON.parse(fs.readFileSync(this.roomStoreFileName, {encoding: 'utf8'}));
+
+        // clear listeners
+
+        this.rooms.forEach(function (r){ r.listeners = [];});
+
         console.log("loaded data from disk.");
     },
 
@@ -663,8 +668,8 @@ var soundbounceServer = {
             // has the socket been dropped?
             if (!soundbounceServer.sockets[listener.id]) {
                 // remove user from room
-                room.listeners = _.filter(room.listeners, function (listener) {
-                    return listener.id != user.id;
+                room.listeners = _.filter(room.listeners, function (l) {
+                    return listener.id != l.id;
                 });
                 return;
             }

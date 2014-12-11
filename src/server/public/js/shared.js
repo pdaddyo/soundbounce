@@ -121,8 +121,10 @@ var soundbounceShared = {
 
         if(room.chat.length>this.MAX_CHAT_HISTORY)
         {
+            var cullBy = room.chat.length - this.MAX_CHAT_HISTORY;
+            console.log("culling chat in "+room.name+" by "+cullBy);
             // remove from the start of the array
-            room.chat.shift( room.chat.length - this.MAX_CHAT_HISTORY);
+            room.chat = _.last(room.chat, this.MAX_CHAT_HISTORY);//( cullBy);
 
         }
     },
