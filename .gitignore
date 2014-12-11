@@ -12,6 +12,10 @@ config.js
 #builds
 builds/
 
+#json history
+history/
+sessions/
+
 # User-specific files
 *.suo
 *.user
