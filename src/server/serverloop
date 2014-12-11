@@ -1,0 +1,11 @@
+#!/bin/bash
+# run soundbounce server forever
+
+
+while :
+ do
+	echo "Launching Soundbounce server..."
+	nodejs server.js
+
+done
+
