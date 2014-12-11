@@ -34,7 +34,6 @@ namespace SoundBounce.WindowsClient
             ConsoleMessage += SpotifyEnabledBrowser_ConsoleMessage;
             Disposed += SpotifyEnabledBrowser_Disposed;
             IsLoadingChanged += SpotifyEnabledBrowser_IsLoadingChanged;
-
         }
 
         private void PlayTokenLost(IntPtr obj)

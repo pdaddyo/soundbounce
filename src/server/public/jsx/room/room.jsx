@@ -114,13 +114,13 @@ var RoomPage = React.createClass({
     },
 
     updateScrollbars: function () {
-        var $playlistcontainer = $('#playlistcontainer');
-        $playlistcontainer.perfectScrollbar({maxScrollbarLength: 224});
-        $playlistcontainer.find('.ps-scrollbar-y-rail').css({
-            marginRight: ($('.chat-panel').width() + 10) + 'px'
-        });
+        /*   var $playlistcontainer = $('#playlistcontainer');
+         $playlistcontainer.perfectScrollbar({maxScrollbarLength: 224});
+         $playlistcontainer.find('.ps-scrollbar-y-rail').css({
+         marginRight: ($('.chat-panel').width() + 10) + 'px'
+         });
 
-        $('.messagescontainer').perfectScrollbar('update');
+         $('.messagescontainer').perfectScrollbar('update');*/
     },
 
     componentDidUpdate: function (prevProps, prevState) {
@@ -300,8 +300,8 @@ var RoomPage = React.createClass({
     },
 
     handleLeaveMessage: function (leavingUserId) {
-        var updatedListeners = _.filter(this.state.room.listeners, function (l){
-           return l.id!=leavingUserId;
+        var updatedListeners = _.filter(this.state.room.listeners, function (l) {
+            return l.id != leavingUserId;
         });
         this.setState({room: React.addons.update(this.state.room, {listeners: {$set: updatedListeners}})});
     },
@@ -388,22 +388,21 @@ var RoomPage = React.createClass({
                     <div className="container-fluid" >
                         <div className="playlistpadder">
                             <div className="row">
-                                <div className="col-sm-8 col-xs-7 col-lg-9">
-                                    <NowPlaying track={this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null} position={this.state.room.currentTrackPosition} color={this.state.room.color} />
-                                </div>
+
+                                <NowPlaying track={this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null} position={this.state.room.currentTrackPosition} color={this.state.room.color} />
+
                             </div>
                             <div className="row">
-                                <div className="col-sm-8 col-xs-7 col-lg-9" >
-                                    <div className="well playlist">
+
+                                <div className="well playlist">
                                        {emptyPlaylistMessage}
-                                        <div className="list-group">
+                                    <div className="list-group">
                                               {_.rest(this.state.room.tracks).map(function (track) {
                                                   var canVote = !_.contains(track.votes.map(function (v) {
                                                       return v.id;
                                                   }), component.state.user.id);
                                                   return <PlaylistItem track={track} key={track.id} color={component.state.room.color} canVote={canVote}/>
                                               })}
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -440,7 +439,9 @@ var RoomPage = React.createClass({
                                             <span className="playlist-state" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Drag from Spotify to add music."}  data-html="true">
                                                 <i className={'' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")}/>
                                             </span>
-                                            <span className="room-listeners " data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.listeners.map(function (l){ return l.name+'<br/>';}).join('')}  data-html="true">{this.state.room.listeners.length}
+                                            <span className="room-listeners " data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.listeners.map(function (l) {
+                                                return l.name + '<br/>';
+                                            }).join('')}  data-html="true">{this.state.room.listeners.length}
                                                 <i className="mdi-social-person"/>
                                             </span>
 

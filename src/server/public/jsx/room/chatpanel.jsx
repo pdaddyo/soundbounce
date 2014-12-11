@@ -5,10 +5,10 @@ var ChatPanel = React.createClass({
         var $messages = $('.messagescontainer');
 
         $messages.height($(document).height() - 136);
-        $messages.perfectScrollbar();
+      //  $messages.perfectScrollbar();
         $(window).on("resize.chat", function () {
             $messages.height($(window).height() - 136);
-            $messages.perfectScrollbar("update");
+        //    $messages.perfectScrollbar("update");
         });
         // set up dropdown
         $('.dropdown-toggle').dropdown();
@@ -47,7 +47,7 @@ var ChatPanel = React.createClass({
         var index = 0;
         var component = this;
         return (
-            <div className="chat-panel col-xs-5 col-sm-4 col-lg-3 ">
+            <div className="chat-panel">
                 <div className="messagescontainer">
                     <ol className="discussion">
 

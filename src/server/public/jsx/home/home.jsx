@@ -6,15 +6,10 @@ HomePage = React.createClass({
 
         this.updateRoomList();
 
-        $(window).on("resize.home", this.updateRoomListHeight);
-        $('#roomlistcontainer').perfectScrollbar();
-        this.updateRoomListHeight();
-
         eventbus.on("update-room-list", this.updateRoomList);
     },
 
     componentWillUnmount: function () {
-        $(window).off("resize.home");
     },
 
     getInitialState: function () {
@@ -22,17 +17,6 @@ HomePage = React.createClass({
     },
 
     componentDidUpdate: function (prevProps, prevState) {
-        //this.updateRoomListHeight();
-    },
-
-    updateScrollbars: function () {
-        var $roomlistcontainer = $('#roomlistcontainer');
-        $roomlistcontainer.perfectScrollbar('update');
-    },
-
-    updateRoomListHeight: function () {
-        var $roomlistcontainer = $('#roomlistcontainer');
-        $roomlistcontainer.height($(window).height() - $roomlistcontainer.position().top - 5);
     },
 
     updateRoomList: function () {
@@ -67,8 +51,6 @@ HomePage = React.createClass({
                 search: search
             });
         }
-
-        this.updateScrollbars();
     },
 
     onSearchChange: function (e) {
@@ -87,16 +69,12 @@ HomePage = React.createClass({
     },
 
     hideMOTD: function () {
-
-        $('#motd').hide();
-        this.updateRoomListHeight();
-        this.updateScrollbars();
-
+        $('#motd').slideUp();
     },
 
     render: function () {
         return (
-            <div>
+            <div id="homecontainer">
                 <div className="jumbotron">
                     <div className="container">
                         <div  className="col-sm-8  ">
@@ -114,34 +92,34 @@ HomePage = React.createClass({
                         </div>
                     </div>
                 </div>
-
-                <div className="container" id="motd">
+                <div  id="roomlistcontainer" className="fancy-scrollbar" >
                     <div className="row" >
-                        <div  className="col-sm-12  ">
-                            <div className="well">
-                                <button type="button" className="close pull-right" data-dismiss="modal" aria-hidden="true" onClick={this.hideMOTD}>×</button>
-                                <i className="mdi-av-play-circle-outline" style={{
-                                    fontSize: '110px',
-                                    float: 'left',
-                                    marginRight: '16px',
-                                    color: '#333',
-                                    textShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)'
-                                }} onClick={this.hideMOTD}/>
-                                <p>Welcome to Soundbounce, where music sounds better together.</p>
+                        <div className="container" id="motd">
+                            <div  className="col-sm-12  ">
+                                <div className="well">
+                                    <button type="button" className="close pull-right" data-dismiss="modal" aria-hidden="true" onClick={this.hideMOTD}>×</button>
+                                    <i className="mdi-av-play-circle-outline" style={{
+                                        fontSize: '110px',
+                                        float: 'left',
+                                        marginRight: '16px',
+                                        color: '#333',
+                                        textShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)'
+                                    }} onClick={this.hideMOTD}/>
+                                    <p>Welcome to Soundbounce, where music sounds better together.</p>
 
-                                <p>
-                                Click on a room below to start listening and contributing, or create your own room. Feedback welcome:&nbsp;
-                                    <a href="http://twitter.com/pdaddyo" target="_blank">@pdaddyo</a>
-                                </p>
-                                <p>
-                                    <strong>
-                                    This is a work in progress and I'm ironing out the kinks.  Changes may be lost, rooms may disappear and things may go bang in the night.</strong>
-                                </p>
+                                    <p>
+                                    Click on a room below to start listening and contributing, or create your own room. Feedback welcome:&nbsp;
+                                        <a href="http://twitter.com/pdaddyo" target="_blank">@pdaddyo</a>
+                                    </p>
+                                    <p>
+                                        <strong>
+                                        This is a work in progress and I'm ironing out the kinks.  Changes may be lost, rooms may disappear and things may go bang in the night.</strong>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div  id="roomlistcontainer" >
+
                     <div className="row ">
                         <div className="container">
                             <div className="col-sm-8">
