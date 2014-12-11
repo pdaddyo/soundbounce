@@ -20,7 +20,7 @@ Array.prototype.move = function (old_index, new_index) {
 
 var soundbounceShared = {
 
-    MAX_CHAT_HISTORY: 150,
+    MAX_CHAT_HISTORY: 200,
   /*  MAX_CHAT_VOTE_HISTORY:100,*/
 
     // makes sure the correct song is at the top of the playlist, starts playing new adds, and removes played songs

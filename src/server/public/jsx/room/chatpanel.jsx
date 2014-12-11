@@ -10,6 +10,7 @@ var ChatPanel = React.createClass({
             $messages.height($(window).height() - 136);
         //    $messages.perfectScrollbar("update");
         });
+
         // set up dropdown
         $('.dropdown-toggle').dropdown();
     },
@@ -78,7 +79,7 @@ var ChatPanel = React.createClass({
                         'info': msg.type != "chat"
                     });
 
-                    return <li className={"other " + msg.type}   >
+                    return <li className={(component.props.user.id==msg.user.id?"self ":"other ") + msg.type}   >
 
                         <div className="avatar">
                             <img className="circle" src={msg.user.img} />

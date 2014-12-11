@@ -410,7 +410,7 @@ var RoomPage = React.createClass({
                     </div>
                 </div>
 
-                <ChatPanel chat={this.state.room.chat} color={this.state.room.color} />
+                <ChatPanel chat={this.state.room.chat} color={this.state.room.color} user={this.state.user} />
 
                 <div className="panel panel-room-top panel-success">
                     <div className="panel-heading" style={{backgroundColor: this.state.room.color}}>
