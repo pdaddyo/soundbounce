@@ -115,7 +115,6 @@ $(function () {
         }
     });
 
-
     window.router = new routerType();
 
     //start router

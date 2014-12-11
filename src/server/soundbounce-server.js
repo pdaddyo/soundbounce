@@ -234,7 +234,7 @@ var soundbounceServer = {
             server.rooms.splice(roomIndex, 1);
             console.log(""+room.name.red+" deleted by "+req.session.user.name);
 
-            res.send(JSON.stringify({succes:true}));
+            res.send(JSON.stringify({success:true}));
         });
 
         // internal status of server
@@ -245,7 +245,7 @@ var soundbounceServer = {
             });
 
             // send back easy to view json
-            res.send('<html><head></head><body><pre style="font-size:11px;color:#333;">' //<meta http-equiv="refresh" content="1;URL=\'/status\'" />
+            res.send('<html><head></head><body><pre style="font-size:11px;color:#333;">'
             + JSON.stringify({
                 rooms: soundbounceServer.rooms.map(function (r){ return {
                    // id: r.id,
@@ -298,14 +298,17 @@ var soundbounceServer = {
                 /* we're now connected */
                 server.sockets[user.id] = socket;
 
-                console.log(("--> user " + user.spotifyUsername + " connected to room " + room.name).cyan);
-
+                console.log(("--> " + user.spotifyUsername + " connected to room ").cyan + room.name.green);
 
                 // remove this listener from the room if they're already here (e.g. after a connection issue)
                 room.listeners = _.filter(room.listeners, function (listener) {
                     return listener.id != user.id;
                 });
 
+                // notify existing listeners that we have a join
+                server.broadcast(room,[{type:"join", payload:server.simpleUser(user) }]);
+
+                // now add the new listener
                 room.listeners.push(user);
 
                 soundbounceShared.updatePlaylist(room);
@@ -313,7 +316,9 @@ var soundbounceServer = {
                 // send initial sync of room state and user info
                 socket.send(JSON.stringify([{type: 'sync', payload: server.getClientViewOfRoom(room), user: user}]));
 
-                // pinger to keep firewalls open
+
+
+                // setup pinger to keep firewalls open
                 var pingTimerId = setInterval(function () {
                     socket.send('[{"type":"ping"}]');
                 }, 5000);
@@ -328,6 +333,9 @@ var soundbounceServer = {
                     room.listeners = _.filter(room.listeners, function (listener) {
                         return listener.id != user.id;
                     });
+
+                    // broadcast to remaining listeners that they've gone
+                    server.broadcast(room,[{type:"leave", payload:user.id }]);
                 });
 
                 socket.on("message", function (data) {
@@ -344,7 +352,6 @@ var soundbounceServer = {
                             server.processChat(room, user, msg.payload);
                             break;
                     }
-
                 })
             });
         });
@@ -368,9 +375,6 @@ var soundbounceServer = {
     topUpRooms: function () {
 
         // automatically top up rooms using linked playlists
-
-        console.log("topping up rooms..");
-
         var TOP_UP_WHEN_TRACKS_BELOW = 50;
         var TOP_UP_TRACKS_TO_ADD = 50;
 
@@ -378,7 +382,7 @@ var soundbounceServer = {
 
         server.spotify.clientCredentialsGrant()
             .then(function (data) {
-                console.log('Spotify Web API: access token expires in ' + data['expires_in']);
+                //console.log('Spotify Web API: access token expires in ' + data['expires_in']);
 
                 // Save the access token so that it's used in future calls
                 server.spotify.setAccessToken(data['access_token']);
@@ -405,7 +409,7 @@ var soundbounceServer = {
                                         limit: 100
                                     }).then(function (data) {
 
-                                        console.log("auto-topping up", room.name.blue, "with tracks from ", data.name.blue, data.tracks.items.length, "offset=", offset);
+                                        console.log("[top-up] ".green, room.name.blue, " from ", data.name.blue, data.tracks.items.length, "offset=", offset);
 
                                         var simpleUser = {id: "1", name: "SoundBounce", img: '/img/soundbounce.png'};
 
@@ -432,7 +436,7 @@ var soundbounceServer = {
 
                                     });
                                 }, function (err) {
-                                    console.log('Something went wrong!', err);
+                                    console.log('Topup Playlist ',room.topUpURI,"for",room.name<" not found.", err);
                                 });
                         }
                     }
@@ -472,6 +476,10 @@ var soundbounceServer = {
     processAdds: function (room, user, trackIds) {
         // spotify API limited to 50 tracks.
         trackIds = _.first(trackIds, 50);
+
+        // remove querystrings e.g. ?action=browse
+        trackIds = trackIds.map(function(t){ return t.split("?")[0];});
+
         console.log(user.name + " added/voted " + trackIds.length + " tracks in " + room.name, trackIds);
 
         var voteList = [], ROOM_MAX_TRACKS = 1000;
@@ -503,9 +511,9 @@ var soundbounceServer = {
                             return;
                         }
 
-                        console.log("Added " + simpleTrack.name + " by " + simpleTrack.artists.map(function (a) {
+                      /*  console.log("Added " + simpleTrack.name + " by " + simpleTrack.artists.map(function (a) {
                             return a.name;
-                        }).join(', '), " length: " + simpleTrack.length);
+                        }).join(', '), " length: " + simpleTrack.length);*/
 
                         simpleUser = soundbounceServer.simpleUser(user);
                         simpleTrack.addedBy = simpleUser;

@@ -41,11 +41,10 @@ var RoomPage = React.createClass({
         });
 
         eventbus.on("edit-room", function () {
-            if(_.contains(component.state.room.admins, component.state.user.id))
-            {
+            if (_.contains(component.state.room.admins, component.state.user.id)) {
                 router.showModal(<RoomEdit room={component.state.room} />);
             }
-            else{
+            else {
                 // todo: better error
                 alert("You are not an administrator of this room");
             }
@@ -74,7 +73,7 @@ var RoomPage = React.createClass({
         eventbus.on("delete-room", function (room) {
             // send delete to server and shutdown
             $.ajax({
-                url: '/deleteroom?id='+encodeURIComponent(room.id),
+                url: '/deleteroom?id=' + encodeURIComponent(room.id),
                 dataType: 'json',
                 success: function (data) {
                     component.handleRoomCloseClick();
@@ -90,7 +89,7 @@ var RoomPage = React.createClass({
 
     componentWillUnmount: function () {
 
-      //  this.send({type: "leaving", payload: {}});
+        //  this.send({type: "leaving", payload: {}});
 
         // close websocket
         if (this.socket) {
@@ -199,23 +198,27 @@ var RoomPage = React.createClass({
                 break;
             case "sync":
                 // the payload is the room json
-                this.receiveSync(data.payload, data.user);
+                this.handleSyncMessage(data.payload, data.user);
                 break;
             case "add":
-                this.receiveTracks(data.payload);
+                this.handleAddMessage(data.payload);
                 break;
             case "vote":
-                this.receiveVotes(data.payload);
+                this.handleVoteMessage(data.payload);
                 break;
             case "chat":
+                this.handleChatMessage(data.payload);
+                break;
             case "join":
-            case "left":
-                this.receiveChat(data.payload);
+                this.handleJoinMessage(data.payload);
+                break;
+            case "leave":
+                this.handleLeaveMessage(data.payload);
                 break;
         }
     },
 
-    receiveChat: function (chatmsg) {
+    handleChatMessage: function (chatmsg) {
         var component = this;
         var updatedRoom = this.state.room;
         updatedRoom.chat.push(chatmsg);
@@ -226,7 +229,7 @@ var RoomPage = React.createClass({
         });
     },
 
-    receiveSync: function (room, user) {
+    handleSyncMessage: function (room, user) {
 
         if (user) {
             this.setState({room: room, user: user});
@@ -241,7 +244,7 @@ var RoomPage = React.createClass({
         });
     },
 
-    receiveTracks: function (payload) {
+    handleAddMessage: function (payload) {
         var component = this;
         payload.tracks.forEach(function (track) {
             soundbounceShared.addTrackToRoom(component.state.room, track, payload.user);
@@ -254,7 +257,7 @@ var RoomPage = React.createClass({
         this.scrollChatToBottom();
     },
 
-    receiveVotes: function (payload) {
+    handleVoteMessage: function (payload) {
         var component = this;
         var room = component.state.room;
         payload.votes.forEach(function (votemsg) {
@@ -288,6 +291,19 @@ var RoomPage = React.createClass({
         this.setState({room: room});
         this.updateScrollbars();
         this.scrollChatToBottom();
+    },
+
+    handleJoinMessage: function (joiningUser) {
+        var updatedListeners = _.clone(this.state.room.listeners);
+        updatedListeners.push(joiningUser);
+        this.setState({room: React.addons.update(this.state.room, {listeners: {$set: updatedListeners}})});
+    },
+
+    handleLeaveMessage: function (leavingUserId) {
+        var updatedListeners = _.filter(this.state.room.listeners, function (l){
+           return l.id!=leavingUserId;
+        });
+        this.setState({room: React.addons.update(this.state.room, {listeners: {$set: updatedListeners}})});
     },
 
     /* drag and drop from spotify */
@@ -327,7 +343,6 @@ var RoomPage = React.createClass({
             this.tick(); // update playlists / position first
 
             if (this.state.room.tracks.length > 0) {
-
                 this.playTrack(this.state.room.tracks[0].id, this.state.room.currentTrackPosition);
                 this.setState({userPaused: false, playing: true});
             }
@@ -339,7 +354,6 @@ var RoomPage = React.createClass({
             // pausing
             this.pauseTrack();
             this.setState({userPaused: true, playing: false});
-
         }
     },
 
@@ -399,7 +413,6 @@ var RoomPage = React.createClass({
 
                 <ChatPanel chat={this.state.room.chat} color={this.state.room.color} />
 
-
                 <div className="panel panel-room-top panel-success">
                     <div className="panel-heading" style={{backgroundColor: this.state.room.color}}>
                         <div className="container-fluid">
@@ -414,13 +427,22 @@ var RoomPage = React.createClass({
                                         {this.state.room.name}
 
                                         </h2>
-                                        <p className="hide-overflow" style={{marginLeft: '30px', lineHeight:'40px;'}}>
+                                        <p className="hide-overflow" style={{marginLeft: '30px', lineHeight: '40px;'}}>
 
-                                            <span style={{top: '-7px', position: 'relative', maxWidth:'300px', marginRight:'10px'}}>
+                                            <span style={{
+                                                top: '-7px',
+                                                position: 'relative',
+                                                maxWidth: '300px',
+                                                marginRight: '10px'
+                                            }}>
                                             {this.state.room.description}
                                             </span>
-                                            <span className="playlist-state" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Drag from Spotify to add music."}  data-html="true"><i className={'' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")}/> </span>
-                                            <span className="room-listeners ">{this.state.room.listeners.length} <i className="mdi-social-person"/> </span>
+                                            <span className="playlist-state" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Drag from Spotify to add music."}  data-html="true">
+                                                <i className={'' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")}/>
+                                            </span>
+                                            <span className="room-listeners " data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.listeners.map(function (l){ return l.name+'<br/>';}).join('')}  data-html="true">{this.state.room.listeners.length}
+                                                <i className="mdi-social-person"/>
+                                            </span>
 
                                         </p>
                                     </div>
