@@ -7,7 +7,7 @@ Keys.cs
 config.js
 
 #webstorm
-.idea
+.idea/
 
 #builds
 builds/

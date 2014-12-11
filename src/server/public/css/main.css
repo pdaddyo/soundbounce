@@ -410,6 +410,36 @@ h1 {
 
 }
 
+
+.room-listeners, .playlist-state{
+    font-size: 12px;
+    font-weight: normal;
+    border: 1px solid rgba(252,255,255,0.3);
+    border-radius: 4px;
+    padding: 1px 4px;
+    margin-bottom: 4px;
+    position: relative;
+    top: -8px;
+    margin-right:10px;
+}
+
+
+.room-listeners i, .playlist-state i{
+    font-size:13px;
+    position:relative;
+    top:1px;
+    left:1px;
+}
+
+.playlist-state{
+    padding-right:17px;
+}
+.playlist-state i{
+    position:absolute;
+    font-size:17px;
+    top:1px;
+    left:5px;
+}
 .room-list-item:hover {
     transform: scale(1.1);
 }

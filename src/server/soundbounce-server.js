@@ -243,11 +243,17 @@ var soundbounceServer = {
             soundbounceServer.rooms.forEach(function (room) {
                 soundbounceShared.updatePlaylist(room);
             });
+
             // send back easy to view json
             res.send('<html><head></head><body><pre style="font-size:11px;color:#333;">' //<meta http-equiv="refresh" content="1;URL=\'/status\'" />
             + JSON.stringify({
-                rooms: soundbounceServer.rooms,
-                users: soundbounceServer.users
+                rooms: soundbounceServer.rooms.map(function (r){ return {
+                   // id: r.id,
+                    name:r.name,
+                    listeners: r.listeners.map(function (l){return l.name;}),
+                    nowPlaying: r.tracks.length > 0 ? r.tracks[0].name : null
+                }})
+                //,users: soundbounceServer.users
             }, null, "&nbsp;").replace(/\n/g, "<br/>") + "</pre>");
         });
 
@@ -439,6 +445,9 @@ var soundbounceServer = {
     processChat: function (room, user, payload) {
 
         var nowPlaying = null;
+
+        // make sure we have correct now playing track
+        soundbounceShared.updatePlaylist(room);
 
         if (room.tracks.length > 0) {
             nowPlaying = room.tracks[0];

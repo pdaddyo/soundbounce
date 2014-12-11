@@ -405,7 +405,7 @@ var RoomPage = React.createClass({
                         <div className="container-fluid">
                             <div className="row">
 
-                                <div className="col-xs-8">
+                                <div className="col-xs-12">
                                     <div className="play-pause-container pull-left">
                                         <a href="javascript:void(0)" onClick={this.onClickPlayPause} className={'btn btn-fab btn-success btn-pause-play ' + (this.state.playing ? 'mdi-av-pause' : 'mdi-av-play-arrow')} style={{color: this.state.room.color}}> </a>
                                     </div>
@@ -414,12 +414,14 @@ var RoomPage = React.createClass({
                                         {this.state.room.name}
 
                                         </h2>
-                                        <p className="hide-overflow" style={{marginLeft: '30px'}}>
-                                            <i className={'padlock ' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")} data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Drag from Spotify to add music."}  data-html="true"></i>
+                                        <p className="hide-overflow" style={{marginLeft: '30px', lineHeight:'40px;'}}>
 
-                                            <span style={{top: '-7px', position: 'relative'}}>
+                                            <span style={{top: '-7px', position: 'relative', maxWidth:'300px', marginRight:'10px'}}>
                                             {this.state.room.description}
                                             </span>
+                                            <span className="playlist-state" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Drag from Spotify to add music."}  data-html="true"><i className={'' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")}/> </span>
+                                            <span className="room-listeners ">{this.state.room.listeners.length} <i className="mdi-social-person"/> </span>
+
                                         </p>
                                     </div>
                                 </div>
@@ -427,8 +429,6 @@ var RoomPage = React.createClass({
                             </div>
                         </div>
                         <div className="toolbar">
-
-
                             <i className="mdi-navigation-close" id="roomClose" title="Back to room list" onClick={this.handleRoomCloseClick} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Leave room" data-delay="500"></i>
                         </div>
                     </div>
@@ -437,7 +437,5 @@ var RoomPage = React.createClass({
             </div>
 
         );
-
-
     }
 });
