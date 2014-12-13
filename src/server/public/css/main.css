@@ -425,7 +425,7 @@ h1 {
     overflow-x: hidden;
     overflow-y: auto;
     padding-top: 20px;
-    height: calc(100% - 141px);
+    height: calc(100% - 104px);
 }
 
 ::-webkit-scrollbar {
