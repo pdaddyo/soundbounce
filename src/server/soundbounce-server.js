@@ -71,9 +71,8 @@ var soundbounceServer = {
             if (req.query.secret != loginSecret) {
                 console.log(("Incorrect secret sent by username " + username).red);
 
-                //todo:re-enable this return!
-//                    res.send("internal auth fail");
-                //      return;
+                    res.send("internal auth fail");
+                    return;
             }
             // if we get here then the secret was good - we can trust the desktop app to have really logged into spotify
 
