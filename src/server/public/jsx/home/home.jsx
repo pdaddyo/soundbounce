@@ -78,17 +78,14 @@ HomePage = React.createClass({
                 <div className="jumbotron">
                     <div className="container">
                         <div  className="col-sm-8  ">
-                            <h1>Soundbounce
-                                <i className="mdi-action-trending-up text-success"></i>
-                            </h1>
+                            <img src="img/soundbounce-white-bg.png" />
                         </div>
                         <div className="col-xs-12 col-sm-4 col-lg-3 pull-right">
                             <button className="btn btn-primary btn-lg" style={{
                                 width: '100%',
-                                marginTop: '42px'
+                                marginTop: '17px'
                             }} onClick={this.clickCreateRoom}>+ Create room
                             </button>
-
                         </div>
                     </div>
                 </div>

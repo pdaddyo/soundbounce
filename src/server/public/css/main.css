@@ -403,6 +403,13 @@ h1 {
     position: relative;
 
 }
+.jumbotron img{
+    width:320px;
+    height:auto;
+    margin-top:14px;
+}
+
+
 
 #homecontainer {
     height: 100%;
