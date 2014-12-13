@@ -95,7 +95,6 @@ var soundbounceServer = {
                 server.users.push(user);
             }
 
-
             // keep user  in session
             req.session.user = user;
 
@@ -277,6 +276,7 @@ var soundbounceServer = {
                 socket.close();
                 return;
             }
+
             // grab the user from the session when the websocket opens
             sessionHandler(req, res, function (err) {
                 // should have a session now
@@ -314,8 +314,6 @@ var soundbounceServer = {
 
                 // send initial sync of room state and user info
                 socket.send(JSON.stringify([{type: 'sync', payload: server.getClientViewOfRoom(room), user: user}]));
-
-
 
                 // setup pinger to keep firewalls open
                 var pingTimerId = setInterval(function () {
@@ -638,10 +636,7 @@ var soundbounceServer = {
     },
 
     addVoteToTrack: function (room, track, user) {
-        // todo - prevent multiple votes on same track by same user, left in for testing for now
-
-
-        soundbounceShared.updatePlaylist(room);
+              soundbounceShared.updatePlaylist(room);
 
         var insertAfter = this.getTrackIdToInsertAfter(room, track.votes.length + 1);
 
@@ -655,7 +650,7 @@ var soundbounceServer = {
 
         if(_.contains(track.votes.map(function(v){return v.id;}), user.id))
         {
-            // can't vote on the playing track
+            // can't vote for same track twice
             console.warn("addVoteToTrack - can't vote for a track more than once, aborting.");
             return;
         }
