@@ -51,4 +51,5 @@ Technology used
 
 Future plans
 =========
-https://trello.com/b/aEfpqOvD/soundbounce
+See the issues list for future enhancements, or add your own ideas here!
+https://github.com/pdaddyo/soundbounce/issues
