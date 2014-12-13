@@ -1,8 +1,10 @@
-Soundbounce 
-=========================
-*Music sounds better together.*
+![Soundbounce](http://soundbounce.org/images/soundbounce-white-bg.png)
+
+###Music sounds better together.
 
 A synchronised, collaborative Spotify client, now available for Windows users with Spotify Premium accounts.
+
+http://soundbounce.org/
 
 Features
 =======
