@@ -687,6 +687,10 @@ h1 {
     z-index:1;
 }
 
+#playlistcontainer.no-now-playing{
+    height: calc(100% + 124px);
+}
+
 #playlistcontainer .ps-scrollbar-y-rail {
     /*right:287px !important;*/
     background: transparent;

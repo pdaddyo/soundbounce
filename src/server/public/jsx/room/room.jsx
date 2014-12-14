@@ -462,7 +462,7 @@ var RoomPage = React.createClass({
                 <div id="nowplayingcontainer">
                     <NowPlaying track={this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null} position={this.state.room.currentTrackPosition} color={this.state.room.color} />
                 </div>
-                <div id="playlistcontainer">
+                <div id="playlistcontainer" className={this.state.room.tracks.length ==0?"no-now-playing":""}>
                     <div className="container-fluid">
                         <div className="playlistpadder">
                             <div className="row">
