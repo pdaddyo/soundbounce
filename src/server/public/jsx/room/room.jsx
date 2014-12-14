@@ -391,10 +391,14 @@ var RoomPage = React.createClass({
 
 
                 </div>
-                <div id="playlistcontainer" >
-                    <div className="container-fluid" >
+                <div id="playlistcontainer">
+                    <div className="container-fluid">
                         <div className="playlistpadder">
                             <div className="row">
+                                <div className="form-control-wrapper track-search-container">
+                                    <i className="mdi-action-search" />
+                                    <input type="text" className="form-control empty" placeholder="Search" onChange={this.onSearchChange} onKeyDown={this.handleKeyDown} value={this.state.search} />
+                                </div>
 
                                 <div className="well playlist">
                                        {emptyPlaylistMessage}

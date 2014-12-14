@@ -241,6 +241,21 @@ h1 {
     color: #999;
 }
 
+/* track search */
+.track-search-container{
+    margin-bottom:10px;
+}
+.track-search-container .form-control {
+    border-bottom: 1px solid #ccc;
+    text-indent:20px;
+}
+
+.track-search-container i {
+    position: absolute;
+    left: 0;
+    top: 7px;
+    color: #999;
+}
 /* now playing */
 
 #nowplayingcontainer {
@@ -325,6 +340,9 @@ h1 {
     /*box-shadow: none;0 6px 10px rgba(0, 0, 0, 0.23), 0 10px 30px rgba(0, 0, 0, 0.19);*/
 }
 
+.track-icons .btn.fa-spotify{
+    font-size:20px;
+}
 .votes {
     position: absolute;
     right: 1px;
@@ -412,8 +430,6 @@ h1 {
 .jumbotron p {
     margin-top:10px;
 }
-
-
 
 #homecontainer {
     height: 100%;
@@ -654,7 +670,7 @@ h1 {
 }
 
 .playlistpadder {
-    padding: 20px 74px;
+    padding: 4px 74px;
 
     margin: 0 auto;
 

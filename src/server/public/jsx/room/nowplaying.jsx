@@ -24,7 +24,7 @@ var NowPlaying = React.createClass({
                             </div>
                             <div className="row-content">
                                 <div className="track-icons">
-                                    <a href="javascript:void(0)" onClick={this.onClickOpenSpotify} className={'btn btn-fab btn-spotify mdi-action-launch'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Show in Spotify" style={{
+                                    <a href="javascript:void(0)" onClick={this.onClickOpenSpotify} className={'btn btn-fab btn-spotify fa fa-spotify'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Show in Spotify" style={{
                                         overflow: 'visible',
                                         backgroundColor: this.props.color
                                     }} data-delay='{"show": 500, "hide": 0}'></a>
