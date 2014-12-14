@@ -110,7 +110,7 @@ HomePage = React.createClass({
                                     </p>
                                     <p>
                                         <strong>
-                                        This is a work in progress and I'm ironing out the kinks.  Changes may be lost, rooms may disappear and things may go bang in the night.</strong>
+                                        This is a work in progress and I'm ironing out the kinks.  If you have any feedback please head over to the issues.</strong>
                                     </p>
                                 </div>
                             </div>

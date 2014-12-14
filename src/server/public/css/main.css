@@ -250,12 +250,24 @@ h1 {
     text-indent:20px;
 }
 
-.track-search-container i {
+.track-search-container i.mdi-action-search{
     position: absolute;
     left: 0;
     top: 7px;
     color: #999;
 }
+.track-search-container i.mdi-content-clear{
+    position: absolute;
+    right: 0;
+    top: 7px;
+    cursor:pointer;
+    color: #999;
+    font-size:17px;
+}
+.track-search-container i.mdi-content-clear:hover{
+    color: #333;
+}
+
 /* now playing */
 
 #nowplayingcontainer {
@@ -325,6 +337,15 @@ h1 {
     right: 14px;
 }
 
+#spotifyResultsContainer p{
+    color:#666;
+}
+
+#spotifyResultsContainer .well{
+    background-color:#f1f1f1;
+    border-radius:5px;
+}
+
 .track-icons .btn {
     width: 20px;
     height: 20px;
@@ -340,6 +361,11 @@ h1 {
     /*box-shadow: none;0 6px 10px rgba(0, 0, 0, 0.23), 0 10px 30px rgba(0, 0, 0, 0.19);*/
 }
 
+.track-icons .btn.btn-add{
+    opacity:1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.23), 0 2px 7px rgba(0, 0, 0, 0.19);
+    font-size:20px;
+}
 .track-icons .btn.fa-spotify{
     font-size: 19px;
     text-indent: -8px;

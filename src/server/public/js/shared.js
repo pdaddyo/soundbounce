@@ -133,6 +133,20 @@ var soundbounceShared = {
     addVoteChat: function (room, track, user)
     {
         this.addChatToRoom(room,{type:"vote", timestamp: new Date(), user: user, track: track} );
+    },
+
+    simpleTrack: function (spotifyTrack) {
+        return {
+            id: spotifyTrack.id,
+            name: spotifyTrack.name,
+            img: spotifyTrack.album.images[1].url, // image 1 is 300x300 ish
+            artists: spotifyTrack.artists.map(function (artist) {
+                return {id: artist.id, name: artist.name};
+            }),
+            length: spotifyTrack.duration_ms,
+            addedBy: {},
+            votes: []
+        }
     }
 
 };
