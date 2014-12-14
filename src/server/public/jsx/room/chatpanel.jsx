@@ -44,6 +44,28 @@ var ChatPanel = React.createClass({
        eventbus.trigger("edit-room");
     },
 
+    findURIExpression: /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?Â«Â»ââââ]))/ig,
+
+    linkify: function(text) {
+        var split = text.split(this.findURIExpression);
+        var result = [];
+        for (var i = 0; i < split.length; ++i) {
+            if (split[i] !== undefined) {
+                if (i + 1 < split.length && split[i + 1] === undefined) {
+                    var url = split[i];
+                    // add in missing http://
+                    if(url.indexOf("http")==-1 && url.indexOf("spotify:")==-1){
+                        url = "http://"+url;
+                    }
+                    result.push(<a href={url} target="_blank">{split[i]}</a>);
+                } else {
+                    result.push(split[i]);
+                }
+            }
+        }
+        return result;
+    },
+
     render: function () {
         var index = 0;
         var component = this;
@@ -79,6 +101,8 @@ var ChatPanel = React.createClass({
                         'info': msg.type != "chat"
                     });
 
+                    text = component.linkify(text);
+
                     return <li className={(component.props.user.id==msg.user.id?"self ":"other ") + msg.type}   >
 
                         <div className="avatar">
@@ -86,7 +110,7 @@ var ChatPanel = React.createClass({
                         </div>
                         <div className="messages" title={msg.context?"Sent during '"+msg.context.name+"' by "+msg.context.artists[0].name:""}>
                         {albumArt} {icon}
-                            <p> {text}</p>
+                            <p >{text}</p>
                             <time>{msg.user.name} • <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context?'<img style="width:90px;height:90px;" src='+msg.context.img+' /><br/>'+msg.context.name+' by '+msg.context.artists[0].name:''} data-html="true">{moment(msg.timestamp).fromNow()}</span></time>
                         </div>
                     </li>;
