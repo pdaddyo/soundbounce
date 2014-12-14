@@ -3,6 +3,7 @@ var RoomPage = React.createClass({
     socket: null,
     intervalId: null,
     lastPlayedTrackId: null,
+    hasSynced: false,
 
     componentDidMount: function () {
         var host = window.document.location.host.replace(/:.*/, '');
@@ -45,7 +46,7 @@ var RoomPage = React.createClass({
                 router.showModal(<RoomEdit room={component.state.room} />);
             }
             else {
-                // todo: better error
+                // todo: better error message or hide the button
                 alert("You are not an administrator of this room");
             }
         });
@@ -130,6 +131,16 @@ var RoomPage = React.createClass({
         this.updateScrollbars();
 
         var prevTrackId = this.lastPlayedTrackId, newTrackId = null;
+
+        // have we had a full sync yet(so we'd have a room name)
+        if(this.state.room.name)
+        {
+            if(!this.hasSynced)
+            {
+                $.material.input();
+                this.hasSynced = true;
+            }
+        }
 
         if (this.state.room.tracks.length > 0) {
             newTrackId = this.state.room.tracks[0].id;
