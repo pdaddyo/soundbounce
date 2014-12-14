@@ -30,7 +30,7 @@ var RoomPage = React.createClass({
     setupEvents: function () {
         var component = this;
         $(window).on("resize.room", function () {
-     //       component.updateScrollbars();
+            //       component.updateScrollbars();
         });
 
         eventbus.on("send-chat", function (chatText) {
@@ -38,7 +38,7 @@ var RoomPage = React.createClass({
         });
 
         eventbus.on("update-scrollbars", function () {
-      //      component.updateScrollbars();
+            //      component.updateScrollbars();
         });
 
         eventbus.on("edit-room", function () {
@@ -61,6 +61,7 @@ var RoomPage = React.createClass({
 
         eventbus.on("track-add", function (track) {
             component.sendAddOrVote([track.id]);
+            component.searchSpotifyImmediately(); // search again to clear the new add from the spotify search results
         });
 
         eventbus.on("open-in-spotify", function (track) {
@@ -365,21 +366,21 @@ var RoomPage = React.createClass({
 
 
     onSearchChange: function (e) {
-        if(e.target.value.length>0) {
+        if (e.target.value.length > 0) {
             this.setState({search: e.target.value});
             this.searchSpotify();
         }
-        else
-        {
+        else {
             this.clearSearch(e);
         }
     },
 
-    clearSearch: function (e){
-        this.setState({search: '', spotifySearchResults:[]});
+    clearSearch: function (e) {
+        this.setState({search: '', spotifySearchResults: []});
     },
 
-    searchSpotify: _.debounce(function () {
+
+    searchSpotifyImmediately: function () {
 
         var component = this;
         $.ajax({
@@ -389,6 +390,11 @@ var RoomPage = React.createClass({
                 var tracks = data.tracks.items.map(function (spotifyTrack) {
                     return soundbounceShared.simpleTrack(spotifyTrack);
                 });
+                tracks = _.filter(tracks, function (t) {
+                    return !_.contains(component.state.room.tracks.map(function (t) {
+                        return t.id;
+                    }), t.id);
+                });
                 component.setState({spotifySearchResults: tracks});
             }.bind(this),
             error: function (xhr, status, err) {
@@ -397,6 +403,10 @@ var RoomPage = React.createClass({
                 alert("search error - " + err.toString());
             }.bind(this)
         });
+    },
+
+    searchSpotify: _.debounce(function () {
+        this.searchSpotifyImmediately();
     }, 200),
 
     handleKeyDown: function (e) {
@@ -437,7 +447,13 @@ var RoomPage = React.createClass({
 
         // filter local list
         if (component.state.search.length > 0) {
-            tracksForRoomPlaylist = _.filter(tracksForRoomPlaylist, function(track){ return (track.name.toLowerCase().indexOf(component.state.search.toLowerCase()) > -1) ;});
+            tracksForRoomPlaylist = _.filter(tracksForRoomPlaylist, function (track) {
+                return (track.name.toLowerCase().indexOf(component.state.search.toLowerCase()) > -1)
+                    || (track.artists.map(function (a) {
+                        return a.name;
+                    }).join(", ").toLowerCase().indexOf(component.state.search.toLowerCase()) > -1)
+                    ;
+            });
         }
 
         return (
@@ -453,20 +469,18 @@ var RoomPage = React.createClass({
                                 <div className="form-control-wrapper track-search-container">
                                     <i className="mdi-action-search" />
                                     <input type="text" className="form-control empty" placeholder="Search" onChange={this.onSearchChange} onKeyDown={this.handleKeyDown} value={this.state.search} />
-                                    <i className="mdi-content-clear" onClick={this.clearSearch} style={{display:this.state.search.length>0?"block":"none"}} />
+                                    <i className="mdi-content-clear" onClick={this.clearSearch} style={{display: this.state.search.length > 0 ? "block" : "none"}} />
                                 </div>
 
                                 <div className="well playlist" style={{display: tracksForRoomPlaylist.length == 0 ? "none" : "block"}}>
                                        {emptyPlaylistMessage}
                                     <div className="list-group">
-                                              {tracksForRoomPlaylist.map(function (track, index,arr) {
-
-
+                                              {tracksForRoomPlaylist.map(function (track, index, arr) {
                                                   var canVote = !_.contains(track.votes.map(function (v) {
                                                       return v.id;
                                                   }), component.state.user.id);
 
-                                                  return <PlaylistItem track={track} key={track.id} color={component.state.room.color} canVote={canVote} canAdd={false} isLast={index==arr.length-1} />
+                                                  return <PlaylistItem track={track} key={track.id} color={component.state.room.color} canVote={canVote} canAdd={false} isLast={index == arr.length - 1} />
                                               })}
                                     </div>
                                 </div>
@@ -476,8 +490,13 @@ var RoomPage = React.createClass({
                                     <div className="well playlist">
 
                                         <div className="list-group">
-                                              {component.state.spotifySearchResults.map(function (track, index,arr) {
-                                                  return <PlaylistItem track={track} key={track.id} color={component.state.room.color} canVote={false} canAdd={true} isLast={index==arr.length-1}/>
+                                              {_.filter(component.state.spotifySearchResults, function (t) {
+                                                  return !_.contains(component.state.room.tracks.map(function (t) {
+                                                      return t.id;
+                                                  }), t.id);
+                                              }).map(function (track, index, arr) {
+
+                                                  return <PlaylistItem track={track} key={track.id} color={component.state.room.color} canVote={false} canAdd={true} isLast={index == arr.length - 1}/>
                                               })}
                                         </div>
                                     </div>
