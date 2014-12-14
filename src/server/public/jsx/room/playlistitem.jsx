@@ -61,11 +61,12 @@ var PlaylistItem = React.createClass({
                         <img className="circle art" src={this.props.track.img} alt="icon" />
                     </div>
                     <div className="row-content">
-                        <h4 className="list-group-item-heading hide-overflow">{this.props.track.name}</h4>
-                        <p className="list-group-item-text">{this.props.track.artists.map(function (a) {
-                            return a.name;
-                        }).join(", ")}
-                            <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} />
+                        <h4 className="list-group-item-heading hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.name}} />
+                        <p className="list-group-item-text" >
+                            <span dangerouslySetInnerHTML={{__html:this.props.track.artists.map(function (a) {
+                                return a.name;
+                            }).join(", ")}} />
+                                <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} />
                         </p>
                     </div>
                 </div>

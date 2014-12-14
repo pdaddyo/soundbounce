@@ -29,13 +29,10 @@ var NowPlaying = React.createClass({
                                         backgroundColor: this.props.color
                                     }} data-delay='{"show": 500, "hide": 0}'></a>
                                 </div>
-                                <h4 className="list-group-item-heading">{this.props.track.name}</h4>
-                                <p className="list-group-item-text hide-overflow">
-                                {this.props.track.artists.map(function (a) {
+                                <h4 className="list-group-item-heading" dangerouslySetInnerHTML={{__html:this.props.track.name}} />
+                                <p className="list-group-item-text hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.artists.map(function (a) {
                                     return a.name;
-                                }).join(", ").substr(0, 200)}
-
-                                </p>
+                                }).join(", ")}} />
                                 <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} />
                             </div>
                         </div>
