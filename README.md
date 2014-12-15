@@ -10,6 +10,7 @@ Features
 =======
 - Public listening rooms
 - High bitrate, normalized audio
+- Integrated Spotify search
 - Dragging and dropping to add tracks from Spotify
 - Chat
 - Voting
