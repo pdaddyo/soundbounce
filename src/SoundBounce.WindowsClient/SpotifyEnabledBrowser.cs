@@ -20,7 +20,9 @@ namespace SoundBounce.WindowsClient
         private bool HasLoaded { get; set; }
         private SpotifyBrowserAPI browserApi;
         private static readonly bool DebuggingSubProcess = true;// Debugger.IsAttached; // for now we're always gonna attach this to let end users access dev tools
-        
+
+        private string themeFileName = ConfigurationManager.AppSettings["ThemeFile"] ?? "default.css";
+
         // default to spotify login screen
         public SpotifyEnabledBrowser()
             : base(BaseURL + "login.html")
@@ -34,6 +36,7 @@ namespace SoundBounce.WindowsClient
             ConsoleMessage += SpotifyEnabledBrowser_ConsoleMessage;
             Disposed += SpotifyEnabledBrowser_Disposed;
             IsLoadingChanged += SpotifyEnabledBrowser_IsLoadingChanged;
+            
         }
 
         private void PlayTokenLost(IntPtr obj)
@@ -106,7 +109,25 @@ namespace SoundBounce.WindowsClient
 
         private void SpotifyEnabledBrowser_IsLoadingChanged(object sender, IsLoadingChangedEventArgs e)
         {
+            if (!e.IsLoading)
+            {
+                string css = File.ReadAllText("themes\\" + this.themeFileName);
 
+                css = css.Replace("\r", "").Replace("\n", "").Replace("'", "\"");
+
+                // try and inject the theme CSS
+                this.ExecuteScriptAsync(@"var css = '"+css+@"',
+                        head = document.getElementsByTagName('head')[0],
+                        style = document.createElement('style');
+
+                    style.type = 'text/css';
+                    if (style.styleSheet){
+                      style.styleSheet.cssText = css;
+                    } else {
+                      style.appendChild(document.createTextNode(css));
+                    }
+                    head.appendChild(style);");
+            }
         }
 
         private void RegisterAPI()
