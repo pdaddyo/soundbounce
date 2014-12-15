@@ -256,6 +256,21 @@ var soundbounceServer = {
             }, null, "&nbsp;").replace(/\n/g, "<br/>") + "</pre>");
         });
 
+        // send admin message to all people in rooms
+        app.get('/adminmessage', function (req, res) {
+            _.keys(soundbounceServer.sockets).forEach(function (key) {
+                var socket = soundbounceServer.sockets[key];
+                try {
+                    socket.send(JSON.stringify([{type: "announce", payload: req.query.message}]));
+                }
+                catch (er) {
+                    console.error("error sending admin message: ", er);
+                }
+            });
+
+            console.log("sent admin message -->", req.query.message);
+            res.send("sent to " + soundbounceServer.sockets.length + " users");
+        });
 
         // web sockets handle all communication with the <Room />
         var wss = new WebSocketServer({server: httpServer});

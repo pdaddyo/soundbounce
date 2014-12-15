@@ -232,7 +232,14 @@ var RoomPage = React.createClass({
             case "leave":
                 this.handleLeaveMessage(data.payload);
                 break;
+            case "announce":
+                this.handleAnnounceMessage(data.payload);
+                break;
         }
+    },
+
+    handleAnnounceMessage: function (message) {
+        alert("Message from your friendly Soundbounce administrators: \n\n   "+message);
     },
 
     handleChatMessage: function (chatmsg) {
