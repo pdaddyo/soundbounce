@@ -95,23 +95,14 @@ HomePage = React.createClass({
                             <div  className="col-sm-12  ">
                                 <div className="well">
                                     <button type="button" className="close pull-right" data-dismiss="modal" aria-hidden="true" onClick={this.hideMOTD}>×</button>
-                                    <i className="mdi-av-play-circle-outline" style={{
-                                        fontSize: '110px',
-                                        float: 'left',
-                                        marginRight: '16px',
-                                        color: '#333',
-                                        textShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)'
-                                    }} onClick={this.hideMOTD}/>
+
                                     <p>Welcome to Soundbounce, where music sounds better together.</p>
 
                                     <p>
-                                    Click on a room below to start listening and contributing, or create your own room. Feedback welcome:&nbsp;
-                                        <a href="http://twitter.com/pdaddyo" target="_blank">@pdaddyo</a>
+                                    Choose a room below to start listening and contributing, or create your own room. Feedback welcome:&nbsp;
+                                        <a href="http://twitter.com/pdaddyo" target="_blank">@pdaddyo</a> or via the Github <a href="https://github.com/pdaddyo/soundbounce/issues" target="_blank">project page</a>.
                                     </p>
-                                    <p>
-                                        <strong>
-                                        This is a work in progress and I'm ironing out the kinks.  If you have any feedback please head over to the issues.</strong>
-                                    </p>
+
                                 </div>
                             </div>
                         </div>
