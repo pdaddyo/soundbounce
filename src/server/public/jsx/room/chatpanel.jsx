@@ -53,11 +53,18 @@ var ChatPanel = React.createClass({
             if (split[i] !== undefined) {
                 if (i + 1 < split.length && split[i + 1] === undefined) {
                     var url = split[i];
+
                     // add in missing http://
-                    if(url.indexOf("http")==-1 && url.indexOf("spotify:")==-1){
+                    if(url.indexOf(":")==-1){
                         url = "http://"+url;
                     }
-                    result.push(<a href={url} target="_blank">{split[i]}</a>);
+
+                    // only use select protocols
+                    var protocol = url.split(":")[0];
+                    if(_.contains(["http", "https", "spotify"], protocol))
+                        result.push(<a href={url} target="_blank">{split[i]}</a>);
+                    else
+                        result.push(split[i]);
                 } else {
                     result.push(split[i]);
                 }
