@@ -369,7 +369,7 @@ h1 {
     font-size:20px;
 }
 .track-icons .btn.fa-spotify{
-    font-size: 19px;
+    font-size: 20px;
     text-indent: -8px;
 }
 .votes {
@@ -885,7 +885,6 @@ h1 {
 .messages time {
     font-size: 9px;
     color: #ccc;
-
 }
 
 .messages i {
