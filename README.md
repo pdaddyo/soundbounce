@@ -12,7 +12,7 @@ Features
 - High bitrate, normalized audio
 - Integrated Spotify search
 - Dragging and dropping to add tracks from Spotify
-- Chat
+- Chat (with emoji)
 - Voting
 - Auto top-up with existing Spotify playlist
 - Create / edit your own room
