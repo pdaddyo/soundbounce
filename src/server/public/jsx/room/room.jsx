@@ -144,6 +144,9 @@ var RoomPage = React.createClass({
         if (this.state.room.name) {
             if (!this.hasSynced) {
                 $.material.input();
+                _.defer(function () {
+                    transition($('.home-page'), $('.room-page'), 54);
+                });
                 this.hasSynced = true;
             }
         }

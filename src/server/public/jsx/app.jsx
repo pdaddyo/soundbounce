@@ -66,8 +66,6 @@ var transition = function ($currPage, $nextPage, animationId) {
 
 
 $(function () {
-
-
     var roomNode = $('.room-page')[0];
 
     var homeNode = $('.home-page')[0];
@@ -80,7 +78,6 @@ $(function () {
         },
 
         home: function () {
-
             _.delay(function () {
                 React.unmountComponentAtNode(roomNode);
             }, 700);
@@ -100,10 +97,8 @@ $(function () {
                 return;
             }
             React.render(<RoomPage roomid={id} color={'#' + color}/>, roomNode);
-            transition($(homeNode), $(roomNode), 54);
-            _.defer(function () {
-                $.material.input();
-            });
+
+
             ga('send', 'pageview');
         },
 

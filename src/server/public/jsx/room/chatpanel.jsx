@@ -119,61 +119,68 @@ var ChatPanel = React.createClass({
     render: function () {
         var index = 0;
         var component = this;
+
+        var allMessages = [];
+
+        for(var chatIndex=0;chatIndex<this.props.chat.length; chatIndex++){
+            var msg = this.props.chat[chatIndex];
+            var text = msg.message;
+            var icon = <i/>, albumArt = null;
+
+            if (msg.type == "add" || msg.type == "vote") {
+
+                if (component.state.showJustChat)
+                    return;
+                var iconClasses = React.addons.classSet({
+                    'text-success': true,
+                    'pull-left': true,
+                    'mdi-file-file-upload': msg.type == "vote",
+                    'mdi-av-playlist-add': msg.type == "add",
+                    'icon': true
+                });
+                albumArt = <img className="album-art" src={msg.track.img} />
+                text = /*(msg.type == "add" ? "Added " : "Voted for ") +*/ msg.track.name + " by " + (msg.track.artists.map(function (a) {
+                    return a.name;
+                }).join(", "));
+                icon = <i className={iconClasses} style={{color: component.props.color}}></i>;
+            }
+
+            var classes = React.addons.classSet({
+                'message': true,
+                'info': msg.type != "chat"
+            });
+
+
+            text = component.linkify(text);
+            text = component.emojify(text);
+
+            var timestamp = moment(msg.timestamp).from(soundbounceShared.serverNow());
+            if (timestamp.indexOf("seconds") > -1)
+                timestamp = "";
+
+            allMessages.push( <li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type}   >
+
+                <div className="avatar">
+                    <img className="circle" src={msg.user.img} />
+                </div>
+                <div className="messages" title={msg.context ? "Sent during '" + msg.context.name + "' by " + msg.context.artists[0].name : ""}>
+                        {albumArt} {icon}
+                    <p >{text}</p>
+                    <time>{msg.user.name} {timestamp == "" ? "" : "• "}
+                        <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context ? '<img style="width:90px;height:90px;" src=' + msg.context.img + ' /><br/>' + msg.context.name + ' by ' + msg.context.artists[0].name : ''} data-html="true">{timestamp}</span>
+                    </time>
+                </div>
+            </li>);
+
+        }
+
+
         return (
             <div className="chat-panel">
                 <div className="messagescontainer">
                     <ol className="discussion">
 
-                {_.map(this.props.chat, function (msg) {
-                    var text = msg.message;
-                    var icon = <i/>, albumArt = null;
-
-                    if (msg.type == "add" || msg.type == "vote") {
-
-                        if (component.state.showJustChat)
-                            return;
-                        var iconClasses = React.addons.classSet({
-                            'text-success': true,
-                            'pull-left': true,
-                            'mdi-file-file-upload': msg.type == "vote",
-                            'mdi-av-playlist-add': msg.type == "add",
-                            'icon': true
-                        });
-                        albumArt = <img className="album-art" src={msg.track.img} />
-                        text = /*(msg.type == "add" ? "Added " : "Voted for ") +*/ msg.track.name + " by " + (msg.track.artists.map(function (a) {
-                            return a.name;
-                        }).join(", "));
-                        icon = <i className={iconClasses} style={{color: component.props.color}}></i>;
-                    }
-
-                    var classes = React.addons.classSet({
-                        'message': true,
-                        'info': msg.type != "chat"
-                    });
-
-
-                    text = component.linkify(text);
-                    text = component.emojify(text);
-
-                    var timestamp = moment(msg.timestamp).from(soundbounceShared.serverNow());
-                    if (timestamp.indexOf("seconds") > -1)
-                        timestamp = "";
-
-                    return <li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type}   >
-
-                        <div className="avatar">
-                            <img className="circle" src={msg.user.img} />
-                        </div>
-                        <div className="messages" title={msg.context ? "Sent during '" + msg.context.name + "' by " + msg.context.artists[0].name : ""}>
-                        {albumArt} {icon}
-                            <p >{text}</p>
-                            <time>{msg.user.name} {timestamp == "" ? "" : "• "}
-                                <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context ? '<img style="width:90px;height:90px;" src=' + msg.context.img + ' /><br/>' + msg.context.name + ' by ' + msg.context.artists[0].name : ''} data-html="true">{timestamp}</span>
-                            </time>
-                        </div>
-                    </li>;
-
-                })}
+                    {allMessages}
                     </ol>
                 </div>
                 <div className="chat-input-area">
