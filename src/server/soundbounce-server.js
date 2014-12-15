@@ -153,7 +153,8 @@ var soundbounceServer = {
                     listeners: [],
                     bans: [],
                     chat: [],
-                    topUpURI: req.query.uri
+                    topUpURI: req.query.uri,
+                    visits:0
                 };
 
                 var existingRoom = _.find(server.rooms, function (r) {
@@ -321,6 +322,9 @@ var soundbounceServer = {
                     return listener.id != user.id;
                 });
 
+                // increase visits count
+                room.visits++;
+
                 // notify existing listeners that we have a join
                 server.broadcast(room, [{type: "join", payload: server.simpleUser(user)}]);
 
@@ -428,7 +432,7 @@ var soundbounceServer = {
                                 var httpSplit = room.topUpURI.split('/');
                                 userId = httpSplit[4];
                                 playlistId = httpSplit[6];
-                                console.log("[top-up] ".green, userId, playlistId);
+                         //       console.log("[top-up] ".green, userId, playlistId);
 
                             }
                             server.spotify.getPlaylistTracks(userId, playlistId)
@@ -442,7 +446,7 @@ var soundbounceServer = {
                                         limit: 100
                                     }).then(function (data) {
 
-                                        console.log("[top-up] ".green, room.name.yellow, " from ", data.name, data.tracks.items.length);
+                                    //    console.log("[top-up] ".green, room.name.yellow, " from ", data.name, data.tracks.items.length);
 
                                         var simpleUser = {
                                             id: "1",
@@ -735,6 +739,8 @@ var soundbounceServer = {
     ,
 
     shutdown: function () {
+        console.log("\nSaving JSON...");
+
         this.saveData();
         console.log("Shutdown OK ".bgGreen.white);
     }
@@ -747,7 +753,6 @@ var soundbounceServer = {
         var usersJson = JSON.stringify(this.users, null, "\t");
         var roomsJson = JSON.stringify(this.rooms, null, "\t");
 
-        console.log("saving JSON...");
         fs.writeFileSync(this.getNewHistoryFileName("users"), usersJson);
         fs.writeFileSync(this.getNewHistoryFileName("rooms"), roomsJson);
 
