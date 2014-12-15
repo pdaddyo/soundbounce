@@ -75,16 +75,16 @@ var ChatPanel = React.createClass({
         var result = [];
         reactArray.forEach(function (chunk) {
             if (typeof chunk === 'string') {
-                chunk = chunk.replace(":)",":smile:");
-                chunk = chunk.replace(":D",":smiley:");
-                chunk = chunk.replace(";)",":wink:");
-                chunk = chunk.replace(":|",":neutral_face:");
-                chunk = chunk.replace(":(",":disappointed:");
-                chunk = chunk.replace(";(",":cry:");
+                chunk = chunk.replace(":)", ":smile:");
+                chunk = chunk.replace(":D", ":smiley:");
+                chunk = chunk.replace(";)", ":wink:");
+                chunk = chunk.replace(":|", ":neutral_face:");
+                chunk = chunk.replace(":(", ":disappointed:");
+                chunk = chunk.replace(";(", ":cry:");
 
                 var split = chunk.split(new RegExp("<object[^>]*>.*?<\/object>|<span[^>]*>.*?<\/span>|<(?:object|embed|svg|img|div|span|p|a)[^>]*>|(" + emojione.shortnameRegexp + ")", "gi"));
 
-                for(var index=0;index<split.length;index++){
+                for (var index = 0; index < split.length; index++) {
                     var shortname = split[index];
                     if ((shortname == undefined) || (shortname == '') || (!(shortname in emojione.emojioneList))) {
                         // if the shortname doesnt exist just push text
@@ -150,6 +150,7 @@ var ChatPanel = React.createClass({
                         'message': true,
                         'info': msg.type != "chat"
                     });
+
 
                     text = component.linkify(text);
                     text = component.emojify(text);
