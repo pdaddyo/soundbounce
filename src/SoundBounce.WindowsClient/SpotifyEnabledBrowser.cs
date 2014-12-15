@@ -23,26 +23,30 @@ namespace SoundBounce.WindowsClient
 
         private string themeFileName = ConfigurationManager.AppSettings["ThemeFile"] ?? "default.css";
 
+        public static SpotifyEnabledBrowser Singleton;
+
         // default to spotify login screen
         public SpotifyEnabledBrowser()
             : base(BaseURL + "login.html")
         {
-            
+            Singleton = this;
             Spotify.Initialize();
 
-            Session.OnLoggedIn+=SessionOnOnLoggedIn;
+            Session.OnLoggedIn += SessionOnOnLoggedIn;
             Session.OnPlayTokenLost += PlayTokenLost;
             HandleCreated += SpotifyEnabledBrowser_HandleCreated;
             ConsoleMessage += SpotifyEnabledBrowser_ConsoleMessage;
             Disposed += SpotifyEnabledBrowser_Disposed;
             IsLoadingChanged += SpotifyEnabledBrowser_IsLoadingChanged;
-            
+
         }
 
         private void PlayTokenLost(IntPtr obj)
         {
             this.ExecuteScriptAsync("eventbus.trigger('play-token-lost');");
         }
+
+
 
         public static void Init()
         {
@@ -59,7 +63,7 @@ namespace SoundBounce.WindowsClient
             {
                 settings.BrowserSubprocessPath = "CefSharp.BrowserSubprocess.exe";
             }
-            
+
             if (!Cef.Initialize(settings))
             {
                 Log.Error("Fatal: Cef failed to initialize. ");
@@ -83,7 +87,7 @@ namespace SoundBounce.WindowsClient
                         var url = string.Format("{0}spotify-login/{1}?secret={2}&version={3}", BaseURL, username,
                                                 SpotifyAPI.Keys.SHA256(username + SpotifyAPI.Keys.LoginPepper),
                                                 ConfigurationManager.AppSettings["clientVersion"]);
-                        
+
                         this.Load(url);
 
                         if (ConfigurationManager.AppSettings["ShowDevTools"] == "true")
@@ -116,7 +120,7 @@ namespace SoundBounce.WindowsClient
                 css = css.Replace("\r", "").Replace("\n", "").Replace("'", "\"");
 
                 // try and inject the theme CSS
-                this.ExecuteScriptAsync(@"var css = '"+css+@"',
+                this.ExecuteScriptAsync(@"var css = '" + css + @"',
                         head = document.getElementsByTagName('head')[0],
                         style = document.createElement('style');
 
@@ -145,6 +149,11 @@ namespace SoundBounce.WindowsClient
         void SpotifyEnabledBrowser_ConsoleMessage(object sender, ConsoleMessageEventArgs e)
         {
             Log.DebugFormat("From {0} Line {1}:  {2}", e.Source, e.Line, e.Message);
+        }
+
+        public void SendTrackFailedMessage(string errorMessage)
+        {
+            this.ExecuteScriptAsync("eventbus.trigger('track-load-failed','" + errorMessage.Replace("'", "\"") + "')");
         }
     }
 }

@@ -91,6 +91,11 @@ var RoomPage = React.createClass({
                 }.bind(this)
             });
         });
+
+        eventbus.on("track-load-failed", function(error){
+            var trackName = component.state.room.tracks.length>0?component.state.room.tracks[0].name:"unknown track";
+            alert("Sorry, track '"+ trackName+"' failed to play. Spotify error: "+error);
+        });
     },
 
     componentWillUnmount: function () {
@@ -112,6 +117,7 @@ var RoomPage = React.createClass({
         eventbus.off("open-in-spotify");
         eventbus.off("play-token-lost");
         eventbus.off("delete-room");
+        eventbus.off("track-load-failed");
 
         clearInterval(this.intervalId);
     },

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SoundBounce.SpotifyAPI;
+using libspotifydotnet;
 
 namespace SoundBounce.WindowsClient
 {
@@ -51,6 +52,7 @@ namespace SoundBounce.WindowsClient
         // plays the given track at the given position in ms
         public void playTrack(string trackId, int position)
         {
+            // move to the spotify thread
             Spotify.PostMessage(PlayTrack, new object[] {trackId, position});
         }
 
@@ -61,8 +63,14 @@ namespace SoundBounce.WindowsClient
 
             var track = new Track("spotify:track:" + trackId);
 
-            Session.LoadPlayer( track.TrackPtr );
+            var error = Session.LoadPlayer( track.TrackPtr );
 
+            if (error != libspotify.sp_error.OK)
+            {
+                SpotifyEnabledBrowser.Singleton.SendTrackFailedMessage(error.ToString());
+                return;
+            }
+            
             if (position > 500) // fix: we'd rather lose the last 0.5 secs than the first (was >0)
             {
                 Session.Seek(position);
