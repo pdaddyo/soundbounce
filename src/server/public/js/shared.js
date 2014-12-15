@@ -157,8 +157,5 @@ var soundbounceShared = {
 
 };
 
-
-try {
-    // doesn't export on client, only server
-    module.exports = soundbounceShared;
-}catch(e){}
+// require doesn't export on client, only server
+if(typeof module === "object") module.exports = soundbounceShared;

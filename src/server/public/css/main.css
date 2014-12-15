@@ -199,9 +199,9 @@ h1 {
 
 .panel-room-top h2 {
     margin-bottom: 4px;
-    margin-top: 10px;
-    letter-spacing: -1px;
-    font-weight: 600;
+    margin-top: 9px;
+    /*letter-spacing: -1px;*/
+    /*font-weight: 500;*/
 }
 
 .btn-pause-play:not(.btn-link):not(.btn-flat) {
@@ -1032,4 +1032,10 @@ body, html {
 
 .pt-page-ontop {
     z-index: 999;
+}
+
+img.emojione {
+    height: 20px;
+    top: 1px;
+    position: relative;
 }
