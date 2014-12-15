@@ -20,7 +20,7 @@ Array.prototype.move = function (old_index, new_index) {
 
 var soundbounceShared = {
 
-    MAX_CHAT_HISTORY: 200,
+    MAX_CHAT_HISTORY: 150,
   /*  MAX_CHAT_VOTE_HISTORY:100,*/
 
     timeAdjust:0,
