@@ -205,11 +205,11 @@ var RoomPage = React.createClass({
 
         switch (data.type) {
             case "ping":
-                this.send({type: "pong", time: (new Date())});
+                this.send({type: "pong"});
                 break;
             case "sync":
                 // the payload is the room json
-                this.handleSyncMessage(data.payload, data.user);
+                this.handleSyncMessage(data.payload, data.user, data.now);
                 break;
             case "add":
                 this.handleAddMessage(data.payload);
@@ -239,7 +239,12 @@ var RoomPage = React.createClass({
         });
     },
 
-    handleSyncMessage: function (room, user) {
+    handleSyncMessage: function (room, user, now) {
+        var serverTime = new Date(now);
+
+        soundbounceShared.timeAdjust = serverTime.getTime() - (new Date()).getTime();
+
+        console.log("ms difference from server:", soundbounceShared.timeAdjust);
 
         if (user) {
             this.setState({room: room, user: user});
@@ -288,7 +293,7 @@ var RoomPage = React.createClass({
             }
 
             var vote = _.clone(user);
-            vote.timestamp = new Date();
+            vote.timestamp = soundbounceShared.serverNow();
 
             track.votes.push(vote);
 

@@ -23,6 +23,12 @@ var soundbounceShared = {
     MAX_CHAT_HISTORY: 200,
   /*  MAX_CHAT_VOTE_HISTORY:100,*/
 
+    timeAdjust:0,
+
+    serverNow: function (){
+        return new Date((new Date()).getTime() + this.timeAdjust);
+    },
+
     // makes sure the correct song is at the top of the playlist, starts playing new adds, and removes played songs
     updatePlaylist: function (room) {
         var done = false;
@@ -44,7 +50,7 @@ var soundbounceShared = {
             // check if the top track is playing (probably a new add to a blank playlist if its not, so start it)
             if (!room.currentTrackStartedAt) {
                 // set top track to play
-                room.currentTrackStartedAt = new Date();
+                room.currentTrackStartedAt = this.serverNow();
                 room.currentTrackPosition = 0;
                 return;
             }
@@ -52,7 +58,7 @@ var soundbounceShared = {
             // if we get here we have a track currently "playing"
             var nowPlaying = room.tracks[0];
             var startedAt = moment(new Date(room.currentTrackStartedAt));
-            var now = moment();
+            var now = moment(this.serverNow());
 
             // how far in are we?
             var msPlayed = moment.duration(now - startedAt).asMilliseconds();
@@ -109,7 +115,7 @@ var soundbounceShared = {
         }
 
         if(String(user.id)!="1") {
-            this.addChatToRoom(room, {type: "add", timestamp: new Date(), user: user, track: track});
+            this.addChatToRoom(room, {type: "add", timestamp: this.serverNow(), user: user, track: track});
         }
 
         room.tracks.splice(insertIndex, 0, track);
@@ -122,7 +128,7 @@ var soundbounceShared = {
         if(room.chat.length>this.MAX_CHAT_HISTORY)
         {
             var cullBy = room.chat.length - this.MAX_CHAT_HISTORY;
-            console.log("culling chat in "+room.name+" by "+cullBy);
+      //      console.log("culling chat in "+room.name+" by "+cullBy);
             // remove from the start of the array
             room.chat = _.last(room.chat, this.MAX_CHAT_HISTORY);//( cullBy);
 
@@ -132,7 +138,7 @@ var soundbounceShared = {
     // voting chat is shared
     addVoteChat: function (room, track, user)
     {
-        this.addChatToRoom(room,{type:"vote", timestamp: new Date(), user: user, track: track} );
+        this.addChatToRoom(room,{type:"vote", timestamp: this.serverNow(), user: user, track: track} );
     },
 
     simpleTrack: function (spotifyTrack) {

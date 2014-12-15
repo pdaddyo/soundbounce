@@ -318,7 +318,8 @@ var soundbounceServer = {
                 socket.send(JSON.stringify([{
                     type: 'sync',
                     payload: server.getClientViewOfRoom(room),
-                    user: user
+                    user: user,
+                    now: new Date()
                 }]));
 
                 // setup pinger to keep firewalls open

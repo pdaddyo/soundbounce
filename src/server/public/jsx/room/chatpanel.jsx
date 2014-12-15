@@ -103,6 +103,10 @@ var ChatPanel = React.createClass({
 
                     text = component.linkify(text);
 
+                    var timestamp = moment(msg.timestamp).from(soundbounceShared.serverNow());
+                    if(timestamp.indexOf("seconds")>-1)
+                        timestamp = "";
+
                     return <li className={(component.props.user.id==msg.user.id?"self ":"other ") + msg.type}   >
 
                         <div className="avatar">
@@ -111,7 +115,7 @@ var ChatPanel = React.createClass({
                         <div className="messages" title={msg.context?"Sent during '"+msg.context.name+"' by "+msg.context.artists[0].name:""}>
                         {albumArt} {icon}
                             <p >{text}</p>
-                            <time>{msg.user.name} • <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context?'<img style="width:90px;height:90px;" src='+msg.context.img+' /><br/>'+msg.context.name+' by '+msg.context.artists[0].name:''} data-html="true">{moment(msg.timestamp).fromNow()}</span></time>
+                            <time>{msg.user.name} {timestamp==""?"":"•"} <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context?'<img style="width:90px;height:90px;" src='+msg.context.img+' /><br/>'+msg.context.name+' by '+msg.context.artists[0].name:''} data-html="true">{timestamp}</span></time>
                         </div>
                     </li>;
 
