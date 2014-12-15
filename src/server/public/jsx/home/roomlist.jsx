@@ -36,12 +36,16 @@ RoomList = React.createClass({
 
     render: function () {
         var component = this;
+        var rooms = _.sortBy(this.props.rooms, function (r) {
+            return -r.visits;
+        });
+
         return (
             <div id="roomlist">
 
-                    <div className="row">
-                        <div className="container">
-                            {_.map(this.props.rooms, function (room) {
+                <div className="row">
+                    <div className="container">
+                            {_.map(rooms, function (room) {
                                 return <div className="col-sm-6 col-md-4 col-lg-3 " key={room.id}>
                                     <div className="room-list-item" onClick={function () {
                                         router.navigate('room/' + room.id + '/' + room.color.substr(1, 10), {trigger: true})

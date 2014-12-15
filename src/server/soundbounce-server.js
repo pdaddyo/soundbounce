@@ -121,7 +121,8 @@ var soundbounceServer = {
                     listeners: room.listeners.length,
                     nowPlaying: room.tracks.length > 0 ? room.tracks[0] : null,
                     color: room.color,
-                    description: room.description
+                    description: room.description,
+                    visits: room.visits ? room.visits: 0
                 }
             });
 
@@ -154,7 +155,7 @@ var soundbounceServer = {
                     bans: [],
                     chat: [],
                     topUpURI: req.query.uri,
-                    visits:0
+                    visits: 0
                 };
 
                 var existingRoom = _.find(server.rooms, function (r) {
@@ -323,7 +324,11 @@ var soundbounceServer = {
                 });
 
                 // increase visits count
-                room.visits++;
+                if (!room.visits) {
+                    room.visits = 1;
+                } else {
+                    room.visits++;
+                }
 
                 // notify existing listeners that we have a join
                 server.broadcast(room, [{type: "join", payload: server.simpleUser(user)}]);
@@ -393,9 +398,7 @@ var soundbounceServer = {
 
     getRandomInt: function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    ,
+    },
 
     topUpRooms: function () {
 
@@ -432,7 +435,7 @@ var soundbounceServer = {
                                 var httpSplit = room.topUpURI.split('/');
                                 userId = httpSplit[4];
                                 playlistId = httpSplit[6];
-                         //       console.log("[top-up] ".green, userId, playlistId);
+                                //       console.log("[top-up] ".green, userId, playlistId);
 
                             }
                             server.spotify.getPlaylistTracks(userId, playlistId)
@@ -446,7 +449,7 @@ var soundbounceServer = {
                                         limit: 100
                                     }).then(function (data) {
 
-                                    //    console.log("[top-up] ".green, room.name.yellow, " from ", data.name, data.tracks.items.length);
+                                        //    console.log("[top-up] ".green, room.name.yellow, " from ", data.name, data.tracks.items.length);
 
                                         var simpleUser = {
                                             id: "1",
