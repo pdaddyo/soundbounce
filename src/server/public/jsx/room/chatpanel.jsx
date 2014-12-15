@@ -166,7 +166,7 @@ var ChatPanel = React.createClass({
                         <div className="messages" title={msg.context ? "Sent during '" + msg.context.name + "' by " + msg.context.artists[0].name : ""}>
                         {albumArt} {icon}
                             <p >{text}</p>
-                            <time>{msg.user.name} {timestamp == "" ? "" : "•"}
+                            <time>{msg.user.name} {timestamp == "" ? "" : "• "}
                                 <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context ? '<img style="width:90px;height:90px;" src=' + msg.context.img + ' /><br/>' + msg.context.name + ' by ' + msg.context.artists[0].name : ''} data-html="true">{timestamp}</span>
                             </time>
                         </div>
