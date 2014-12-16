@@ -198,7 +198,6 @@ var RoomPage = React.createClass({
 
     scrollChatToBottom: function () {
         _.defer(function () {
-
             var $messages = $('.messagescontainer');
             var currentScroll = $messages.scrollTop();
             console.log("currentScroll", currentScroll);
