@@ -904,8 +904,8 @@ h1 {
 
 .messages .album-art {
     float: right;
-    width: 56px;
-    height: 56px;
+    width: 38px;
+    height: 38px;
     margin-left: 5px;
     border: 1px solid rgba(100, 100, 100, 0.2);
     border-radius: 100%;
@@ -919,6 +919,9 @@ h1 {
     border: 1px solid rgba(100, 100, 100, 0.1);
 }
 
+.messages-expand{
+    display:none;
+}
 .discussion .add .messages, .discussion .vote .messages {
     width: 100%;
 

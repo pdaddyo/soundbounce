@@ -122,15 +122,16 @@ var ChatPanel = React.createClass({
 
         var allMessages = [];
 
-        for(var chatIndex=0;chatIndex<this.props.chat.length; chatIndex++){
+        for (var chatIndex = 0; chatIndex < this.props.chat.length; chatIndex++) {
             var msg = this.props.chat[chatIndex];
             var text = msg.message;
-            var icon = <i/>, albumArt = null;
+            var icon = <i/>, albumArt = null, expand = null;
+            var timestamp = moment(msg.timestamp).from(soundbounceShared.serverNow());
 
             if (msg.type == "add" || msg.type == "vote") {
 
                 if (component.state.showJustChat)
-                    return;
+                    continue;
                 var iconClasses = React.addons.classSet({
                     'text-success': true,
                     'pull-left': true,
@@ -139,33 +140,84 @@ var ChatPanel = React.createClass({
                     'icon': true
                 });
                 albumArt = <img className="album-art" src={msg.track.img} />
-                text = /*(msg.type == "add" ? "Added " : "Voted for ") +*/ msg.track.name + " by " + (msg.track.artists.map(function (a) {
+                text = msg.track.name + " by " + (msg.track.artists.map(function (a) {
                     return a.name;
                 }).join(", "));
                 icon = <i className={iconClasses} style={{color: component.props.color}}></i>;
+
+                var groupedMessages = [];
+                groupedMessages.push(text);
+
+                // group together whilst next vote / add is from same user, and is less than 10 seconds after
+                while (chatIndex + 1 < this.props.chat.length
+                && this.props.chat[chatIndex + 1].type == msg.type
+                && this.props.chat[chatIndex + 1].user.id == msg.user.id
+                && ((new Date(this.props.chat[chatIndex + 1].timestamp)).getTime() - (new Date(this.props.chat[chatIndex].timestamp)).getTime()) < 1000 * 240) {
+
+                    chatIndex++;
+                    var nextMsg = this.props.chat[chatIndex];
+                    var nextTxt = nextMsg.track.name + " by " + (nextMsg.track.artists.map(function (a) {
+                            return a.name;
+                        }).join(", "));
+
+                    groupedMessages.push(nextTxt);
+                    timestamp = moment(nextMsg.timestamp).from(soundbounceShared.serverNow());
+                }
+
+                if (groupedMessages.length > 1) {
+                    text = <p onClick={function (e){ $(e.currentTarget).parent().find('.messages-expand').slideToggle();}}>{nextMsg.type == "add" ? "Added " : "Voted for "}<a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a></p>;
+                    expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function(m){return <p>{m}</p>;}))}</div>;
+                   // albumArt = null;
+                }
+                else {
+                    text = <p>{(msg.type == "add" ? "Added " : "Voted for ") + groupedMessages[0]}</p>;
+                }
+
+
             }
+            else {
+                // chat message grouping
+                text = component.linkify(text);
+                text = component.emojify(text);
+
+                var groupedMessages = [];
+                groupedMessages.push(<p>{text}</p>);
+
+                // group together whilst next chat is from same user, and is less than 10 seconds after
+                while (chatIndex + 1 < this.props.chat.length
+                && this.props.chat[chatIndex + 1].type == "chat"
+                && this.props.chat[chatIndex + 1].user.id == msg.user.id
+                && ((new Date(this.props.chat[chatIndex + 1].timestamp)).getTime() - (new Date(this.props.chat[chatIndex].timestamp)).getTime()) < 1000 * 10) {
+
+                    chatIndex++;
+                    var nextMsg = this.props.chat[chatIndex];
+                    var nextTxt = component.linkify(nextMsg.message);
+                    nextTxt = component.emojify(nextTxt);
+                    groupedMessages.push(<p>{nextTxt}</p>);
+                    timestamp = moment(nextMsg.timestamp).from(soundbounceShared.serverNow());
+                }
+
+                text = _.flatten(groupedMessages);
+
+            }
+
+            if (timestamp.indexOf("seconds") > -1)
+                timestamp = "Just now";
 
             var classes = React.addons.classSet({
                 'message': true,
                 'info': msg.type != "chat"
             });
 
-
-            text = component.linkify(text);
-            text = component.emojify(text);
-
-            var timestamp = moment(msg.timestamp).from(soundbounceShared.serverNow());
-            if (timestamp.indexOf("seconds") > -1)
-                timestamp = "";
-
-            allMessages.push( <li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type}   >
+            allMessages.push(<li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type}   >
 
                 <div className="avatar">
                     <img className="circle" src={msg.user.img} />
                 </div>
                 <div className="messages" title={msg.context ? "Sent during '" + msg.context.name + "' by " + msg.context.artists[0].name : ""}>
                         {albumArt} {icon}
-                    <p >{text}</p>
+                    {text}
+                {expand}
                     <time>{msg.user.name} {timestamp == "" ? "" : "• "}
                         <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context ? '<img style="width:90px;height:90px;" src=' + msg.context.img + ' /><br/>' + msg.context.name + ' by ' + msg.context.artists[0].name : ''} data-html="true">{timestamp}</span>
                     </time>
