@@ -104,12 +104,18 @@ var RoomPage = React.createClass({
                 console.warn("No spotifyBrowserApi found!? ", err);
             }
         });
+
+        eventbus.on("open-url", function (url) {
+            try {
+                spotifyBrowserApi.openUrl(url);
+            } catch (err) {
+                console.warn("No spotifyBrowserApi found!? ", err);
+            }
+        });
+
     },
 
     componentWillUnmount: function () {
-
-        //  this.send({type: "leaving", payload: {}});
-
         // close websocket
         if (this.socket) {
             this.socket.close(1000, "normal close");
@@ -127,6 +133,7 @@ var RoomPage = React.createClass({
         eventbus.off("delete-room");
         eventbus.off("track-load-failed");
         eventbus.off("star-track");
+        eventbus.off("open-url");
 
         clearInterval(this.intervalId);
     },
