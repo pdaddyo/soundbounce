@@ -63,6 +63,11 @@ namespace SoundBounce.WindowsClient
             Spotify.PostMessage(StarTrack, new object[] { trackId });
         }
 
+        public void openUrl(string url)
+        {
+            Process.Start(url);
+        }
+
 
         /* private methods */
 
