@@ -348,7 +348,13 @@ var soundbounceServer = {
 
                 // setup pinger to keep firewalls open
                 var pingTimerId = setInterval(function () {
-                    socket.send('[{"type":"ping"}]');
+                    try {
+                        socket.send('[{"type":"ping"}]');
+                    }
+                    catch(err)
+                    {
+                        console.error("unable to send ping to client "+user.name);
+                    }
                 }, 5000);
 
                 socket.on('close', function () {
