@@ -502,6 +502,9 @@ var soundbounceServer = {
             nowPlaying = room.tracks[0];
         }
 
+        if(_.isEmpty(payload.message.trim()))
+            return;
+
         var chatmsg = {
             type: "chat",
             id: shortId(),
