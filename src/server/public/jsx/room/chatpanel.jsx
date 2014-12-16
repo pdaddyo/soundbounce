@@ -192,7 +192,7 @@ var ChatPanel = React.createClass({
                 while (chatIndex + 1 < this.props.chat.length
                 && this.props.chat[chatIndex + 1].type == "chat"
                 && this.props.chat[chatIndex + 1].user.id == msg.user.id
-                && ((new Date(this.props.chat[chatIndex + 1].timestamp)).getTime() - (new Date(this.props.chat[chatIndex].timestamp)).getTime()) < 1000 * 10) {
+                && ((new Date(this.props.chat[chatIndex + 1].timestamp)).getTime() - (new Date(this.props.chat[chatIndex].timestamp)).getTime()) < 1000 * 30) {
 
                     chatIndex++;
                     var nextMsg = this.props.chat[chatIndex];
