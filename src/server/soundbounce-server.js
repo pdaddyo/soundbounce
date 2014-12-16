@@ -399,7 +399,6 @@ var soundbounceServer = {
         }, 1000 * 60 * 10);
 
         server.topUpRooms();
-
     },
 
     getRandomInt: function (min, max) {
@@ -793,5 +792,12 @@ var soundbounceServer = {
         return String(historyFolder + name + "-" + zeroPad(number, 6) + ".json");
     }
 };
+
+process.on('uncaughtException', function(err) {
+    console.log('Uncaught exception: ' + err);
+    console.log("Saving before restart...");
+    soundbounceServer.saveData();
+    console.log("Saved.");
+});
 
 module.exports = soundbounceServer;
