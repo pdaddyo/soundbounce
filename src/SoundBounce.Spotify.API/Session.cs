@@ -379,7 +379,7 @@ namespace SoundBounce.SpotifyAPI
             soundBuffer = new BufferedWaveProvider(waveFormat);
             soundBuffer.BufferDuration = TimeSpan.FromSeconds(10);
             waveOut.Init(soundBuffer);
-
+            
         }
 
         private static void get_audio_buffer_stats(IntPtr sessionPtr, IntPtr statsPtr)
