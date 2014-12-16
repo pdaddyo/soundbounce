@@ -155,5 +155,10 @@ namespace SoundBounce.WindowsClient
         {
             this.ExecuteScriptAsync("eventbus.trigger('track-load-failed','" + errorMessage.Replace("'", "\"") + "')");
         }
+
+        public void SendCurrentlyPlayingTrackIsStarred()
+        {
+            this.ExecuteScriptAsync("eventbus.trigger('playing-track-is-starred');");
+        }
     }
 }
