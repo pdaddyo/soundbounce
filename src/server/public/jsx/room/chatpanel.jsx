@@ -44,6 +44,11 @@ var ChatPanel = React.createClass({
         eventbus.trigger("edit-room");
     },
 
+    clickLinkInChat: function (e) {
+        var url = $(e.currentTarget).data("url");
+        eventbus.trigger("open-url", url);
+    },
+
     findURIExpression: /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?Â«Â»ââââ]))/ig,
 
     linkify: function (text) {
@@ -60,7 +65,7 @@ var ChatPanel = React.createClass({
                     // only use select protocols
                     var protocol = url.split(":")[0];
                     if (_.contains(["http", "https", "spotify"], protocol))
-                        result.push(<a href={url} target="_blank">{split[i]}</a>);
+                        result.push(<a href="javascript:void(0)" onClick={this.clickLinkInChat} data-url={url}target="_blank">{split[i]}</a>);
                     else
                         result.push(split[i]);
                 } else {

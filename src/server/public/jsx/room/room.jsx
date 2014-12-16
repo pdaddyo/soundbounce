@@ -112,7 +112,6 @@ var RoomPage = React.createClass({
                 console.warn("No spotifyBrowserApi found!? ", err);
             }
         });
-
     },
 
     componentWillUnmount: function () {
