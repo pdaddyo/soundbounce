@@ -96,6 +96,14 @@ namespace SoundBounce.WindowsClient
             }
 
             Session.Play();
+
+            // should be loaded, now check if it's starred
+            if (libspotify.sp_track_is_starred(Session.SessionPtr, track.TrackPtr))
+            {
+                Log.Debug("track is starred? "); // this is called for every track - bug in libspotify???
+
+               // SpotifyEnabledBrowser.Singleton.SendCurrentlyPlayingTrackIsStarred();
+            }
         }
 
         private void StarTrack(object[] args)

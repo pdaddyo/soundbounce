@@ -112,6 +112,10 @@ var RoomPage = React.createClass({
                 console.warn("No spotifyBrowserApi found!? ", err);
             }
         });
+
+        eventbus.on("playing-track-is-starred", function () {
+            $('.now-playing .star-button-holder').hide();
+        });
     },
 
     componentWillUnmount: function () {
@@ -133,6 +137,7 @@ var RoomPage = React.createClass({
         eventbus.off("track-load-failed");
         eventbus.off("star-track");
         eventbus.off("open-url");
+        eventbus.off("playing-track-is-starred");
 
         clearInterval(this.intervalId);
     },
@@ -177,6 +182,7 @@ var RoomPage = React.createClass({
                     console.log("calling spotifyBrowserApi.playTrack on " + newTrackId);
                     this.lastPlayedTrackId = newTrackId;
                     component.playTrack(newTrackId, this.state.room.currentTrackPosition);
+                    $('.now-playing .star-button-holder').show();
                 }
             }
         } else {
