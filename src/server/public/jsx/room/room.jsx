@@ -47,7 +47,7 @@ var RoomPage = React.createClass({
             }
             else {
                 // todo: better error message or hide the button
-                alert("You are not an administrator of this room");
+                router.alert("You are not an administrator of this room", "Unable to edit");
             }
         });
 
@@ -94,7 +94,7 @@ var RoomPage = React.createClass({
 
         eventbus.on("track-load-failed", function(error){
             var trackName = component.state.room.tracks.length>0?component.state.room.tracks[0].name:"unknown track";
-            alert("Sorry, track '"+ trackName+"' failed to play. Spotify error: "+error);
+            router.alert("Sorry, track '"+ trackName+"' failed to play. Spotify error: "+error,"Unable to play track");
         });
     },
 
@@ -242,7 +242,7 @@ var RoomPage = React.createClass({
     },
 
     handleAnnounceMessage: function (message) {
-        alert("Message from your friendly Soundbounce administrators: \n\n   "+message);
+        router.alert(message,"Message from Soundbounce team");
     },
 
     handleChatMessage: function (chatmsg) {
@@ -421,7 +421,7 @@ var RoomPage = React.createClass({
             error: function (xhr, status, err) {
                 // todo: display friendly error popups
                 console.error(status, err.toString());
-                alert("search error - " + err.toString());
+                router.alert("search error - " + err.toString(),"Ooops! Something went wrong...");
             }.bind(this)
         });
     },

@@ -102,6 +102,10 @@ $(function () {
             ga('send', 'pageview');
         },
 
+        alert: function (message, title){
+            this.showModal(<AlertMessage message={message} title={title} />);
+        },
+
         showModal: function (component) {
             React.unmountComponentAtNode(modalDOMNode);
             React.render(component, modalDOMNode);
