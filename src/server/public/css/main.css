@@ -733,6 +733,7 @@ h1 {
     background-color: #eee;
     border-left: 1px solid #eee;
     width: 35%;
+    -webkit-user-select:text;
 }
 
 .chat-panel .messagescontainer {
