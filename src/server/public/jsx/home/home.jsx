@@ -32,7 +32,7 @@ HomePage = React.createClass({
 
                 // todo: display friendly error popups
                 console.error(status, err.toString());
-                alert(err.toString());
+                router.alert(err.toString(),"Ooops! Something went wrong...");
             }.bind(this)
         });
     },

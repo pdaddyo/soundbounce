@@ -59,7 +59,7 @@ var RoomEdit = React.createClass({
                 $('#modal-holder .modal').modal('hide');
             }.bind(this),
             error: function (xhr, status, err) {
-                alert(status + " " + err.toString());
+                router.alert(status + " " + err.toString(),"Ooops! Something went wrong...");
                 console.error(status, err.toString());
             }.bind(this)
         });
