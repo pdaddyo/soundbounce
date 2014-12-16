@@ -165,7 +165,7 @@ var ChatPanel = React.createClass({
                 }
 
                 if (groupedMessages.length > 1) {
-                    text = <p onClick={function (e){ $(e.currentTarget).parent().find('.messages-expand').slideToggle();}}>{nextMsg.type == "add" ? "Added " : "Voted for "}<a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a></p>;
+                    text = <p onClick={function (e){ $(e.currentTarget).parent().find('.messages-expand').slideToggle(); $(e.currentTarget).parent().find('.album-art').toggle(); }}>{nextMsg.type == "add" ? "Added " : "Voted for "}<a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a></p>;
                     expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function(m){return <p>{m}</p>;}))}</div>;
                    // albumArt = null;
                 }
