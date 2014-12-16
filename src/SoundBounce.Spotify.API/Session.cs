@@ -280,7 +280,7 @@ namespace SoundBounce.SpotifyAPI
                 {
                     libspotify.sp_session_set_volume_normalization(sessionPtr, true);
                 }
-               
+
                 return err;
             }
         }
@@ -300,13 +300,20 @@ namespace SoundBounce.SpotifyAPI
                 Session.OnAudioStreamComplete(null);
         }
 
-
         private static void log_message(IntPtr sessionPtr, string message)
         {
             if (message.EndsWith("\n"))
                 message = message.Substring(0, message.Length - 1);
 
-            Spotify.Log.DebugFormat("libspotify > " + message);
+            if (message.Contains("facebook"))
+            {
+                Spotify.Log.DebugFormat("libspotify > facebook message, not logging");
+            }
+            else
+            {
+                Spotify.Log.DebugFormat("libspotify > " + message);
+            }
+
         }
 
         private static void logged_in(IntPtr sessionPtr, libspotify.sp_error error)
@@ -453,5 +460,7 @@ namespace SoundBounce.SpotifyAPI
         {
             //  Spotify.Log.DebugFormat("userinfo_updated");
         }
+
+
     }
 }

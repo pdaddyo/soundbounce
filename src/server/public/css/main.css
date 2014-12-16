@@ -318,6 +318,7 @@ h1 {
     line-height: 1.2;
     text-overflow: ellipsis;
     text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    width:90%;
 }
 
 .now-playing .list-group .list-group-item .row-picture img {
@@ -371,6 +372,13 @@ h1 {
 .track-icons .btn.fa-spotify{
     font-size: 20px;
     text-indent: -8px;
+}
+.track-icons .btn.mdi-action-grade{
+    font-size: 20px;
+    text-indent: -9px;
+    opacity:1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.23), 0 2px 7px rgba(0, 0, 0, 0.19);
+
 }
 .votes {
     position: absolute;
