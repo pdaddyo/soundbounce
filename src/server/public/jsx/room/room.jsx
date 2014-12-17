@@ -179,7 +179,7 @@ var RoomPage = React.createClass({
                 if (!component.state.userPaused) {
                     component.setState({playing: true});
 
-                    console.log("calling spotifyBrowserApi.playTrack on " + newTrackId);
+                    console.log("calling spotifyBrowserApi.playTrack for track " + newTrackId);
                     this.lastPlayedTrackId = newTrackId;
                     component.playTrack(newTrackId, this.state.room.currentTrackPosition);
                     $('.now-playing .star-button-holder').show();
@@ -427,6 +427,8 @@ var RoomPage = React.createClass({
     searchSpotifyImmediately: function () {
 
         var component = this;
+        if(_.isEmpty(this.state.search.trim()))
+            return;
         $.ajax({
             url: 'https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(this.state.search),
             dataType: 'json',
@@ -495,8 +497,8 @@ var RoomPage = React.createClass({
                 return (track.name.toLowerCase().indexOf(component.state.search.toLowerCase()) > -1)
                     || (track.artists.map(function (a) {
                         return a.name;
-                    }).join(", ").toLowerCase().indexOf(component.state.search.toLowerCase()) > -1)
-                    ;
+                    }).join(", ").toLowerCase().indexOf(component.state.search.toLowerCase()) > -1
+                    || (track.votes[0] && track.votes[0].name.toLowerCase().indexOf(component.state.search.toLowerCase()) > -1));
             });
         }
 
