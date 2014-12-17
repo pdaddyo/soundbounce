@@ -196,7 +196,7 @@ var soundbounceServer = {
                 res.send(JSON.stringify({id: room.id}));
 
                 // this room just updated, so re-sync the connected users:
-                server.broadcast(room, [{type: 'sync', payload: server.getClientViewOfRoom(room)}]);
+                server.reSyncAllUsers(room);
             }
 
         });
@@ -339,12 +339,7 @@ var soundbounceServer = {
                 soundbounceShared.updatePlaylist(room, server);
 
                 // send initial sync of room state and user info
-                socket.send(JSON.stringify([{
-                    type: 'sync',
-                    payload: server.getClientViewOfRoom(room),
-                    user: user,
-                    now: new Date()
-                }]));
+                socket.send(JSON.stringify([server.createSyncMessage(room, user)]));
 
                 // setup pinger to keep firewalls open
                 var pingTimerId = setInterval(function () {
@@ -401,6 +396,31 @@ var soundbounceServer = {
         server.topUpRooms();
     },
 
+    reSyncAllUsers: function (room){
+        var server = this;
+      // send a sync message to each connected user
+        room.listeners.forEach(function (listener) {
+            // has the socket been dropped?
+            if (!soundbounceServer.sockets[listener.id]) {
+                // remove user from room
+                room.listeners = _.filter(room.listeners, function (l) {
+                    return listener.id != l.id;
+                });
+                return;
+            }
+
+            soundbounceServer.sockets[listener.id].send(JSON.stringify([server.createSyncMessage(room, listener)]));
+        });
+    },
+
+    createSyncMessage: function (room, user){
+        return {
+            type: 'sync',
+                payload: this.getClientViewOfRoom(room),
+            user: user,
+            now: new Date()
+        }
+    },
     getRandomInt: function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     },
