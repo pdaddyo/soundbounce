@@ -519,6 +519,7 @@ var soundbounceServer = {
     },
     processChat: function (room, user, payload) {
 
+        var server = this;
         var nowPlaying = null;
 
         // make sure we have correct now playing track
@@ -540,7 +541,7 @@ var soundbounceServer = {
             context: nowPlaying
         };
 
-        console.log(user.name + ": " + payload.message);
+        console.log("["+room.name.green+"]"+user.name + ": " + payload.message);
 
         soundbounceShared.addChatToRoom(room, chatmsg);
 
@@ -549,6 +550,7 @@ var soundbounceServer = {
     ,
 
     processAdds: function (room, user, trackIds) {
+        var server = this;
         // spotify API limited to 50 tracks.
         trackIds = _.first(trackIds, 50);
 
@@ -635,10 +637,10 @@ var soundbounceServer = {
 
     simpleUser: function (user) {
         return {id: user.id, name: user.name, img: user.img};
-    }
-    ,
+    },
 
     processVotes: function (room, user, trackIds) {
+        var server = this;
         var votes = [];
         trackIds.map(function (tid) {
             return _.find(room.tracks, function (t) {
@@ -696,6 +698,8 @@ var soundbounceServer = {
     ,
 
     addVoteToTrack: function (room, track, user) {
+        var server = this;
+
         soundbounceShared.updatePlaylist(room, server);
 
         var insertAfter = this.getTrackIdToInsertAfter(room, track.votes.length + 1);
