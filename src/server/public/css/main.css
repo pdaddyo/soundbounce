@@ -516,6 +516,28 @@ h1 {
     -webkit-transform: translate3d(0, 0, 0);
 }
 
+.room-list-item .desc{
+    font-size:10px;
+    position:absolute;
+    opacity:0;
+    color:#fff;
+    transition: all 0.58s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height:14px;
+
+    bottom:4px;
+    left:200px;
+    z-index:1;
+    overflow:hidden;
+    max-height:28px;
+    width:75%;
+    text-overflow: ellipsis;
+}
+
+.room-list-item:hover .desc{
+    opacity:0.8;
+    left:10px;
+}
+
 .room-listeners, .playlist-state {
     font-size: 12px;
     font-weight: normal;
@@ -595,7 +617,7 @@ h1 {
     height: 6px;
     width: 100%;
     transition: background-color 0.58s cubic-bezier(0.4, 0, 0.2, 1), color 0.58s cubic-bezier(0.4, 0, 0.2, 1);
-
+    z-index:2;
 }
 
 .room-list-item:hover .color-bar {
@@ -631,6 +653,7 @@ h1 {
     left: 10px;
     top: 0;
     width: 90%;
+    line-height:97%;
     font-weight: normal;
     margin-top: 10px;
     text-align: left;

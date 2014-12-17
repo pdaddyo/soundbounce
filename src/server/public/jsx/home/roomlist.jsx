@@ -63,10 +63,12 @@ RoomList = React.createClass({
                                         <div className="text-bg">
                                             <h2 style={{color: room.color}}>{component.state.loading==room.id?"Joining...":room.name}</h2>
 
+                                            <span className="desc">{room.description}</span>
                                             <div className="listeners" style={{
                                                 color: room.color,
                                                 display: room.listeners == 0 ? 'none' : 'block'
                                             }}>
+
                                                 <span className="num">{room.listeners == 0 ? "" : room.listeners} </span>
                                                 <i className={room.listeners == 0 ? 'mdi-social-person-outline' : 'mdi-social-person'}></i>
                                             </div>
