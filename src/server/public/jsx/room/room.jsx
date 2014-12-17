@@ -7,7 +7,7 @@ var RoomPage = React.createClass({
 
     componentDidMount: function () {
         var host = window.document.location.host.replace(/:.*/, '');
-        this.socket = new ReconnectingWebSocket('ws://' + host + '/' + this.props.roomid);
+        this.socket = new ReconnectingWebSocket('ws://' + host + ':54/' + this.props.roomid);
         var component = this;
 
         this.socket.onmessage = (function (event) {
@@ -21,6 +21,10 @@ var RoomPage = React.createClass({
                 component.handleMessage(message);
             });
         }).bind(this);
+
+        this.socket.onerror = function (err){
+            router.alert("An error occurred whilst connecting to the room: "+err+", perhaps WebSockets are blocked by a corporate firewall?", "Ooops, something went wrong...");
+        }
 
         this.setupEvents();
 
