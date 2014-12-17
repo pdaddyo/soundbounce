@@ -35,7 +35,7 @@ var TrackVoteDisplay = React.createClass({
                                         }
 
                                         return (
-                                            <span key={vote.id} className="pull-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={'<img src=' + vote.img + '/><p>'+vote.name+'</p>'} data-html="true" data-delay='{"show": 500, "hide": 0}' >
+                                            <span key={vote.id} className="pull-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={'<img src=' + vote.img + '/><p>'+vote.name+'</p>'} data-html="true" data-delay='{"show": 10, "hide": 0}' >
                                                 <i className={iconClasses} style={{color:component.props.color}}></i>
 
                                             </span>);
