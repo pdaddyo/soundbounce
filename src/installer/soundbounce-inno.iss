@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{A1E1F8D8-BEA1-44A0-90DD-ECB5DF59A082}
 AppName=Soundbounce
-AppVersion=1.0
+AppVersion=1.0a
 ;AppVerName=Soundbounce 0.9
 AppPublisher=soundbounce.org
 AppPublisherURL=http://soundbounce.org
