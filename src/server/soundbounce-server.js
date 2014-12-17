@@ -111,7 +111,7 @@ var soundbounceServer = {
         // simple room list for the home screen
         app.get('/roomlist', function (req, res) {
             server.rooms.forEach(function (r) {
-                soundbounceShared.updatePlaylist(r);
+                soundbounceShared.updatePlaylist(r, server);
             });
 
             var simpleRoomList = _.map(server.rooms, function (room) {
@@ -238,7 +238,7 @@ var soundbounceServer = {
         app.get('/status', function (req, res) {
             // update the playlists
             soundbounceServer.rooms.forEach(function (room) {
-                soundbounceShared.updatePlaylist(room);
+                soundbounceShared.updatePlaylist(room, server);
             });
 
             // send back easy to view json
@@ -336,7 +336,7 @@ var soundbounceServer = {
                 // now add the new listener
                 room.listeners.push(user);
 
-                soundbounceShared.updatePlaylist(room);
+                soundbounceShared.updatePlaylist(room, server);
 
                 // send initial sync of room state and user info
                 socket.send(JSON.stringify([{
@@ -405,6 +405,24 @@ var soundbounceServer = {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     },
 
+    // recycle tracks that were added by users, if there's room in playlist
+    handleRemovedTrack: function (track, room){
+        var server = this;
+
+        // if there's room, and it wasn't added by soundbounce automatically
+        if(room.tracks.length<200 && track.addedBy.id!="1")
+        {
+            console.log("recycling track "+track.name+" in room "+room.name);
+
+            // add in a few moments, to avoid it appearing before track ends for clients that are slightly behind
+            _.delay(function () {
+                server.processAdds(room, server.getSoundbounceUser(), [track.id]);
+            }, 10 * 1000);
+
+        }
+
+    },
+
     topUpRooms: function () {
 
         // automatically top up rooms using linked playlists
@@ -421,7 +439,7 @@ var soundbounceServer = {
                 server.spotify.setAccessToken(data['access_token']);
 
                 server.rooms.forEach(function (room) {
-                    soundbounceShared.updatePlaylist(room);
+                    soundbounceShared.updatePlaylist(room, server);
 
                     if (!_.isEmpty(room.topUpURI)) {
 
@@ -456,11 +474,7 @@ var soundbounceServer = {
 
                                         //    console.log("[top-up] ".green, room.name.yellow, " from ", data.name, data.tracks.items.length);
 
-                                        var simpleUser = {
-                                            id: "1",
-                                            name: "SoundBounce",
-                                            img: '/img/soundbounce.png'
-                                        };
+                                        var simpleUser = server.getSoundbounceUser();
 
                                         var tracksToAdd = _.first(_.shuffle(data.tracks.items), TOP_UP_TRACKS_TO_ADD);
 
@@ -493,15 +507,22 @@ var soundbounceServer = {
             }, function (err) {
                 console.log('Something went wrong when retrieving an access token', err);
             });
-    }
-    ,
+    },
 
+
+    getSoundbounceUser: function () {
+        return {
+            id: "1",
+                name: "SoundBounce",
+            img: '/img/soundbounce.png'
+        };
+    },
     processChat: function (room, user, payload) {
 
         var nowPlaying = null;
 
         // make sure we have correct now playing track
-        soundbounceShared.updatePlaylist(room);
+        soundbounceShared.updatePlaylist(room, server);
 
         if (room.tracks.length > 0) {
             nowPlaying = room.tracks[0];
@@ -517,13 +538,11 @@ var soundbounceServer = {
             timestamp: (new Date()),
             user: this.simpleUser(user),
             context: nowPlaying
-
         };
 
         console.log(user.name + ": " + payload.message);
 
         soundbounceShared.addChatToRoom(room, chatmsg);
-        //room.chat.push(chatmsg);
 
         soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
     }
@@ -677,7 +696,7 @@ var soundbounceServer = {
     ,
 
     addVoteToTrack: function (room, track, user) {
-        soundbounceShared.updatePlaylist(room);
+        soundbounceShared.updatePlaylist(room, server);
 
         var insertAfter = this.getTrackIdToInsertAfter(room, track.votes.length + 1);
 

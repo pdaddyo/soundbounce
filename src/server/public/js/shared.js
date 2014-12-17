@@ -30,7 +30,7 @@ var soundbounceShared = {
     },
 
     // makes sure the correct song is at the top of the playlist, starts playing new adds, and removes played songs
-    updatePlaylist: function (room) {
+    updatePlaylist: function (room, server) {
         var done = false;
         while (!done) {
             done = true;
@@ -80,7 +80,12 @@ var soundbounceShared = {
 
                 // reset position, remove top track
                 room.currentTrackPosition = 0;
-                room.tracks.shift();
+                var trackRemoved = room.tracks.shift();
+
+                // the server may want to re-add this track, so let it know (if we're on the server, remember this code could be running on client!)
+                if(server){
+                    server.handleRemovedTrack(trackRemoved, room);
+                }
 
                 // and loop around, update again
                 done = false;
