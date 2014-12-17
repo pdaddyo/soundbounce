@@ -7,7 +7,7 @@ var RoomPage = React.createClass({
 
     componentDidMount: function () {
         var host = window.document.location.host.replace(/:.*/, '');
-        this.socket = new ReconnectingWebSocket('ws://' + host + ':8080/' + this.props.roomid);
+        this.socket = new ReconnectingWebSocket('ws://' + host + '/' + this.props.roomid);
         var component = this;
 
         this.socket.onmessage = (function (event) {
@@ -221,7 +221,7 @@ var RoomPage = React.createClass({
         _.defer(function () {
             var $messages = $('.messagescontainer');
             var currentScroll = $messages.scrollTop();
-            console.log("currentScroll", currentScroll);
+            //console.log("currentScroll", currentScroll);
             var height = $messages[0].scrollHeight + 200;
             $messages.scrollTop(height);
         });

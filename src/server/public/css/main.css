@@ -380,6 +380,9 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.23), 0 2px 7px rgba(0, 0, 0, 0.19);
 
 }
+
+.mdi-action-grade:before { position: absolute; right: 5px; left: auto; }
+
 .votes {
     position: absolute;
     right: 1px;
