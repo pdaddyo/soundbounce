@@ -1058,3 +1058,7 @@ img.emojione {
     top: 1px;
     position: relative;
 }
+
+button.close {
+    opacity: 0.5;
+}
