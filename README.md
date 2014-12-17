@@ -14,6 +14,7 @@ Features
 - Dragging and dropping to add tracks from Spotify
 - Chat (with emoji)
 - Voting
+- *NEW* - Star now playing track
 - Auto top-up with existing Spotify playlist
 - Create / edit your own room
 
@@ -26,7 +27,7 @@ Requirements
 Installation instructions
 =============
 - Download latest release: https://github.com/pdaddyo/soundbounce/releases
-- Run soundbounce_setup.exe, then follow the on-screen instructions.
+- Run soundbounce-setup-v1.0.exe, then follow the on-screen instructions.
 
 Motivation
 ==========
