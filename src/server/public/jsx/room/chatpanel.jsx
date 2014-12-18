@@ -135,8 +135,8 @@ var ChatPanel = React.createClass({
                 return a.name;
             }).join(", "));
 
-        // find track in actual room (may have already played!)
-        var track = _.find(this.props.tracks, function (t){ return t.id == voteTrack.id;});
+        // find track in actual room (may have already played, and don't include playing track)
+        var track = _.find(_.rest(this.props.tracks), function (t){ return t.id == voteTrack.id;});
 
         if(!track)
             return <span>{text}</span>;
