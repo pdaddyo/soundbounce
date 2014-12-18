@@ -58,7 +58,7 @@ var NowPlaying = React.createClass({
                                         return a.name;
                                     }).join(", ")
                                 }} />
-                                <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} />
+                                <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} addedBy={this.props.track.addedBy} />
                             </div>
                         </div>
                     </div>
