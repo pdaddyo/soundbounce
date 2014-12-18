@@ -817,10 +817,11 @@ h1 {
 
 }
 
-.vote-chat {
-    display:inline-block;
-    border-bottom: 1px #999 dotted;
+.vote-chat:hover {
+    color:#337ab7;
+    cursor:pointer;
 }
+
 .vote .messages, .add .messages {
     background-color: #fdfdfd;
 }
