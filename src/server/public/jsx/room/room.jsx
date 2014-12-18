@@ -7,7 +7,7 @@ var RoomPage = React.createClass({
 
     componentDidMount: function () {
         var host = window.document.location.host.replace(/:.*/, '');
-        this.socket = new ReconnectingWebSocket('ws://' + host + ':54/' + this.props.roomid);
+        this.socket = new ReconnectingWebSocket('ws://' + host + '/' + this.props.roomid);
         var component = this;
 
         this.socket.onmessage = (function (event) {
@@ -61,6 +61,10 @@ var RoomPage = React.createClass({
 
         eventbus.on("track-vote", function (track) {
             component.sendAddOrVote([track.id]);
+        });
+
+        eventbus.on("track-vote-id", function (trackId) {
+            component.sendAddOrVote([trackId]);
         });
 
         eventbus.on("track-add", function (track) {
@@ -134,6 +138,7 @@ var RoomPage = React.createClass({
         eventbus.off("edit-room");
         eventbus.off("room-color");
         eventbus.off("track-vote");
+        eventbus.off("track-vote-id");
         eventbus.off("track-add");
         eventbus.off("open-in-spotify");
         eventbus.off("play-token-lost");
@@ -556,7 +561,7 @@ var RoomPage = React.createClass({
                     </div>
                 </div>
 
-                <ChatPanel chat={this.state.room.chat} color={this.state.room.color} user={this.state.user} />
+                <ChatPanel chat={this.state.room.chat} color={this.state.room.color} user={this.state.user} tracks={this.state.room.tracks} />
 
                 <div className="panel panel-room-top panel-success">
                     <div className="panel-heading" style={{backgroundColor: this.state.room.color}}>

@@ -121,6 +121,36 @@ var ChatPanel = React.createClass({
         return result;
     },
 
+    clickVoteInChat: function (e){
+        var trackId = $(e.currentTarget).data("track");
+        eventbus.trigger("track-vote-id", trackId);
+    },
+
+    trackNameWithVoteSpan: function(voteTrack){
+        // if the user hasn't voted for this track, show a tooltip
+
+        var component = this;
+
+        var text = voteTrack.name + " by " + (voteTrack.artists.map(function (a) {
+                return a.name;
+            }).join(", "));
+
+        // find track in actual room (may have already played!)
+        var track = _.find(this.props.tracks, function (t){ return t.id == voteTrack.id;});
+
+        if(!track)
+            return <span>{text}</span>;
+
+        var hasVoted = _.filter(track.votes, function (v){ return v.id==component.props.user.id;}).length>0;
+
+        if(hasVoted) {
+            return <span>{text}</span>;
+        }
+        else {
+            return <span className="vote-chat" data-toggle="tooltip" data-placement="top" data-original-title={'Vote for '+track.name} onClick={component.clickVoteInChat} data-track={track.id}>{text}</span>;
+        }
+    },
+
     render: function () {
         var index = 0;
         var component = this;
@@ -144,16 +174,15 @@ var ChatPanel = React.createClass({
                     'mdi-av-playlist-add': msg.type == "add",
                     'icon': true
                 });
+
                 albumArt = <img className="album-art" src={msg.track.img} />
-                text = msg.track.name + " by " + (msg.track.artists.map(function (a) {
-                    return a.name;
-                }).join(", "));
+
                 icon = <i className={iconClasses} style={{color: component.props.color}}></i>;
 
                 var groupedMessages = [];
-                groupedMessages.push(text);
+                groupedMessages.push(component.trackNameWithVoteSpan(msg.track));
 
-                // group together whilst next vote / add is from same user, and is less than 10 seconds after
+                // group together whilst next vote / add is from same user, and is less than 240 seconds after
                 while (chatIndex + 1 < this.props.chat.length
                 && this.props.chat[chatIndex + 1].type == msg.type
                 && this.props.chat[chatIndex + 1].user.id == msg.user.id
@@ -161,21 +190,22 @@ var ChatPanel = React.createClass({
 
                     chatIndex++;
                     var nextMsg = this.props.chat[chatIndex];
-                    var nextTxt = nextMsg.track.name + " by " + (nextMsg.track.artists.map(function (a) {
-                            return a.name;
-                        }).join(", "));
+                    /*  var nextTxt = nextMsg.track.name + " by " + (nextMsg.track.artists.map(function (a) {
+                     return a.name;
+                     }).join(", "));*/
 
-                    groupedMessages.push(nextTxt);
+                    groupedMessages.push(component.trackNameWithVoteSpan(nextMsg.track));
                     timestamp = moment(nextMsg.timestamp).from(soundbounceShared.serverNow());
                 }
 
                 if (groupedMessages.length > 1) {
-                    text = <p onClick={function (e){ $(e.currentTarget).parent().find('.messages-expand').slideToggle(); $(e.currentTarget).parent().find('.album-art').toggle(); }}>{nextMsg.type == "add" ? "Added " : "Voted for "}<a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a></p>;
+                        text = <p onClick={function (e){ $(e.currentTarget).parent().find('.messages-expand').slideToggle(); $(e.currentTarget).parent().find('.album-art').toggle(); }}>{nextMsg.type == "add" ? "Added " : "Voted for "}<a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a></p>;
+                    //expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function(m){return <p>{m}</p>;}))}</div>;
                     expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function(m){return <p>{m}</p>;}))}</div>;
-                   // albumArt = null;
+                    // albumArt = null;
                 }
                 else {
-                    text = <p>{(msg.type == "add" ? "Added " : "Voted for ") + groupedMessages[0]}</p>;
+                    text = <p><span>{(msg.type == "add" ? "Added " : "Voted for ")}</span>{groupedMessages[0]}</p>;
                 }
 
 
