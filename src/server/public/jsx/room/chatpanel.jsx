@@ -88,6 +88,8 @@ var ChatPanel = React.createClass({
                 chunk = chunk.replace(";(", ":cry:");
                 chunk = chunk.replace("(y)", ":thumbsup:");
                 chunk = chunk.replace("(Y)", ":thumbsup:");
+                chunk = chunk.replace(":-P", ":stuck_out_tongue:");
+                chunk = chunk.replace(":-p", ":stuck_out_tongue:");
 
                 var split = chunk.split(new RegExp("<object[^>]*>.*?<\/object>|<span[^>]*>.*?<\/span>|<(?:object|embed|svg|img|div|span|p|a)[^>]*>|(" + emojione.shortnameRegexp + ")", "gi"));
 
