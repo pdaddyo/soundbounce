@@ -380,6 +380,9 @@ var soundbounceServer = {
                         case "chat":
                             server.processChat(room, user, msg.payload);
                             break;
+                        case "remove-track":
+                            server.processRemove(room, user, msg.payload);
+                            break;
                     }
                 })
             });
@@ -394,6 +397,27 @@ var soundbounceServer = {
         }, 1000 * 60 * 10);
 
         server.topUpRooms();
+    },
+
+
+    processRemove: function (room, user, trackId){
+        // find track
+        var trackToRemove = _.find(room.tracks, function (t){ return t.id==trackId;});
+        if(!trackToRemove)
+            return;
+
+        // must be room admin or the person who added track
+        if( !(_.contains(room.admins, user.id) || trackToRemove.addedBy.id==user.id))
+            return;
+
+        if(room.tracks[0].id==trackId) {
+           // this is currently playing, so reset position
+            room.currentTrackStartedAt = soundbounceShared.serverNow();
+            room.currentTrackPosition = 0;
+        }
+
+        room.tracks = _.filter(room.tracks, function (t){ return t.id!=trackId;});
+        this.reSyncAllUsers(room);
     },
 
     reSyncAllUsers: function (room){

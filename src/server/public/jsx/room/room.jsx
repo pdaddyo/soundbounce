@@ -124,6 +124,10 @@ var RoomPage = React.createClass({
         eventbus.on("playing-track-is-starred", function () {
             $('.now-playing .star-button-holder').hide();
         });
+
+        eventbus.on("remove-track", function (track) {
+            component.send({type: "remove-track", payload: track.id})
+        });
     },
 
     componentWillUnmount: function () {
@@ -147,6 +151,7 @@ var RoomPage = React.createClass({
         eventbus.off("star-track");
         eventbus.off("open-url");
         eventbus.off("playing-track-is-starred");
+        eventbus.off("remove-track");
 
         clearInterval(this.intervalId);
     },
@@ -471,6 +476,9 @@ var RoomPage = React.createClass({
         }
     },
 
+    isCurrentUserRoomAdmin: function () {
+        return _.contains(this.state.room.admins, this.state.user.id);
+    },
 
     render: function () {
         var component = this;
@@ -515,7 +523,11 @@ var RoomPage = React.createClass({
             <div id="room" onDrop={this.handleDrop} onDragOver={this.dragOver} onDragEnter={this.dragOver} onKeyDown={this.handleKeyDown}>
 
                 <div id="nowplayingcontainer">
-                    <NowPlaying track={this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null} position={this.state.room.currentTrackPosition} color={this.state.room.color} />
+                    <NowPlaying
+                        track={this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null}
+                        position={this.state.room.currentTrackPosition}
+                        color={this.state.room.color}
+                        canRemove={component.isCurrentUserRoomAdmin() ||(this.state.room.tracks.length > 0 ? this.state.room.tracks[0].addedBy.id==component.state.user.id : false)} />
                 </div>
                 <div id="playlistcontainer" className={this.state.room.tracks.length ==0?"no-now-playing":""}>
                     <div className="container-fluid">
@@ -535,7 +547,15 @@ var RoomPage = React.createClass({
                                                       return v.id;
                                                   }), component.state.user.id);
 
-                                                  return <PlaylistItem track={track} key={track.id} color={component.state.room.color} canVote={canVote} canAdd={false} isLast={index == arr.length - 1} />
+                                                  return <PlaylistItem
+                                                      track={track}
+                                                      key={track.id}
+                                                      color={component.state.room.color}
+                                                      canVote={canVote}
+                                                      canAdd={false}
+                                                      canRemove={component.isCurrentUserRoomAdmin() ||(track.addedBy.id==component.state.user.id)}
+                                                      isLast={index == arr.length - 1}
+                                                  />
                                               })}
                                     </div>
                                 </div>

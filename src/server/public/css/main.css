@@ -360,25 +360,29 @@ h1 {
     box-shadow: none;
     opacity: 0;
     transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.78s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.68s cubic-bezier(0.4, 0, 0.2, 1);
-
-    /*box-shadow: none;0 6px 10px rgba(0, 0, 0, 0.23), 0 10px 30px rgba(0, 0, 0, 0.19);*/
 }
 
 .track-icons .btn.btn-add{
     opacity:1;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.23), 0 2px 7px rgba(0, 0, 0, 0.19);
     font-size:20px;
+
 }
 .track-icons .btn.fa-spotify{
     font-size: 20px;
     text-indent: -8px;
 }
+
+.track-icons .btn.fa-trash{
+    font-size: 18px;
+    text-indent: -7px;
+}
+
 .track-icons .btn.mdi-action-grade{
     font-size: 20px;
     text-indent: -9px;
     opacity:1;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.23), 0 2px 7px rgba(0, 0, 0, 0.19);
-
 }
 
 .mdi-action-grade:before { position: absolute; right: 5px; left: auto; }
