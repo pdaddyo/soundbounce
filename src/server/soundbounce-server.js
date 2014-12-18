@@ -461,7 +461,7 @@ var soundbounceServer = {
 
             // add in a few moments, to avoid it appearing before track ends for clients that are slightly behind
             _.delay(function () {
-                server.processAdds(room, track.addedBy, [track.id]);
+                server.processAdds(room, track.addedBy, [track.id], true);
             }, 10 * 1000);
         }
 
@@ -593,7 +593,8 @@ var soundbounceServer = {
     }
     ,
 
-    processAdds: function (room, user, trackIds) {
+    processAdds: function (room, user, trackIds, dontVote) {
+
         var server = this;
         // spotify API limited to 50 tracks.
         trackIds = _.first(trackIds, 50);
@@ -641,7 +642,7 @@ var soundbounceServer = {
                         simpleUser = soundbounceServer.simpleUser(user);
                         simpleTrack.addedBy = simpleUser;
 
-                        if (String(user.id) != "1") {
+                        if ((String(user.id) != "1") && !dontVote) {
                             // vote for the track, but don't trigger a vote event
                             var vote = simpleUser;
                             vote.timestamp = new Date();

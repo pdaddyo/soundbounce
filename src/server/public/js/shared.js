@@ -119,7 +119,7 @@ var soundbounceShared = {
             insertIndex = 1;
         }
 
-        if(String(user.id)!="1") {
+        if(String(user.id)!="1" && track.votes.length>0) {
             this.addChatToRoom(room, {type: "add", timestamp: this.serverNow(), user: user, track: track});
         }
 
