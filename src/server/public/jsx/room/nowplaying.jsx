@@ -15,6 +15,12 @@ var NowPlaying = React.createClass({
         eventbus.trigger("star-track", this.props.track);
     },
 
+    onClickRemoveTrack: function () {
+        if(confirm("Are you sure you want to remove this track?")) {
+            eventbus.trigger("remove-track", this.props.track);
+        }
+    },
+
     render: function () {
         if (this.props.track == null) {
             return <div/>;
@@ -29,6 +35,11 @@ var NowPlaying = React.createClass({
                             </div>
                             <div className="row-content">
                                 <div className="track-icons">
+                                    <a href="javascript:void(0)" onClick={this.onClickRemoveTrack} className={'btn btn-fab btn-spotify fa fa-trash'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Remove track" style={{
+                                        overflow: 'visible',
+                                        backgroundColor: this.props.color,
+                                        display:this.props.canRemove?"inline-block":"none"
+                                    }} data-delay='{"show": 500, "hide": 0}'></a>
 
                                     <a href="javascript:void(0)" onClick={this.onClickOpenSpotify} className={'btn btn-fab btn-spotify fa fa-spotify'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Show in Spotify" style={{
                                         overflow: 'visible',
