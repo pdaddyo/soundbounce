@@ -457,13 +457,12 @@ var soundbounceServer = {
         // if there's room, and it wasn't added by soundbounce automatically
         if(room.tracks.length<200 && track.addedBy.id!="1")
         {
-            console.log("recycling track "+track.name+" in room "+room.name);
+        //    console.log("recycling track "+track.name+" in room "+room.name);
 
             // add in a few moments, to avoid it appearing before track ends for clients that are slightly behind
             _.delay(function () {
                 server.processAdds(room, track.addedBy, [track.id]);
             }, 10 * 1000);
-
         }
 
     },
@@ -471,8 +470,8 @@ var soundbounceServer = {
     topUpRooms: function () {
 
         // automatically top up rooms using linked playlists
-        var TOP_UP_WHEN_TRACKS_BELOW = 50;
-        var TOP_UP_TRACKS_TO_ADD = 50;
+        var TOP_UP_WHEN_TRACKS_BELOW = 100;
+        var TOP_UP_TRACKS_TO_ADD = 100;
 
         var server = this;
 
@@ -865,7 +864,8 @@ process.on('uncaughtException', function(err) {
     console.log('Uncaught exception: ' + err);
     console.log("Saving before restart...");
     soundbounceServer.saveData();
-    console.log("Saved.");
+    console.log("Saved, restarting...");
+    process.exit(1);
 });
 
 module.exports = soundbounceServer;
