@@ -773,51 +773,6 @@ h1 {
     /*   right:-8px !important;*/
 }
 
-.chat-panel .message {
-    background: white;
-    padding: 10px;
-    border-radius: 2px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    /*display: flexbox;*/
-    margin-bottom: 10px;
-}
-
-.chat-panel .message.info {
-    background: rgba(255, 255, 255, 0.7);
-}
-
-.chat-panel .message p {
-    font-size: 12px;
-    margin: 0 0 0.2rem 0;
-}
-
-.chat-panel .message p i {
-    line-height: 19px;
-    padding-right: 5px;
-}
-
-.chat-panel .message time {
-    font-size: 10px;
-    color: #ccc;
-    white-space: nowrap;
-}
-
-.chat-panel .message time .who-when {
-    display: block;
-}
-
-.chat-panel .message time .track {
-    display: none;
-}
-
-.chat-panel .message:hover time .who-when {
-    display: none;
-}
-
-.chat-panel .message:hover time .track {
-    display: block;
-}
-
 .discussion {
     list-style: none;
     background: transparent;
@@ -862,6 +817,10 @@ h1 {
 
 }
 
+.vote-chat {
+    display:inline-block;
+    border-bottom: 1px #999 dotted;
+}
 .vote .messages, .add .messages {
     background-color: #fdfdfd;
 }
