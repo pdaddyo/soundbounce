@@ -77,7 +77,7 @@ var PlaylistItem = React.createClass({
                             <span dangerouslySetInnerHTML={{__html:this.props.track.artists.map(function (a) {
                                 return a.name;
                             }).join(", ")}} />
-                                <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} />
+                                <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} addedBy={this.props.track.addedBy} />
                         </p>
                     </div>
                 </div>

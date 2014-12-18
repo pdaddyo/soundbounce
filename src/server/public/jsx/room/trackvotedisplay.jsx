@@ -17,9 +17,12 @@ var TrackVoteDisplay = React.createClass({
 
             <span className="votes">
                                     {this.props.votes.map(function (vote) {
+
+                                        var useOutline = index>0 || vote.id!=component.props.addedBy.id;
+
                                         var iconClasses = React.addons.classSet({
-                                            'mdi-social-person-outline':index>0,
-                                            'mdi-social-person':index==0,
+                                            'mdi-social-person-outline':useOutline,
+                                            'mdi-social-person':!useOutline,
                                             'text-success':true,
                                             'pull-right':true
                                         });
@@ -35,7 +38,7 @@ var TrackVoteDisplay = React.createClass({
                                         }
 
                                         return (
-                                            <span key={vote.id} className="pull-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={'<img src=' + vote.img + '/><p>'+vote.name+'</p>'} data-html="true" data-delay='{"show": 50, "hide": 0}' >
+                                            <span key={vote.id} className="pull-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={'<p class="top-line">'+(useOutline?'Vote from':'Added by')+'</p><img src=' + vote.img + '/><p>'+vote.name+'</p>'} data-html="true" data-delay='{"show": 50, "hide": 0}' >
                                                 <i className={iconClasses} style={{color:component.props.color}}></i>
 
                                             </span>);
