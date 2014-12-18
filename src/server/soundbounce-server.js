@@ -271,7 +271,7 @@ var soundbounceServer = {
             });
 
             console.log("sent admin message -->", req.query.message);
-            res.send("sent to " + soundbounceServer.sockets.length + " users");
+            res.send("sent to " + _.keys(soundbounceServer.sockets.length) + " users");
         });
 
         // web sockets handle all communication with the <Room />
@@ -313,10 +313,11 @@ var soundbounceServer = {
                     console.warn(user.name + " tried to open multiple websockets");
                     return;
                 }
+
                 /* we're now connected */
                 server.sockets[user.id] = socket;
 
-                console.log(("--> " + user.spotifyUsername + " connected to room ").cyan + room.name.green);
+                console.log(("--> " + user.name + " connected to room ").cyan + room.name.green);
 
                 // remove this listener from the room if they're already here (e.g. after a connection issue)
                 room.listeners = _.filter(room.listeners, function (listener) {
@@ -353,7 +354,7 @@ var soundbounceServer = {
                 }, 5000);
 
                 socket.on('close', function () {
-                    console.log(("<-- user " + user.spotifyUsername + " left room " + room.name).magenta);
+                    console.log(("<-- " + user.name + " left room ").magenta + room.name);
                     server.sockets[user.id] = null;
 
                     //stop pinging
@@ -460,7 +461,7 @@ var soundbounceServer = {
 
             // add in a few moments, to avoid it appearing before track ends for clients that are slightly behind
             _.delay(function () {
-                server.processAdds(room, server.getSoundbounceUser(), [track.id]);
+                server.processAdds(room, track.addedBy, [track.id]);
             }, 10 * 1000);
 
         }
@@ -692,7 +693,7 @@ var soundbounceServer = {
             });
         }).forEach(function (track) {
             if (track) {
-                console.log(user.name + " voted for " + track.name);
+            //    console.log(user.name + " voted for " + track.name);
 
                 // add the vote to the server, and note which track we're going to put it after
                 var insertAfter = soundbounceServer.addVoteToTrack(room, track, soundbounceServer.simpleUser(user));
@@ -772,7 +773,7 @@ var soundbounceServer = {
                     insertIndex = i + 1;
                 }
             }
-            console.log("vote - move to after " + insertAfter + ", indices: ", currentIndex, insertIndex);
+           // console.log("vote - move to after " + insertAfter + ", indices: ", currentIndex, insertIndex);
             if (currentIndex != insertIndex) {
                 // move the track
                 room.tracks = room.tracks.move(currentIndex, insertIndex);
