@@ -422,6 +422,9 @@ var soundbounceServer = {
     },
 
     reSyncAllUsers: function (room){
+
+        soundbounceShared.updatePlaylist(room);
+
         var server = this;
       // send a sync message to each connected user
         room.listeners.forEach(function (listener) {
@@ -606,7 +609,7 @@ var soundbounceServer = {
 
         //console.log(user.name + " added/voted " + trackIds.length + " tracks in " + room.name, trackIds);
 
-        var voteList = [], ROOM_MAX_TRACKS = 1000;
+        var voteList = [], ROOM_MAX_TRACKS = 250;
 
         this.spotify.getTracks(trackIds)
             .then(function (data) {
@@ -798,8 +801,7 @@ var soundbounceServer = {
     getClientViewOfRoom: function (room) {
         // todo: sanitise the output to client
         return room;
-    }
-    ,
+    },
 
     broadcast: function (room, messages) {
         room.listeners.forEach(function (listener) {
