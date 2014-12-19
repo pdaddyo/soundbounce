@@ -16,9 +16,10 @@ var NowPlaying = React.createClass({
     },
 
     onClickRemoveTrack: function () {
-        if(confirm("Are you sure you want to remove this track?")) {
-            eventbus.trigger("remove-track", this.props.track);
-        }
+        var component = this;
+        router.confirm("Are you sure you want to remove '"+this.props.track.name+"'?", "Confirm remove", function () {
+            eventbus.trigger("remove-track", component.props.track);
+        });
     },
 
     render: function () {
