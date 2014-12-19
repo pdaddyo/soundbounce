@@ -1,5 +1,7 @@
 var PlaylistItem = React.createClass({
 
+    isPreviewing:false,
+
     componentDidMount: function () {
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -37,6 +39,18 @@ var PlaylistItem = React.createClass({
         });
     },
 
+    previewStart: function () {
+        this.isPreviewing = true;
+        eventbus.trigger("preview-start", this.props.track.id);
+    },
+
+    previewStop: function () {
+        if(this.isPreviewing){
+            eventbus.trigger("preview-stop");
+            this.isPreviewing = false;
+        }
+    },
+
     render: function () {
         if (this.props.track == null) {
             return <div/>;
@@ -69,7 +83,7 @@ var PlaylistItem = React.createClass({
                             }} data-delay='{"show": 500, "hide": 0}'></a>
 
                         </div>
-                        <img className="circle art" src={this.props.track.img} alt="icon" />
+                        <img className="circle art" src={this.props.track.img} alt="icon" onMouseDown={this.previewStart} onMouseUp={this.previewStop} onMouseOut={this.previewStop} data-toggle="tooltip" data-placement="top" data-original-title="Click and hold to preview" />
                     </div>
                     <div className="row-content">
                         <h4 className="list-group-item-heading hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.name}} />

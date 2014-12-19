@@ -128,6 +128,18 @@ var RoomPage = React.createClass({
         eventbus.on("remove-track", function (track) {
             component.send({type: "remove-track", payload: track.id})
         });
+
+        eventbus.on("preview-start", function (trackId){
+            component.playTrack(trackId, 90*1000);
+        });
+
+        eventbus.on("preview-stop", function (){
+            soundbounceShared.updatePlaylist(component.state.room);
+            // if there's still a track playing
+            if(component.state.room.tracks.length>0){
+                component.playTrack(component.state.room.tracks[0].id, component.state.room.currentTrackPosition);
+            }
+        });
     },
 
     componentWillUnmount: function () {
@@ -154,6 +166,8 @@ var RoomPage = React.createClass({
         eventbus.off("open-url");
         eventbus.off("playing-track-is-starred");
         eventbus.off("remove-track");
+        eventbus.off("preview-start");
+        eventbus.off("preview-stop");
 
         clearInterval(this.intervalId);
     },
