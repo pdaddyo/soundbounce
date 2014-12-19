@@ -6,5 +6,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="server node_modules" level="project" />
     <orderEntry type="library" name="require" level="application" />
+    <orderEntry type="library" name="emojione" level="application" />
   </component>
 </module>
