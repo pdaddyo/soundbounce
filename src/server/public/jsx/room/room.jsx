@@ -131,6 +131,8 @@ var RoomPage = React.createClass({
     },
 
     componentWillUnmount: function () {
+
+        this.pauseTrack();
         // close websocket
         if (this.socket) {
             this.socket.close(1000, "normal close");
@@ -395,7 +397,7 @@ var RoomPage = React.createClass({
     },
 
     handleRoomCloseClick: function (e) {
-        this.pauseTrack();
+       // this.pauseTrack();
         $('.tooltip').remove();
         eventbus.trigger("update-room-list");
 
@@ -623,7 +625,7 @@ var RoomPage = React.createClass({
                             </div>
                         </div>
                         <div className="toolbar">
-                            <i className="mdi-navigation-close" id="roomClose" title="Back to room list" onClick={this.handleRoomCloseClick} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Leave room" data-delay="500"></i>
+                            <i className="mdi-navigation-close" id="roomClose" title="Back to room list" onClick={this.handleRoomCloseClick} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Back to room list" data-delay="500"></i>
                         </div>
                     </div>
                 </div>

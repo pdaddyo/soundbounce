@@ -474,14 +474,13 @@ var soundbounceServer = {
 
         // automatically top up rooms using linked playlists
         var TOP_UP_WHEN_TRACKS_BELOW = 100;
-        var TOP_UP_TRACKS_TO_ADD = 100;
+        var TOP_UP_TRACKS_TO_ADD = 50;
 
         var server = this;
 
         server.spotify.clientCredentialsGrant()
             .then(function (data) {
-                //console.log('Spotify Web API: access token expires in ' + data['expires_in']);
-
+                // console.log('Spotify Web API: access token expires in ' + data['expires_in']);
                 // Save the access token so that it's used in future calls
                 server.spotify.setAccessToken(data['access_token']);
 
@@ -502,6 +501,7 @@ var soundbounceServer = {
                             if (room.topUpURI.indexOf("https://") == 0) {
 
                                 // this is an http, not spotify playlist URI, so split differently
+                                // NOTE: this doesn't work
                                 var httpSplit = room.topUpURI.split('/');
                                 userId = httpSplit[4];
                                 playlistId = httpSplit[6];

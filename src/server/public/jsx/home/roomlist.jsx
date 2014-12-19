@@ -40,9 +40,11 @@ RoomList = React.createClass({
 
     render: function () {
         var component = this;
-        var rooms = _.sortBy(this.props.rooms, function (r) {
+        var rooms = _(this.props.rooms).chain().sortBy( function (r) {
             return -r.visits;
-        });
+        }).sortBy( function(r){
+            return -r.listeners;
+        }).value();
 
         return (
             <div id="roomlist">
