@@ -414,11 +414,15 @@ h1 {
 }
 
 .list-group-item .art {
-    transition: border-radius 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor:pointer;
+    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .list-group-item:hover .art {
     border-radius: 0 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.23), 0 5px 15px rgba(0, 0, 0, 0.19);
+
+
 }
 
 .padlock {
