@@ -79,7 +79,7 @@ $(function () {
 
         home: function () {
             _.delay(function () {
-                React.unmountComponentAtNode(roomNode);
+            //    React.unmountComponentAtNode(roomNode);
             }, 700);
 
             React.render(<HomePage/>, homeNode);
@@ -96,6 +96,7 @@ $(function () {
                 router.navigate("home");
                 return;
             }
+            React.unmountComponentAtNode(roomNode);
             React.render(<RoomPage roomid={id} color={'#' + color}/>, roomNode);
 
 

@@ -1,3 +1,7 @@
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
 var ChatPanel = React.createClass({
 
     componentDidMount: function () {
@@ -64,8 +68,17 @@ var ChatPanel = React.createClass({
                     }
                     // only use select protocols
                     var protocol = url.split(":")[0];
-                    if (_.contains(["http", "https", "spotify"], protocol))
-                        result.push(<a href="javascript:void(0)" onClick={this.clickLinkInChat} data-url={url}target="_blank">{split[i]}</a>);
+                    if (_.contains(["http", "https", "spotify"], protocol)) {
+
+                        if(url.endsWith(".gif") || url.endsWith(".png") || url.endsWith(".jpg"))
+                        {
+                            result.push(<a href="javascript:void(0)" onClick={this.clickLinkInChat} data-url={url} target="_blank"
+                                data-toggle="tooltip" data-placement="top" data-original-title={'<img src="'+url+'" style="width:180px; height:auto;" />'} data-html="true" >{split[i]}</a>);
+                        }
+                        else {
+                            result.push(<a href="javascript:void(0)" onClick={this.clickLinkInChat} data-url={url} target="_blank">{split[i]}</a>);
+                        }
+                    }
                     else
                         result.push(split[i]);
                 } else {
@@ -80,7 +93,7 @@ var ChatPanel = React.createClass({
         var result = [];
         reactArray.forEach(function (chunk) {
             if (typeof chunk === 'string') {
-                chunk = chunk.replace(":)", ":smile:");
+                chunk = chunk.replace(":)", ":grinning:");
                 chunk = chunk.replace(":D", ":smiley:");
                 chunk = chunk.replace(";)", ":wink:");
                 chunk = chunk.replace(":|", ":neutral_face:");
