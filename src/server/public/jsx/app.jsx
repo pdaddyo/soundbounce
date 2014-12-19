@@ -78,10 +78,6 @@ $(function () {
         },
 
         home: function () {
-            _.delay(function () {
-            //    React.unmountComponentAtNode(roomNode);
-            }, 700);
-
             React.render(<HomePage/>, homeNode);
             transition($(roomNode), $(homeNode), 55);
             _.defer(function () {
@@ -99,12 +95,15 @@ $(function () {
             React.unmountComponentAtNode(roomNode);
             React.render(<RoomPage roomid={id} color={'#' + color}/>, roomNode);
 
-
             ga('send', 'pageview');
         },
 
         alert: function (message, title){
             this.showModal(<AlertMessage message={message} title={title} />);
+        },
+
+        confirm: function (message, title, ok, cancel){
+            this.showModal(<ConfirmMessage message={message} title={title} ok={ok} cancel={cancel} />);
         },
 
         showModal: function (component) {
