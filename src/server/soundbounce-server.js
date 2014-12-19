@@ -236,26 +236,37 @@ var soundbounceServer = {
 
         // public status of server (not used by soundbounce client but useful for monitoring)
         app.get('/status', function (req, res) {
+            var listeners = 0;
+            var roomsWithListeners = [];
             // update the playlists
             soundbounceServer.rooms.forEach(function (room) {
                 soundbounceShared.updatePlaylist(room, server);
+                listeners += room.listeners.length;
+                roomsWithListeners.push(room);
             });
 
-            // send back easy to view json
-            res.send('<html><head></head><body><pre style="font-size:11px;color:#333;">'
-            + JSON.stringify({
-                rooms: soundbounceServer.rooms.map(function (r) {
-                    return {
-                        // id: r.id,
-                        name: r.name,
-                        listeners: r.listeners.map(function (l) {
-                            return l.name;
-                        }),
-                        nowPlaying: r.tracks.length > 0 ? r.tracks[0].name : null
-                    }
-                })
-                //,users: soundbounceServer.users
-            }, null, "&nbsp;").replace(/\n/g, "<br/>") + "</pre>");
+            var result = '<html><head><style>body{font-family: "Helvetic Neue", Helvetica, Arial;}</style></head><body><h2>'
+                +listeners+' listeners in '+ roomsWithListeners.length +' rooms</h2>'
+
+            _.sortBy(soundbounceServer.rooms, function(r){ return -r.listeners.length;}).forEach(function (r){
+                result+=('<h2>'+r.name+'</h2>');
+                result += r.listeners.map(function (l){ return "<img src='"+l.img+"'/>";}).join('') +"<br/>";
+
+                if(r.listeners.length>0) {
+                    result += ('<h4>' + (r.listeners.map(function (l) {
+                        return l.name;
+                    }).join(', ')) + '</h4>');
+                }
+
+                result+=("<p>"+  _.last(_.filter(r.chat, function (c){return c.type=="chat";}), 5).map(function (chat){
+                    return (""+chat.user.name+"<span style='font-size:10px;'> "+moment(chat.timestamp).from(soundbounceShared.serverNow())+"</span> "+chat.message+"<br/>");
+
+                }).join('')+"</p>" );
+
+                result+="<hr/>";
+            });
+
+            res.send(result);
         });
 
         // send admin message to all people in rooms
