@@ -614,15 +614,6 @@ var RoomPage = React.createClass({
 
                                         </h2>
                                         <p className="hide-overflow" style={{marginLeft: '30px', lineHeight: '40px;'}}>
-
-                                            <span style={{
-                                                top: '-7px',
-                                                position: 'relative',
-                                                maxWidth: '300px',
-                                                marginRight: '10px'
-                                            }}>
-                                            {this.state.room.description}
-                                            </span>
                                             <span className="playlist-state" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Search for tracks below, or <br/>drag and drop from Spotify."}  data-html="true">
                                                 <i className={'' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")}/>
                                             </span>
@@ -631,6 +622,15 @@ var RoomPage = React.createClass({
                                             }).join('')}  data-html="true">{this.state.room.listeners.length}
                                                 <i className="mdi-social-person"/>
                                             </span>
+                                            <span style={{
+                                                top: '-7px',
+                                                position: 'relative',
+                                                maxWidth: '300px',
+                                                marginRight: '10px'
+                                            }}>
+                                            {this.state.room.description}
+                                            </span>
+
 
                                         </p>
                                     </div>
