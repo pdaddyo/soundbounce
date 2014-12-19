@@ -171,6 +171,11 @@ h1 {
     line-height: 31px;
 }
 
+.list-group .artist:hover {
+    text-decoration:underline;
+    cursor:pointer;
+}
+
 .panel-room-top {
     z-index: 1000;
     height: 97px;

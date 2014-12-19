@@ -140,6 +140,11 @@ var RoomPage = React.createClass({
                 component.playTrack(component.state.room.tracks[0].id, component.state.room.currentTrackPosition);
             }
         });
+
+        eventbus.on("click-artist", function (artistName){
+            component.setState({search:artistName});
+            component.searchSpotify();
+        });
     },
 
     componentWillUnmount: function () {
@@ -168,6 +173,7 @@ var RoomPage = React.createClass({
         eventbus.off("remove-track");
         eventbus.off("preview-start");
         eventbus.off("preview-stop");
+        eventbus.off("click-artist");
 
         clearInterval(this.intervalId);
     },

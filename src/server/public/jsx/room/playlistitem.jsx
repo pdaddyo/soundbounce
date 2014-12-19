@@ -51,6 +51,10 @@ var PlaylistItem = React.createClass({
         }
     },
 
+    onClickArtist: function (e){
+        eventbus.trigger("click-artist",$(e.currentTarget).text() );
+    },
+
     render: function () {
         if (this.props.track == null) {
             return <div/>;
@@ -88,7 +92,7 @@ var PlaylistItem = React.createClass({
                     <div className="row-content">
                         <h4 className="list-group-item-heading hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.name}} />
                         <p className="list-group-item-text" >
-                            <span dangerouslySetInnerHTML={{__html:this.props.track.artists.map(function (a) {
+                            <span className="artist" onClick={this.onClickArtist} dangerouslySetInnerHTML={{__html:this.props.track.artists.map(function (a) {
                                 return a.name;
                             }).join(", ")}} />
                                 <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} addedBy={this.props.track.addedBy} />
