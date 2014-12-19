@@ -242,7 +242,8 @@ var soundbounceServer = {
             soundbounceServer.rooms.forEach(function (room) {
                 soundbounceShared.updatePlaylist(room, server);
                 listeners += room.listeners.length;
-                roomsWithListeners.push(room);
+                if(room.listeners.length>0)
+                    roomsWithListeners.push(room);
             });
 
             var result = '<html><head><style>body{font-family: "Helvetic Neue", Helvetica, Arial;}</style></head><body><h2>'
@@ -250,7 +251,7 @@ var soundbounceServer = {
 
             _.sortBy(soundbounceServer.rooms, function(r){ return -r.listeners.length;}).forEach(function (r){
                 result+=('<h2>'+r.name+'</h2>');
-                result += r.listeners.map(function (l){ return "<img src='"+l.img+"'/>";}).join('') +"<br/>";
+                result += r.listeners.map(function (l){ return "<img style='width:20%' src='"+l.img+"'/> ";}).join('') +"<br/>";
 
                 if(r.listeners.length>0) {
                     result += ('<h4>' + (r.listeners.map(function (l) {
@@ -258,7 +259,7 @@ var soundbounceServer = {
                     }).join(', ')) + '</h4>');
                 }
 
-                result+=("<p>"+  _.last(_.filter(r.chat, function (c){return c.type=="chat";}), 5).map(function (chat){
+                result+=("<p>"+   _.sortBy(_.last(_.filter(r.chat, function (c){return c.type=="chat";}), 5), function (c){return -(new Date(c.timestamp).getTime());}).map(function (chat){
                     return (""+chat.user.name+"<span style='font-size:10px;'> "+moment(chat.timestamp).from(soundbounceShared.serverNow())+"</span> "+chat.message+"<br/>");
 
                 }).join('')+"</p>" );
