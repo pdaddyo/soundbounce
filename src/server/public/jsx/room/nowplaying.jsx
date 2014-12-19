@@ -22,6 +22,10 @@ var NowPlaying = React.createClass({
         });
     },
 
+    onClickArtist: function (e){
+        eventbus.trigger("click-artist",$(e.currentTarget).text() );
+    },
+
     render: function () {
         if (this.props.track == null) {
             return <div/>;
@@ -54,7 +58,7 @@ var NowPlaying = React.createClass({
                                     </span>
                                 </div>
                                 <h4 className="list-group-item-heading" dangerouslySetInnerHTML={{__html: this.props.track.name}} />
-                                <p className="list-group-item-text hide-overflow" dangerouslySetInnerHTML={{
+                                <p className="list-group-item-text hide-overflow artist" onClick={this.onClickArtist} dangerouslySetInnerHTML={{
                                     __html: this.props.track.artists.map(function (a) {
                                         return a.name;
                                     }).join(", ")

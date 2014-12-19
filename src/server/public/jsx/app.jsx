@@ -99,6 +99,8 @@ $(function () {
         },
 
         alert: function (message, title){
+            if(!title)
+                title="Soundbounce";
             this.showModal(<AlertMessage message={message} title={title} />);
         },
 
