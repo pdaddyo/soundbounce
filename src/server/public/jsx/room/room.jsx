@@ -22,8 +22,8 @@ var RoomPage = React.createClass({
             });
         }).bind(this);
 
-        this.socket.onerror = function (err){
-            router.alert("An error occurred whilst connecting to the room: "+err+", perhaps WebSockets are blocked by a corporate firewall?", "Ooops, something went wrong...");
+        this.socket.onerror = function (err) {
+            router.alert("An error occurred whilst connecting to the room: " + err + ", perhaps WebSockets are blocked by a corporate firewall?", "Ooops, something went wrong...");
         }
 
         this.setupEvents();
@@ -100,9 +100,9 @@ var RoomPage = React.createClass({
             });
         });
 
-        eventbus.on("track-load-failed", function(error){
-            var trackName = component.state.room.tracks.length>0?component.state.room.tracks[0].name:"unknown track";
-            router.alert("Sorry, track '"+ trackName+"' failed to play. Spotify error: "+error,"Unable to play track");
+        eventbus.on("track-load-failed", function (error) {
+            var trackName = component.state.room.tracks.length > 0 ? component.state.room.tracks[0].name : "unknown track";
+            router.alert("Sorry, track '" + trackName + "' failed to play. Spotify error: " + error, "Unable to play track");
         });
 
         eventbus.on("star-track", function (track) {
@@ -129,20 +129,20 @@ var RoomPage = React.createClass({
             component.send({type: "remove-track", payload: track.id})
         });
 
-        eventbus.on("preview-start", function (trackId){
-            component.playTrack(trackId, 90*1000);
+        eventbus.on("preview-start", function (track) {
+            component.playTrack(track.id, Math.round(track.length / 3));
         });
 
-        eventbus.on("preview-stop", function (){
+        eventbus.on("preview-stop", function () {
             soundbounceShared.updatePlaylist(component.state.room);
             // if there's still a track playing
-            if(component.state.room.tracks.length>0){
+            if (component.state.room.tracks.length > 0) {
                 component.playTrack(component.state.room.tracks[0].id, component.state.room.currentTrackPosition);
             }
         });
 
-        eventbus.on("click-artist", function (artistName){
-            component.setState({search:artistName});
+        eventbus.on("click-artist", function (artistName) {
+            component.setState({search: artistName});
             component.searchSpotify();
         });
     },
@@ -301,7 +301,7 @@ var RoomPage = React.createClass({
     },
 
     handleAnnounceMessage: function (message) {
-        router.alert(message,"Message from Soundbounce team");
+        router.alert(message, "Message from Soundbounce team");
     },
 
     handleChatMessage: function (chatmsg) {
@@ -417,7 +417,7 @@ var RoomPage = React.createClass({
     },
 
     handleRoomCloseClick: function (e) {
-       // this.pauseTrack();
+        // this.pauseTrack();
         $('.tooltip').remove();
         eventbus.trigger("update-room-list");
 
@@ -463,7 +463,7 @@ var RoomPage = React.createClass({
     searchSpotifyImmediately: function () {
 
         var component = this;
-        if(_.isEmpty(this.state.search.trim()))
+        if (_.isEmpty(this.state.search.trim()))
             return;
         $.ajax({
             url: 'https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(this.state.search),
@@ -482,7 +482,7 @@ var RoomPage = React.createClass({
             error: function (xhr, status, err) {
                 // todo: display friendly error popups
                 console.error(status, err.toString());
-                router.alert("search error - " + err.toString(),"Ooops! Something went wrong...");
+                router.alert("search error - " + err.toString(), "Ooops! Something went wrong...");
             }.bind(this)
         });
     },
@@ -549,9 +549,9 @@ var RoomPage = React.createClass({
                         track={this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null}
                         position={this.state.room.currentTrackPosition}
                         color={this.state.room.color}
-                        canRemove={component.isCurrentUserRoomAdmin() ||(this.state.room.tracks.length > 0 ? this.state.room.tracks[0].addedBy.id==component.state.user.id : false)} />
+                        canRemove={component.isCurrentUserRoomAdmin() || (this.state.room.tracks.length > 0 ? this.state.room.tracks[0].addedBy.id == component.state.user.id : false)} />
                 </div>
-                <div id="playlistcontainer" className={this.state.room.tracks.length ==0?"no-now-playing":""}>
+                <div id="playlistcontainer" className={this.state.room.tracks.length == 0 ? "no-now-playing" : ""}>
                     <div className="container-fluid">
                         <div className="playlistpadder">
                             <div className="row">
@@ -575,7 +575,7 @@ var RoomPage = React.createClass({
                                                       color={component.state.room.color}
                                                       canVote={canVote}
                                                       canAdd={false}
-                                                      canRemove={component.isCurrentUserRoomAdmin() ||(track.addedBy.id==component.state.user.id)}
+                                                      canRemove={component.isCurrentUserRoomAdmin() || (track.addedBy.id == component.state.user.id)}
                                                       isLast={index == arr.length - 1}
                                                   />
                                               })}

@@ -41,7 +41,7 @@ var PlaylistItem = React.createClass({
 
     previewStart: function () {
         this.isPreviewing = true;
-        eventbus.trigger("preview-start", this.props.track.id);
+        eventbus.trigger("preview-start", this.props.track);
     },
 
     previewStop: function () {
