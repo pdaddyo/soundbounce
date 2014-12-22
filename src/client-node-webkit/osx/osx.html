@@ -48,8 +48,11 @@
             global.spotifyUsername = user;
             spotify.login(user, pass, false, false);
         },
+        getUsername: function () {
+            return global.spotifyUsername;
+        },
         getVersion: function () {
-            return '0.9-osx';
+            return clientVersion;
         },
         playTrack: function (trackId, position) {
             setTimeout(function () {
@@ -60,8 +63,20 @@
         },
         pauseTrack: function () {
             spotify.player.pause();
-        }
+        },
+        starTrack: function (trackId){
+            setTimeout(function () {
+                var track = spotify.createFromLink('spotify:track:' + trackId);
+                track.starred = true;
+            }, 1);
+        },
+        openUrl: function (url){
+            gui.Shell.openExternal(url);
 
+        },
+        openInSpotify: function(trackId){
+            gui.Shell.openExternal("spotify:track:"+trackId+"?action=browse");
+        }
 
     };
 
