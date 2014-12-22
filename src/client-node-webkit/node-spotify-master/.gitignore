@@ -1,0 +1,28 @@
+# Sourcecode not to commit
+loginData.js
+spotify_appkey.key
+
+# output
+build/
+settings/
+cache/
+events.js
+
+#vim
+*.swp
+
+#emacs
+.#.*
+*~
+
+#osx
+.DS_Store
+
+#IntelliJ
+*.iml
+.idea
+
+# other files
+executes.txt
+TODOS
+copyright.txt
