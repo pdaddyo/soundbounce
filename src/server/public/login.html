@@ -31,19 +31,18 @@
         $(function () {
             $.material.init();
 
-         //   $('.version').text('v' + spotifyBrowserApi.getVersion());
+            $('.version').text('Client v' + spotifyBrowserApi.getVersion());
 
             var user = $.cookie('username');
             var pass = $.cookie('pass');
 
             if (user) {
                 $('#inputEmail').val(user);
-                if(pass){
+                if (pass) {
                     $('#inputPassword').val(pass);
                     $('.btn-success').focus();
                 }
-                else
-                {
+                else {
                     $('#inputPassword').focus();
                 }
 
@@ -61,10 +60,10 @@
 
                 var remember = $('#remember')[0].checked;
 
-                if(remember){
+                if (remember) {
                     $.cookie('pass', $('#inputPassword').val(), {expires: 30});
                 }
-                else{
+                else {
                     $.cookie('pass', '', {expires: -1});
                 }
 
@@ -77,12 +76,19 @@
 
         });
     </script>
-<style>
-    .checkbox {
-        padding-top: 13px !important;
+    <style>
+        .checkbox {
+            padding-top: 13px !important;
 
-    }
-</style>
+        }
+        .version {
+            color:#666;
+            font-size:12px;
+            position:absolute;
+            bottom:20px;
+            right:20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -124,7 +130,8 @@
 
                                     <div class="checkbox pull-left">
                                         <label>
-                                            <input type="checkbox" id="remember" checked="checked"><span class="toggle"></span> Remember
+                                            <input type="checkbox" id="remember" checked="checked"><span
+                                                class="toggle"></span> Remember
                                             password?
                                         </label>
                                     </div>
@@ -132,6 +139,7 @@
                                     <input type="submit" class="btn btn-success  pull-right" value="Log in »"/>
 
                                 </div>
+                            </div>
                         </fieldset>
                     </form>
 
@@ -145,7 +153,7 @@
 
 
 <footer>
-    <p></p>
+    <p class="version">version</p>
 </footer>
 
 <script>
