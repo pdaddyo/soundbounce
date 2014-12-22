@@ -249,8 +249,14 @@ var RoomPage = React.createClass({
 
     tick: function () {
         var updatedRoom = this.state.room;
-        soundbounceShared.updatePlaylist(updatedRoom);
-        this.setState({room: updatedRoom});
+        var playlistUpdated = soundbounceShared.updatePlaylist(updatedRoom);
+
+        if(playlistUpdated) {
+            // only update the whole room state if the playlist changed
+            this.setState({room: updatedRoom});
+        }
+
+        eventbus.trigger("track-position-update", updatedRoom.currentTrackPosition);
     },
 
     scrollChatToBottom: function () {

@@ -1,9 +1,17 @@
 var NowPlaying = React.createClass({
     componentDidMount: function () {
-
+        var component = this;
+        eventbus.on("track-position-update", function (newPosition){
+            component.setState({trackPosition: newPosition});
+        });
     },
 
     componentWillUnmount: function () {
+        eventbus.off("track-position-update");
+    },
+
+    getInitialState: function () {
+        return {trackPosition:0};
     },
 
     onClickOpenSpotify: function () {
@@ -70,7 +78,7 @@ var NowPlaying = React.createClass({
                     <div className="bs-component">
                         <div className="progress progress-striped  active">
                             <div className="progress-bar progress-bar-success" style={{
-                                width: (this.props.position / this.props.track.length * 100) + '%',
+                                width: (this.state.trackPosition / this.props.track.length * 100) + '%',
                                 backgroundColor: this.props.color
                             }}></div>
                         </div>
