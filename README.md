@@ -4,6 +4,8 @@
 
 A synchronised, collaborative Spotify client, now available for Windows users with Spotify Premium accounts.
 
+Also now in beta fro OSX!
+
 http://soundbounce.org/
 
 Features
@@ -14,15 +16,16 @@ Features
 - Dragging and dropping to add tracks from Spotify
 - Chat (with emoji)
 - Voting
-- *NEW* - Star now playing track
+- Star now playing track
+- *NEW* Preview upcoming tracks and search results
 - Auto top-up with existing Spotify playlist
 - Create / edit your own room
 
 Requirements
 ==========
-- Windows 7+
+- Windows 7+ / OSX 10.7+
 - Spotify Premium account
-- .NET Framework 4.5
+- .NET Framework 4.5 (on Windows)
 
 Installation instructions
 =============
