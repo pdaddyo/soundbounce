@@ -4,7 +4,7 @@
 
 A synchronised, collaborative Spotify client, now available for Windows users with Spotify Premium accounts.
 
-Also now in beta fro OSX!
+Also now in beta for OSX, check the releases page!
 
 http://soundbounce.org/
 
