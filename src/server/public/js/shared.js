@@ -30,6 +30,7 @@ var soundbounceShared = {
     },
 
     // makes sure the correct song is at the top of the playlist, starts playing new adds, and removes played songs
+    // returns true if the playlist has changed, false if it hasn't
     updatePlaylist: function (room, server) {
         var done = false;
         while (!done) {
@@ -42,7 +43,7 @@ var soundbounceShared = {
             if (_.isEmpty(room.tracks))
             {
                 room.currentTrackStartedAt = null;
-                return;
+                return false;
             }
 
 
@@ -52,7 +53,7 @@ var soundbounceShared = {
                 // set top track to play
                 room.currentTrackStartedAt = this.serverNow();
                 room.currentTrackPosition = 0;
-                return;
+                return true;
             }
 
             // if we get here we have a track currently "playing"
@@ -93,7 +94,10 @@ var soundbounceShared = {
             else {
                 //    console.log(room.name+" currently ", msPlayed, "ms into track " + nowPlaying.name);
                 room.currentTrackPosition = msPlayed;
+                return false;
             }
+
+            return true;
         }
     },
 

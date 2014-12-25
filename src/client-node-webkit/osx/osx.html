@@ -1,0 +1,105 @@
+<html>
+<script>
+
+    var clientVersion = '0.9-beta-osx';
+
+    var baseUrl = "http://app.soundbounce.org/";
+
+    var cryptoLib = require('crypto');
+    var hash = function (inputString) {
+        return cryptoLib.createHash('sha256').update(inputString).digest('hex');
+    }
+
+    var gui = require('nw.gui');
+    var dataPath = gui.App.dataPath;
+
+    var mainWindow = gui.Window.get();
+    mainWindow.title = 'Soundbounce';
+
+    global.spotifyUsername = null;
+
+
+    var spotify = require('spotify')({
+        settingsFolder: dataPath+'/settings',
+        cacheFolder: dataPath+'/cache',
+        appkeyFile: 'app.key'
+    });
+
+    var spotifyLoggedIn = function () {
+        // we're logged in, tell the server
+        document.getElementById('mainframe').src = baseUrl + "spotify-login/" + global.spotifyUsername + '?secret=' + hash(global.spotifyUsername + 'hirdTurn42+pa$tCover39=latBlade62') + "&version=" + clientVersion;
+
+        // then inject the player
+        // todo: stop this being a timeout
+        setTimeout(function () {
+            injectAPI();
+        }, 700);
+    };
+    spotify.on({
+        ready: spotifyLoggedIn,
+        logout: function () {
+            alert('Unable to log you in, did you get your Spotify details correct?  Please re-launch Soundbouce and try again.');
+        }
+    });
+
+
+    var spotifyBrowserApi = {
+        login: function (user, pass) {
+            global.spotifyUsername = user;
+            spotify.login(user, pass, false, false);
+        },
+        getUsername: function () {
+            return global.spotifyUsername;
+        },
+        getVersion: function () {
+            return clientVersion;
+        },
+        playTrack: function (trackId, position) {
+            setTimeout(function () {
+                var track = spotify.createFromLink('spotify:track:' + trackId);
+
+                spotify.player.playAndSeek(track, position);
+            }, 1);
+        },
+        pauseTrack: function () {
+            spotify.player.pause();
+        },
+        starTrack: function (trackId){
+            setTimeout(function () {
+                var track = spotify.createFromLink('spotify:track:' + trackId);
+                track.starred = true;
+            }, 1);
+        },
+        openUrl: function (url){
+            gui.Shell.openExternal(url);
+
+        },
+        openInSpotify: function(trackId){
+            gui.Shell.openExternal("spotify:track:"+trackId+"?action=browse");
+        }
+
+    };
+
+
+    // document.getElementById('mainframe').
+
+</script>
+<style>
+    html, body {
+        padding: 0;
+        margin: 0;
+    }
+</style>
+<title>Soundbounce</title>
+
+<body>
+<iframe id="mainframe" src="http://app.soundbounce.org/login.html" style="width:100%; height:100%; border:none;"
+        frameborder="0"></iframe>
+<script>
+    function injectAPI() {
+        window.frames[0].spotifyBrowserApi = spotifyBrowserApi;
+    }
+    injectAPI();
+</script>
+</body>
+</html>

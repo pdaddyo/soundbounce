@@ -1,0 +1,18 @@
+{
+  "name" : "node-spotify",
+  "version": "0.6.0",
+  "description": "A wrapper for libspotify",
+  "keywords": ["spotify", "music"],
+  "homepage": "http://www.node-spotify.com",
+  "bugs" : {
+    "url" : "https://github.com/FrontierPsychiatrist/node-spotify/issues",
+    "email": "moritz.schulze@gmail.com"
+  },
+  "license" : "MIT",
+  "author" : "Moritz Schulze <moritz.schulze@gmail.com> (http://www.node-spotify.com)",
+  "main": "./build/Release/spotify.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FrontierPsychiatrist/node-spotify"
+  }
+}

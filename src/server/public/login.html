@@ -16,7 +16,7 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.6/css/ripples.css">
     <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.6/css/material-wfont.css">
+          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.1/css/material-wfont.min.css">
     <link rel="stylesheet" href="css/main.css">
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -31,12 +31,21 @@
         $(function () {
             $.material.init();
 
-            $('.version').text('v' + spotifyBrowserApi.getVersion());
+            $('.version').text('Client v' + spotifyBrowserApi.getVersion());
 
             var user = $.cookie('username');
+            var pass = $.cookie('pass');
+
             if (user) {
                 $('#inputEmail').val(user);
-                $('#inputPassword').focus();
+                if (pass) {
+                    $('#inputPassword').val(pass);
+                    $('.btn-success').focus();
+                }
+                else {
+                    $('#inputPassword').focus();
+                }
+
             }
             else {
                 $('#inputEmail').focus();
@@ -47,8 +56,16 @@
                 // $('#loginContainer').css({opacity:0.2});
 
                 // save login name
-                $.cookie('username', $('#inputEmail').val(), {expires: 7});
+                $.cookie('username', $('#inputEmail').val(), {expires: 30});
 
+                var remember = $('#remember')[0].checked;
+
+                if (remember) {
+                    $.cookie('pass', $('#inputPassword').val(), {expires: 30});
+                }
+                else {
+                    $.cookie('pass', '', {expires: -1});
+                }
 
                 // c# handles the login
                 spotifyBrowserApi.login($('#inputEmail').val(), $('#inputPassword').val());
@@ -59,14 +76,26 @@
 
         });
     </script>
+    <style>
+        .checkbox {
+            padding-top: 13px !important;
 
+        }
+        .version {
+            color:#666;
+            font-size:12px;
+            position:absolute;
+            bottom:20px;
+            right:20px;
+        }
+    </style>
 </head>
 <body>
 
 
 <div class="jumbotron">
     <div class="container">
-            <img src="img/soundbounce-white-bg.png" />
+        <img src="img/soundbounce-white-bg.png"/>
 
         <p>Music sounds better together.</p>
     </div>
@@ -96,8 +125,19 @@
 
                                     <input type="password" class="form-control" id="inputPassword"
                                            placeholder="Password">
+                                </div>
+                                <div class="col-sm-12">
+
+                                    <div class="checkbox pull-left">
+                                        <label>
+                                            <input type="checkbox" id="remember" checked="checked"><span
+                                                class="toggle"></span> Remember
+                                            password?
+                                        </label>
+                                    </div>
 
                                     <input type="submit" class="btn btn-success  pull-right" value="Log in »"/>
+
                                 </div>
                             </div>
                         </fieldset>
@@ -113,7 +153,7 @@
 
 
 <footer>
-    <p></p>
+    <p class="version">version</p>
 </footer>
 
 <script>
