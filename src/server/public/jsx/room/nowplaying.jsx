@@ -42,6 +42,16 @@ var NowPlaying = React.createClass({
         eventbus.trigger("click-artist",$(e.currentTarget).text() );
     },
 
+    minSec: function(ms){
+        var min = Math.floor(ms/1000/60),
+            sec = Math.floor((ms/1000) % 60);
+
+        if(sec<10)
+            sec = "0"+sec;
+
+        return min+":"+sec;
+    },
+
     render: function () {
         if (this.props.track == null) {
             return <div/>;
@@ -84,11 +94,11 @@ var NowPlaying = React.createClass({
                         </div>
                     </div>
                     <div className="bs-component">
-                        <div className="progress progress-striped  active">
+                        <div className="progress progress-striped  active"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.minSec(this.props.track.length-this.state.trackPosition)+ " remaining"} >
                             <div className="progress-bar progress-bar-success" style={{
                                 width: (this.state.trackPosition / this.props.track.length * 100) + '%',
                                 backgroundColor: this.props.color
-                            }}></div>
+                            }}  ></div>
                         </div>
                     </div>
                 </div>
