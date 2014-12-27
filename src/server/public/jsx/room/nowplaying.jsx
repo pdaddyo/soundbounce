@@ -37,7 +37,6 @@ var NowPlaying = React.createClass({
         }
     },
 
-
     onClickArtist: function (e){
         eventbus.trigger("click-artist",$(e.currentTarget).text() );
     },

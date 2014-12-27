@@ -523,12 +523,11 @@ var soundbounceServer = {
                             var userId = uriSplit[2];
                             var playlistId = uriSplit[4];
 
-                            if (room.topUpURI.indexOf("https://") == 0) {
-
+                            if (room.topUpURI.indexOf("spotify") != 0) {
                                 // only support spotify URI
                                 return;
-
                             }
+
                             //  console.log("[top-up] ".green, room.name, room.tracks.length);
                             server.spotify.getPlaylistTracks(userId, playlistId)
                                 .then(function (data) {
@@ -567,7 +566,7 @@ var soundbounceServer = {
 
                                             if (!_.isEmpty(trackIds)) {
                                                 if (offset > 0) {
-                                                    console.log("[top-up] ".green, room.name.yellow, "1st: "+data.items[0].track.name);
+                                           //         console.log("[top-up] ".green, room.name.yellow, "1st: "+data.items[0].track.name);
                                                 }
                                                 server.processAdds(room, simpleUser, trackIds);
                                             }
