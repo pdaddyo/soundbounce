@@ -568,7 +568,6 @@ var soundbounceServer = {
             });
     },
 
-
     getSoundbounceUser: function () {
         return {
             id: "1",
@@ -576,6 +575,7 @@ var soundbounceServer = {
             img: '/img/soundbounce.png'
         };
     },
+
     processChat: function (room, user, payload) {
 
         var server = this;
