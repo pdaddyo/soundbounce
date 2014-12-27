@@ -543,10 +543,7 @@ var soundbounceServer = {
                                         offset: offset,
                                         limit: 100
                                     }).then(function (data) {
-
                                         try {
-
-
                                             var simpleUser = server.getSoundbounceUser();
 
                                             var tracksToAdd = _.first(_.shuffle(data.items), TOP_UP_TRACKS_TO_ADD);

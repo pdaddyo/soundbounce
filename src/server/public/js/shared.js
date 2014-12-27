@@ -21,11 +21,11 @@ Array.prototype.move = function (old_index, new_index) {
 var soundbounceShared = {
 
     MAX_CHAT_HISTORY: 150,
-  /*  MAX_CHAT_VOTE_HISTORY:100,*/
+    /*  MAX_CHAT_VOTE_HISTORY:100,*/
 
-    timeAdjust:0,
+    timeAdjust: 0,
 
-    serverNow: function (){
+    serverNow: function () {
         return new Date((new Date()).getTime() + this.timeAdjust);
     },
 
@@ -36,12 +36,11 @@ var soundbounceShared = {
         while (!done) {
             done = true;
 
-            if(room==null)
+            if (room == null)
                 return;
 
             // if we're out of tracks, bail
-            if (_.isEmpty(room.tracks))
-            {
+            if (_.isEmpty(room.tracks)) {
                 room.currentTrackStartedAt = null;
                 return false;
             }
@@ -84,7 +83,7 @@ var soundbounceShared = {
                 var trackRemoved = room.tracks.shift();
 
                 // the server may want to re-add this track, so let it know (if we're on the server, remember this code could be running on client!)
-                if(server){
+                if (server) {
                     server.handleRemovedTrack(trackRemoved, room);
                 }
 
@@ -116,28 +115,27 @@ var soundbounceShared = {
             }
         }
 
-       // console.log("inserting " + track.name + " (" + track.id + ") at index ", insertIndex, " insertafter=" + track.insertAfter);
+        // console.log("inserting " + track.name + " (" + track.id + ") at index ", insertIndex, " insertafter=" + track.insertAfter);
 
         if (room.tracks.length > 0 && insertIndex == 0) {
             // you can't insert above the playing track, even if it has more votes.
             insertIndex = 1;
         }
 
-        if(String(user.id)!="1" && track.votes.length>0) {
+        if (String(user.id) != "1" && track.votes.length > 0) {
             this.addChatToRoom(room, {type: "add", timestamp: this.serverNow(), user: user, track: track});
         }
 
         room.tracks.splice(insertIndex, 0, track);
     },
 
-    addChatToRoom: function (room, chat){
+    addChatToRoom: function (room, chat) {
 
         room.chat.push(chat);
 
-        if(room.chat.length>this.MAX_CHAT_HISTORY)
-        {
+        if (room.chat.length > this.MAX_CHAT_HISTORY) {
             var cullBy = room.chat.length - this.MAX_CHAT_HISTORY;
-      //      console.log("culling chat in "+room.name+" by "+cullBy);
+            //      console.log("culling chat in "+room.name+" by "+cullBy);
             // remove from the start of the array
             room.chat = _.last(room.chat, this.MAX_CHAT_HISTORY);//( cullBy);
 
@@ -145,16 +143,15 @@ var soundbounceShared = {
     },
 
     // voting chat is shared
-    addVoteChat: function (room, track, user)
-    {
-        this.addChatToRoom(room,{type:"vote", timestamp: this.serverNow(), user: user, track: track} );
+    addVoteChat: function (room, track, user) {
+        this.addChatToRoom(room, {type: "vote", timestamp: this.serverNow(), user: user, track: track});
     },
 
     simpleTrack: function (spotifyTrack) {
         return {
             id: spotifyTrack.id,
             name: spotifyTrack.name,
-            img: spotifyTrack.album.images[1].url, // image 1 is 300x300 ish
+            img: spotifyTrack.album.images.length > 1 ? spotifyTrack.album.images[1].url : spotifyTrack.album.images[0].url, // image 1 is 300x300 ish
             artists: spotifyTrack.artists.map(function (artist) {
                 return {id: artist.id, name: artist.name};
             }),
@@ -167,4 +164,4 @@ var soundbounceShared = {
 };
 
 // require doesn't export on client, only server
-if(typeof module === "object") module.exports = soundbounceShared;
+if (typeof module === "object") module.exports = soundbounceShared;
