@@ -523,7 +523,7 @@ var soundbounceServer = {
                                 var userId = uriSplit[2];
                                 var playlistId = uriSplit[4];
 
-                                if (room.topUpURI.indexOf("spotify") != 0) {
+                                if (room.topUpURI.indexOf("spotify") != 0 || room.topUpURI.indexOf(":starred")>-1) {
                                     // only support spotify URI
                                     return;
                                 }
