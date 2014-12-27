@@ -27,6 +27,7 @@ var soundbounceServer = {
 
     RECYCLE_TRACKS_WHEN_PLAYLIST_HAS_LESS_THAN: 200,
     TOP_UP_WHEN_TRACKS_BELOW: 130,
+    ROOM_MAX_TRACKS: 300,
 
     spotify: new spotifyApi({
         clientId: config.spotify.webAPI.clientID,
@@ -638,7 +639,7 @@ var soundbounceServer = {
 
         //console.log(user.name + " added/voted " + trackIds.length + " tracks in " + room.name, trackIds);
 
-        var voteList = [], ROOM_MAX_TRACKS = 250;
+        var voteList = [];
 
         this.spotify.getTracks(trackIds)
             .then(function (data) {
@@ -648,7 +649,7 @@ var soundbounceServer = {
 
                 var messages = [], simpleTracks = [];
 
-                var canAdd = room.tracks.length < ROOM_MAX_TRACKS;
+                var canAdd = room.tracks.length < server.ROOM_MAX_TRACKS;
 
                 try {
                     // todo: log all adds + votes to disk
