@@ -1,0 +1,9 @@
+{
+  "name": "Soundbounce",
+  "main": "osx.html",
+  "window": {
+    "toolbar": false,
+    "width": 1024,
+    "height": 600
+  }
+}

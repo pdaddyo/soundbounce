@@ -401,12 +401,6 @@
       <option name="number" value="Default" />
       <updated>1416583551352</updated>
     </task>
-    <task id="LOCAL-00039" summary="prevented room transition from triggering until room has synced to stop the jolt in the transition.">
-      <created>1418681850664</created>
-      <option name="number" value="00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1418681850664</updated>
-    </task>
     <task id="LOCAL-00040" summary="tweaked max chat history down to 150">
       <created>1418684107397</created>
       <option name="number" value="00040" />
@@ -695,7 +689,13 @@
       <option name="project" value="LOCAL" />
       <updated>1419677968257</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary=".gitignore issues">
+      <created>1419678058379</created>
+      <option name="number" value="00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1419678058379</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -781,7 +781,6 @@
       <TodoPanelSettings />
     </option>
     <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
-    <MESSAGE value="now shows description on homescreen. closes #42" />
     <MESSAGE value="hovering over little people icons for votes now shows instantly" />
     <MESSAGE value="fixed sync code when admin saving a room edit, fixes #59" />
     <MESSAGE value="search usernames in room search bar, closes #63" />
@@ -806,7 +805,8 @@
     <MESSAGE value="fixed auto-top up only getting first 100 tracks of playlist - closes #92" />
     <MESSAGE value="branching issue" />
     <MESSAGE value="ignore .idea folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="ignore .idea folder" />
+    <MESSAGE value=".gitignore issues" />
+    <option name="LAST_COMMIT_MESSAGE" value=".gitignore issues" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
