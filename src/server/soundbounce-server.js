@@ -25,6 +25,9 @@ var soundbounceServer = {
     userStoreFileName: jsonFolder + "users.json",
     roomStoreFileName: jsonFolder + "rooms.json",
 
+    RECYCLE_TRACKS_WHEN_PLAYLIST_HAS_LESS_THAN: 200,
+    TOP_UP_WHEN_TRACKS_BELOW: 130,
+
     spotify: new spotifyApi({
         clientId: config.spotify.webAPI.clientID,
         clientSecret: config.spotify.webAPI.clientSecret
@@ -122,7 +125,7 @@ var soundbounceServer = {
                     nowPlaying: room.tracks.length > 0 ? room.tracks[0] : null,
                     color: room.color,
                     description: room.description,
-                    visits: room.visits ? room.visits: 0
+                    visits: room.visits ? room.visits : 0
                 }
             });
 
@@ -242,29 +245,37 @@ var soundbounceServer = {
             soundbounceServer.rooms.forEach(function (room) {
                 soundbounceShared.updatePlaylist(room, server);
                 listeners += room.listeners.length;
-                if(room.listeners.length>0)
+                if (room.listeners.length > 0)
                     roomsWithListeners.push(room);
             });
 
             var result = '<html><head><style>body{font-family: "Helvetic Neue", Helvetica, Arial;}</style></head><body><h2>'
-                +listeners+' listeners in '+ roomsWithListeners.length +' rooms</h2>'
+                + listeners + ' listeners in ' + roomsWithListeners.length + ' rooms</h2>'
 
-            _.sortBy(soundbounceServer.rooms, function(r){ return -r.listeners.length;}).forEach(function (r){
-                result+=('<h2>'+r.name+'</h2>');
-                result += r.listeners.map(function (l){ return "<img style='width:20%' src='"+l.img+"'/> ";}).join('') +"<br/>";
+            _.sortBy(soundbounceServer.rooms, function (r) {
+                return -r.listeners.length;
+            }).forEach(function (r) {
+                result += ('<h2>' + r.name + '</h2>');
+                result += r.listeners.map(function (l) {
+                    return "<img style='width:20%' src='" + l.img + "'/> ";
+                }).join('') + "<br/>";
 
-                if(r.listeners.length>0) {
+                if (r.listeners.length > 0) {
                     result += ('<h4>' + (r.listeners.map(function (l) {
                         return l.name;
                     }).join(', ')) + '</h4>');
                 }
 
-                result+=("<p>"+   _.sortBy(_.last(_.filter(r.chat, function (c){return c.type=="chat";}), 5), function (c){return -(new Date(c.timestamp).getTime());}).map(function (chat){
-                    return (""+chat.user.name+"<span style='font-size:10px;'> "+moment(chat.timestamp).from(soundbounceShared.serverNow())+"</span> "+chat.message+"<br/>");
+                result += ("<p>" + _.sortBy(_.last(_.filter(r.chat, function (c) {
+                    return c.type == "chat";
+                }), 5), function (c) {
+                    return -(new Date(c.timestamp).getTime());
+                }).map(function (chat) {
+                    return ("" + chat.user.name + "<span style='font-size:10px;'> " + moment(chat.timestamp).from(soundbounceShared.serverNow()) + "</span> " + chat.message + "<br/>");
 
-                }).join('')+"</p>" );
+                }).join('') + "</p>" );
 
-                result+="<hr/>";
+                result += "<hr/>";
             });
 
             res.send(result);
@@ -359,9 +370,8 @@ var soundbounceServer = {
                     try {
                         socket.send('[{"type":"ping"}]');
                     }
-                    catch(err)
-                    {
-                        console.error("unable to send ping to client "+user.name);
+                    catch (err) {
+                        console.error("unable to send ping to client " + user.name);
                     }
                 }, 5000);
 
@@ -406,39 +416,43 @@ var soundbounceServer = {
         // top up rooms and save every 10 mins
         setInterval(function () {
             server.topUpRooms();
-            server.saveData();
+            server.saveDataAsync();
         }, 1000 * 60 * 10);
 
         server.topUpRooms();
     },
 
 
-    processRemove: function (room, user, trackId){
+    processRemove: function (room, user, trackId) {
         // find track
-        var trackToRemove = _.find(room.tracks, function (t){ return t.id==trackId;});
-        if(!trackToRemove)
+        var trackToRemove = _.find(room.tracks, function (t) {
+            return t.id == trackId;
+        });
+        if (!trackToRemove)
             return;
 
         // must be room admin or the person who added track
-        if( !(_.contains(room.admins, user.id) || trackToRemove.addedBy.id==user.id))
+        if (!(_.contains(room.admins, user.id) || trackToRemove.addedBy.id == user.id))
             return;
 
-        if(room.tracks[0].id==trackId) {
-           // this is currently playing, so reset position
+        if (room.tracks[0].id == trackId) {
+            // this is currently playing, so reset position
             room.currentTrackStartedAt = soundbounceShared.serverNow();
             room.currentTrackPosition = 0;
         }
 
-        room.tracks = _.filter(room.tracks, function (t){ return t.id!=trackId;});
+        room.tracks = _.filter(room.tracks, function (t) {
+            return t.id != trackId;
+        });
         this.reSyncAllUsers(room);
     },
 
-    reSyncAllUsers: function (room){
+    reSyncAllUsers: function (room) {
 
         soundbounceShared.updatePlaylist(room);
 
         var server = this;
-      // send a sync message to each connected user
+        // send a sync message to each connected user
         room.listeners.forEach(function (listener) {
             // has the socket been dropped?
             if (!soundbounceServer.sockets[listener.id]) {
@@ -453,31 +467,31 @@ var soundbounceServer = {
         });
     },
 
-    createSyncMessage: function (room, user){
+    createSyncMessage: function (room, user) {
         return {
             type: 'sync',
-                payload: this.getClientViewOfRoom(room),
+            payload: this.getClientViewOfRoom(room),
             user: user,
             now: new Date()
         }
     },
+
     getRandomInt: function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     },
 
     // recycle tracks that were added by users, if there's room in playlist
-    handleRemovedTrack: function (track, room){
+    handleRemovedTrack: function (track, room) {
         var server = this;
 
         // if there's room, and it wasn't added by soundbounce automatically
-        if(room.tracks.length<200 && track.addedBy.id!="1")
-        {
-        //    console.log("recycling track "+track.name+" in room "+room.name);
+        if (room.tracks.length < server.RECYCLE_TRACKS_WHEN_PLAYLIST_HAS_LESS_THAN && track.addedBy.id != "1") {
+            //    console.log("recycling track "+track.name+" in room "+room.name);
 
             // add in a few moments, to avoid it appearing before track ends for clients that are slightly behind
             _.delay(function () {
                 server.processAdds(room, track.addedBy, [track.id], true);
-            }, 10 * 1000);
+            }, 10 * 2000);
         }
 
     },
@@ -485,14 +499,14 @@ var soundbounceServer = {
     topUpRooms: function () {
 
         // automatically top up rooms using linked playlists
-        var TOP_UP_WHEN_TRACKS_BELOW = 100;
+
         var TOP_UP_TRACKS_TO_ADD = 50;
 
         var server = this;
 
         server.spotify.clientCredentialsGrant()
             .then(function (data) {
-                // console.log('Spotify Web API: access token expires in ' + data['expires_in']);
+               // console.log('Spotify Web API: access token expires in ' + data['expires_in']);
                 // Save the access token so that it's used in future calls
                 server.spotify.setAccessToken(data['access_token']);
 
@@ -502,63 +516,70 @@ var soundbounceServer = {
                     if (!_.isEmpty(room.topUpURI)) {
 
                         // see if we need to top up
-                        if (room.tracks.length < TOP_UP_WHEN_TRACKS_BELOW) {
+                        if (room.tracks.length < server.TOP_UP_WHEN_TRACKS_BELOW) {
                             // we need to top up! go get the playlist
 
-                            // spotify:user:1118412559:playlist:41Uf61JyNjhkETfVqI3Jjm
                             var uriSplit = room.topUpURI.split(':');
                             var userId = uriSplit[2];
                             var playlistId = uriSplit[4];
 
                             if (room.topUpURI.indexOf("https://") == 0) {
 
-                                // this is an http, not spotify playlist URI, so split differently
-                                // NOTE: this doesn't work
-                                var httpSplit = room.topUpURI.split('/');
-                                userId = httpSplit[4];
-                                playlistId = httpSplit[6];
-                                //       console.log("[top-up] ".green, userId, playlistId);
+                                // only support spotify URI
+                                return;
 
                             }
+                            //  console.log("[top-up] ".green, room.name, room.tracks.length);
                             server.spotify.getPlaylistTracks(userId, playlistId)
                                 .then(function (data) {
+                                   // console.log("[top-up] ".green, room.name, room.tracks.length, data.total);
                                     var offset = 0;
                                     if (data.total > 100) {
                                         offset = server.getRandomInt(0, data.total - 100);
                                     }
-                                    server.spotify.getPlaylist(uriSplit[2], uriSplit[4], {
+
+                                    //console.log("[top-up] " + room.name.yellow, "offset: ", offset);
+                                    server.spotify.getPlaylistTracks(userId, playlistId, {
                                         offset: offset,
                                         limit: 100
                                     }).then(function (data) {
 
-                                        //    console.log("[top-up] ".green, room.name.yellow, " from ", data.name, data.tracks.items.length);
+                                        try {
 
-                                        var simpleUser = server.getSoundbounceUser();
 
-                                        var tracksToAdd = _.first(_.shuffle(data.tracks.items), TOP_UP_TRACKS_TO_ADD);
+                                            var simpleUser = server.getSoundbounceUser();
 
-                                        var trackIds = [];
-                                        _.each(tracksToAdd, function (spotifyTrackAdd) {
-                                            var spotifyTrack = spotifyTrackAdd.track;
-                                            var simpleTrack = soundbounceShared.simpleTrack(spotifyTrack);
-                                            if (_.find(room.tracks, function (t) {
-                                                    return t.id == simpleTrack.id;
-                                                }) != null) {
-                                                // track is already in room, so skip
-                                                return;
+                                            var tracksToAdd = _.first(_.shuffle(data.items), TOP_UP_TRACKS_TO_ADD);
+
+                                            var trackIds = [];
+                                            _.each(tracksToAdd, function (spotifyTrackAdd) {
+                                                var spotifyTrack = spotifyTrackAdd.track;
+                                                var simpleTrack = soundbounceShared.simpleTrack(spotifyTrack);
+                                                if (_.find(room.tracks, function (t) {
+                                                        return t.id == simpleTrack.id;
+                                                    }) != null) {
+                                                    // track is already in room, so skip
+                                                    return;
+                                                }
+
+                                                // is it already in add list (i.e. a dupe in the top-up list)?
+                                                if (!_.contains(trackIds, simpleTrack.id)) {
+                                                    trackIds.push(simpleTrack.id);
+                                                }
+                                            });
+
+                                            if (!_.isEmpty(trackIds)) {
+                                                if (offset > 0) {
+                                                    console.log("[top-up] ".green, room.name.yellow, "1st: "+data.items[0].track.name);
+                                                }
+                                                server.processAdds(room, simpleUser, trackIds);
                                             }
-                                            // is it already in add list?
-                                            if (!_.contains(trackIds, simpleTrack.id)) {
-                                                trackIds.push(simpleTrack.id);
-                                            }
-                                        });
-
-                                        if (!_.isEmpty(trackIds))
-                                            server.processAdds(room, simpleUser, trackIds);
-
+                                        } catch (err) {
+                                            console.log("error topping up " + room.name + ": " + err);
+                                        }
                                     });
                                 }, function (err) {
-                                    console.log('Topup Playlist ', room.topUpURI, "for", room.name < " not found.", err);
+                                    console.log('Error: Topup Playlist ', room.topUpURI, "for", room.name + " not found.", err);
                                 });
                         }
                     }
@@ -568,14 +589,14 @@ var soundbounceServer = {
             });
     },
 
-
     getSoundbounceUser: function () {
         return {
             id: "1",
-                name: "SoundBounce",
+            name: "Soundbounce",
             img: '/img/soundbounce.png'
         };
     },
+
     processChat: function (room, user, payload) {
 
         var server = this;
@@ -588,7 +609,7 @@ var soundbounceServer = {
             nowPlaying = room.tracks[0];
         }
 
-        if(_.isEmpty(payload.message.trim()))
+        if (_.isEmpty(payload.message.trim()))
             return;
 
         var chatmsg = {
@@ -600,13 +621,12 @@ var soundbounceServer = {
             context: nowPlaying
         };
 
-        console.log("["+room.name.green+"]"+user.name + ": " + payload.message);
+        console.log("[" + room.name.green + "]" + user.name + ": " + payload.message);
 
         soundbounceShared.addChatToRoom(room, chatmsg);
 
         soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
-    }
-    ,
+    },
 
     processAdds: function (room, user, trackIds, dontVote) {
 
@@ -656,6 +676,7 @@ var soundbounceServer = {
 
                         simpleUser = soundbounceServer.simpleUser(user);
                         simpleTrack.addedBy = simpleUser;
+                        simpleTrack.addedAt = new Date();
 
                         if ((String(user.id) != "1") && !dontVote) {
                             // vote for the track, but don't trigger a vote event
@@ -708,7 +729,7 @@ var soundbounceServer = {
             });
         }).forEach(function (track) {
             if (track) {
-            //    console.log(user.name + " voted for " + track.name);
+                //    console.log(user.name + " voted for " + track.name);
 
                 // add the vote to the server, and note which track we're going to put it after
                 var insertAfter = soundbounceServer.addVoteToTrack(room, track, soundbounceServer.simpleUser(user));
@@ -726,8 +747,7 @@ var soundbounceServer = {
         });
 
         soundbounceServer.broadcast(room, [{type: "vote", payload: {votes: votes}}]);
-    }
-    ,
+    },
 
 // given a number of votes, returns the trackId that should be positioned above this one after the move (i.e. the track we should "insert after")
 // returns null if none above (usually first track added)
@@ -754,8 +774,7 @@ var soundbounceServer = {
         }
 
         return track.id;
-    }
-    ,
+    },
 
     addVoteToTrack: function (room, track, user) {
         var server = this;
@@ -788,7 +807,7 @@ var soundbounceServer = {
                     insertIndex = i + 1;
                 }
             }
-           // console.log("vote - move to after " + insertAfter + ", indices: ", currentIndex, insertIndex);
+            // console.log("vote - move to after " + insertAfter + ", indices: ", currentIndex, insertIndex);
             if (currentIndex != insertIndex) {
                 // move the track
                 room.tracks = room.tracks.move(currentIndex, insertIndex);
@@ -807,8 +826,7 @@ var soundbounceServer = {
         soundbounceShared.addVoteChat(room, track, user);
 
         return insertAfter;
-    }
-    ,
+    },
 
     getClientViewOfRoom: function (room) {
         // todo: sanitise the output to client
@@ -828,16 +846,14 @@ var soundbounceServer = {
 
             soundbounceServer.sockets[listener.id].send(JSON.stringify(messages));
         });
-    }
-    ,
+    },
 
     shutdown: function () {
         console.log("\nSaving JSON...");
 
         this.saveData();
         console.log("Shutdown OK ".bgGreen.white);
-    }
-    ,
+    },
 
     saveData: function () {
         // save files to disk
@@ -851,10 +867,21 @@ var soundbounceServer = {
 
         fs.writeFileSync(this.userStoreFileName, usersJson);
         fs.writeFileSync(this.roomStoreFileName, roomsJson);
+    },
 
+    saveDataAsync: function () {
+        // save files to disk without blocking
+        // save backups first to history folders
 
-    }
-    ,
+        var usersJson = JSON.stringify(this.users, null, "\t");
+        var roomsJson = JSON.stringify(this.rooms, null, "\t");
+
+        fs.writeFile(this.getNewHistoryFileName("users"), usersJson);
+        fs.writeFile(this.getNewHistoryFileName("rooms"), roomsJson);
+
+        fs.writeFile(this.userStoreFileName, usersJson);
+        fs.writeFile(this.roomStoreFileName, roomsJson);
+    },
 
 // searches the history folder for next free name
     getNewHistoryFileName: function (name) {
@@ -875,7 +902,7 @@ var soundbounceServer = {
     }
 };
 
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', function (err) {
     console.log('Uncaught exception: ' + err);
     console.log("Saving before restart...");
     soundbounceServer.saveData();
