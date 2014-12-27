@@ -32,7 +32,6 @@ var soundbounceServer = {
     spotify: new spotifyApi({
         clientId: config.spotify.webAPI.clientID,
         clientSecret: config.spotify.webAPI.clientSecret
-        //redirectUri : 'http://www.example.com/callback'
     }),
 
     sockets: [],

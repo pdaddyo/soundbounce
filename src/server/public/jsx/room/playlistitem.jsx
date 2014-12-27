@@ -32,11 +32,18 @@ var PlaylistItem = React.createClass({
 
     },
 
-    onClickRemoveTrack: function () {
+    onClickRemoveTrack: function (e) {
         var component = this;
-        router.confirm("Are you sure you want to remove '"+this.props.track.name+"'?", "Confirm remove", function () {
+
+        if(e.ctrlKey)
+        {
             eventbus.trigger("remove-track", component.props.track);
-        });
+        }
+        else {
+            router.confirm("Are you sure you want to remove '" + this.props.track.name + "'?", "Confirm remove", function () {
+                eventbus.trigger("remove-track", component.props.track);
+            });
+        }
     },
 
     previewStart: function () {
