@@ -6,6 +6,9 @@
 Keys.cs
 config.js
 
+# Don't accidentally share Android Spotify keys
+keys.xml
+
 #webstorm
 .idea/
 
