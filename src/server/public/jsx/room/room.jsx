@@ -101,8 +101,7 @@ var RoomPage = React.createClass({
         });
 
         eventbus.on("track-load-failed", function (error) {
-            var trackName = component.state.room.tracks.length > 0 ? component.state.room.tracks[0].name : "unknown track";
-            router.alert("Sorry, track '" + trackName + "' failed to play. Spotify error: " + error, "Unable to play track");
+            router.alert("Spotify is not able to play this track, usually this is because it is unavailable in your region, sorry.", "Unable to play track");
         });
 
         eventbus.on("star-track", function (track) {
