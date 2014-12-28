@@ -136,6 +136,15 @@ $(function () {
     });
 
 
+    eventbus.on("open-url", function (url) {
+        try {
+            spotifyBrowserApi.openUrl(url);
+        } catch (err) {
+            console.warn("No spotifyBrowserApi found!? ", err);
+        }
+    });
+
+
 });
 
 

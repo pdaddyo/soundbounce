@@ -112,14 +112,6 @@ var RoomPage = React.createClass({
             }
         });
 
-        eventbus.on("open-url", function (url) {
-            try {
-                spotifyBrowserApi.openUrl(url);
-            } catch (err) {
-                console.warn("No spotifyBrowserApi found!? ", err);
-            }
-        });
-
         eventbus.on("playing-track-is-starred", function () {
             $('.now-playing .star-button-holder').hide();
         });
@@ -167,7 +159,6 @@ var RoomPage = React.createClass({
         eventbus.off("delete-room");
         eventbus.off("track-load-failed");
         eventbus.off("star-track");
-        eventbus.off("open-url");
         eventbus.off("playing-track-is-starred");
         eventbus.off("remove-track");
         eventbus.off("preview-start");

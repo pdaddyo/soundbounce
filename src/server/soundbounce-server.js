@@ -46,11 +46,16 @@ var soundbounceServer = {
 
             // clear listeners
 
+            var trackCount =0;
             this.rooms.forEach(function (r) {
                 r.listeners = [];
+                trackCount+= r.tracks.length;
             });
 
-            console.log("loaded data from disk.");
+
+            console.log("loaded data from disk:");
+            console.log(this.rooms.length+" rooms containing "+trackCount+" tracks, "+this.users.length," users");
+
         },
 
         init: function (app, httpServer, sessionHandler) {
