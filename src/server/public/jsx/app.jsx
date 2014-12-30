@@ -77,6 +77,8 @@ $(function () {
             "room/:roomniceurl/:color": "room"
         },
 
+        currentRoom: null,
+
         home: function () {
             React.render(<HomePage/>, homeNode);
             transition($(roomNode), $(homeNode), 55);
@@ -87,13 +89,24 @@ $(function () {
         },
 
         room: function (id, color) {
+
             // prevents re-loading room before transition has ended
             if(isAnimating){
                 router.navigate("home");
                 return;
             }
-            React.unmountComponentAtNode(roomNode);
-            React.render(<RoomPage roomid={id} color={'#' + color}/>, roomNode);
+
+            if(this.currentRoomId!=id)
+            {
+                this.currentRoomId = id;
+                React.unmountComponentAtNode(roomNode);
+                React.render(<RoomPage roomid={id} color={'#' + color}/>, roomNode);
+            }
+            else
+            {
+                // same room that's playing, so just animate back in
+                transition($('.home-page'), $('.room-page'), 54);
+            }
 
             ga('send', 'pageview');
         },

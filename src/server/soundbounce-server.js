@@ -496,7 +496,7 @@ var soundbounceServer = {
                 // add in a few moments, to avoid it appearing before track ends for clients that are slightly behind
                 _.delay(function () {
                     server.processAdds(room, track.addedBy, [track.id], true);
-                }, 10 * 2000);
+                }, 10 * 10000);
             }
 
         },
