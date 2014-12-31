@@ -42,6 +42,7 @@ Are you a developer?  Please get involved!
 
 Known issues
 ============
+- Sometimes audio won't work on first launch.  Wait a few minutes, restart app and should be fine from then on.  Seems to affect OSX more than Windows.  
 - If you get spotify credentials wrong, you'll have to re-launch app
 
 Technology used
