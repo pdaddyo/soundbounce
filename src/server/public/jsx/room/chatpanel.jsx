@@ -93,7 +93,7 @@ var ChatPanel = React.createClass({
         var result = [];
         reactArray.forEach(function (chunk) {
             if (typeof chunk === 'string') {
-                chunk = chunk.replace(":)", ":grinning:");
+                chunk = chunk.replace(":)", ":blush:");
                 chunk = chunk.replace(":D", ":smiley:");
                 chunk = chunk.replace(";)", ":wink:");
                 chunk = chunk.replace(":|", ":neutral_face:");

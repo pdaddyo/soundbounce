@@ -93,12 +93,13 @@ HomePage = React.createClass({
                             <div  className="col-sm-12  ">
                                 <div className="well">
                                     <button type="button" className="close pull-right" data-dismiss="modal" aria-hidden="true" onClick={this.hideMOTD}>×</button>
-
                                     <p>Welcome to Soundbounce, where music sounds better together.</p>
 
+<hr/>
                                     <p>
                                         Please get involved and suggest features, report bugs and look at future plans on our <a href="javascript:eventbus.trigger('open-url', 'https://github.com/pdaddyo/soundbounce/issues');">project page on Github</a>.
                                     </p>
+
 
                                 </div>
                             </div>
