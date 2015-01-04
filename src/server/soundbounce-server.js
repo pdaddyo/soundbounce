@@ -262,7 +262,7 @@ var soundbounceServer = {
                 }).forEach(function (r) {
                     result += ('<h2>' + r.name + '</h2>');
                     result += r.listeners.map(function (l) {
-                        return "<img style='width:20%' src='" + l.img + "'/> ";
+                        return "<img src='" + l.img + "'/> ";
                     }).join('') + "<br/>";
 
                     if (r.listeners.length > 0) {

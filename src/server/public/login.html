@@ -31,15 +31,23 @@
         $(function () {
             $.material.init();
 
-            $('.version').text('Client v' + spotifyBrowserApi.getVersion());
+            try {
+                $('.version').text('Client v' + spotifyBrowserApi.getVersion());
+            } catch(err){
+                alert("Oops - cannot find libspotify.  Please double-check the installation instructions for your platform.");
+            }
 
-            var user = $.cookie('username');
-            var pass = $.cookie('pass');
+
+            var user = localStorage.getItem('username');
+            var pass = localStorage.getItem('pass');
+
+            // clear old cookie storage method
+            $.cookie('pass', '', {expires: -1});
 
             if (user) {
                 $('#inputEmail').val(user);
                 if (pass) {
-                    $('#inputPassword').val(pass);
+                    $('#inputPassword').val(atob(pass));
                     $('.btn-success').focus();
                 }
                 else {
@@ -56,20 +64,20 @@
                 // $('#loginContainer').css({opacity:0.2});
 
                 // save login name
-                $.cookie('username', $('#inputEmail').val(), {expires: 30});
+                localStorage.setItem("username",$('#inputEmail').val());
 
                 var remember = $('#remember')[0].checked;
 
                 if (remember) {
-                    $.cookie('pass', $('#inputPassword').val(), {expires: 30});
+                    localStorage.setItem("pass", btoa($('#inputPassword').val()));
                 }
                 else {
-                    $.cookie('pass', '', {expires: -1});
+                    localStorage.setItem("pass", null);
                 }
 
-                // c# handles the login
+                // the host browser Spotify API handles the login
                 spotifyBrowserApi.login($('#inputEmail').val(), $('#inputPassword').val());
-                $('#loginForm').html('Connecting to Spotify...');
+                $('#loginForm').html("Just a moment - we're connecting to Spotify...");
 
                 return false;
             });
