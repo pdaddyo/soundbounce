@@ -498,6 +498,16 @@ var RoomPage = React.createClass({
         return _.contains(this.state.room.admins, this.state.user.id);
     },
 
+    convertHexColor: function (hex, opacity) {
+        var hex = hex.replace('#', '')
+            ,r = parseInt(hex.substring(0, 2), 16)
+            ,g = parseInt(hex.substring(2, 4), 16)
+            ,b = parseInt(hex.substring(4, 6), 16);
+
+        var res = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
+        return res;
+    },
+
     render: function () {
         var component = this;
         if (_.isEmpty(this.state.room)) {
@@ -609,8 +619,8 @@ var RoomPage = React.createClass({
 
                 <ChatPanel chat={this.state.room.chat} color={this.state.room.color} user={this.state.user} tracks={this.state.room.tracks} />
 
-                <div className="panel panel-room-top panel-success">
-                    <div className="panel-heading" style={{backgroundColor: this.state.room.color}}>
+                <div className="panel panel-room-top panel-success" style={{backgroundColor:'transparent !important'}}>
+                    <div className="panel-heading" style={{backgroundColor: this.convertHexColor(this.state.room.color, 70)}}>
                         <div className="container-fluid">
                             <div className="row">
 

@@ -542,7 +542,7 @@ h1 {
 
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: rgba(90, 90, 90, 0.2);
+    background-color: rgba(190, 190, 190, 0.2);
     transition: background-color 0.38s cubic-bezier(0.4, 0, 0.2, 1)
 }
 
