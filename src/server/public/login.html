@@ -33,7 +33,7 @@
             $.material.init();
 
             try {
-                $('.version').text('Client v' + spotifyBrowserApi.getVersion());
+                $('.version').text('v' + spotifyBrowserApi.getVersion());
             } catch (err) {
                 alert("Oops - cannot find libspotify.  Please double-check the installation instructions for your platform.");
             }
@@ -110,6 +110,11 @@
 
         .logos a:hover {
             color: #666;
+        }
+
+        .version {
+            display: inline-block;
+            margin-right: 5px;
         }
     </style>
 </head>
