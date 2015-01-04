@@ -884,7 +884,7 @@ var soundbounceServer = {
             // save backups first to history folders
 
             var usersJson = JSON.stringify(this.users, null, "\t");
-            var roomsJson = JSON.stringify(this.rooms, null, "\t");
+            var roomsJson = JSON.stringify(this.rooms);
 
             fs.writeFileSync(this.getNewHistoryFileName("users"), usersJson);
             fs.writeFileSync(this.getNewHistoryFileName("rooms"), roomsJson);
@@ -899,7 +899,7 @@ var soundbounceServer = {
             // save backups first to history folders
 
             var usersJson = JSON.stringify(this.users, null, "\t");
-            var roomsJson = JSON.stringify(this.rooms, null, "\t");
+            var roomsJson = JSON.stringify(this.rooms);
 
             fs.writeFile(this.getNewHistoryFileName("users"), usersJson);
             fs.writeFile(this.getNewHistoryFileName("rooms"), roomsJson);
