@@ -257,11 +257,15 @@ h1 {
     text-indent:20px;
 }
 
-.track-search-container i.mdi-action-search{
+.track-search-container ::-webkit-input-placeholder {
+    color:rgba(255,255,255,0.5);
+}
+
+ i.mdi-action-search{
     position: absolute;
     left: 0;
     top: 7px;
-    color: #999;
+    color:rgba(255,255,255,0.5);
 }
 .track-search-container i.mdi-content-clear{
     position: absolute;
@@ -547,9 +551,7 @@ h1 {
     background-color: rgba(90, 90, 90, 0.3);
 }
 
-#room ::-webkit-input-placeholder {
-    color:rgba(255,255,255,0.5);
-}
+
 
 .room-list-item {
     height: 96px;
