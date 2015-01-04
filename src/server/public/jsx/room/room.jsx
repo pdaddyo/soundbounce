@@ -241,7 +241,7 @@ var RoomPage = React.createClass({
         var updatedRoom = this.state.room;
         var playlistUpdated = soundbounceShared.updatePlaylist(updatedRoom);
 
-        if(playlistUpdated) {
+        if (playlistUpdated) {
             // only update the whole room state if the playlist changed
             this.setState({room: updatedRoom});
         }
@@ -537,9 +537,17 @@ var RoomPage = React.createClass({
             });
         }
 
-        return (
-            <div id="room" onDrop={this.handleDrop} onDragOver={this.dragOver} onDragEnter={this.dragOver} onKeyDown={this.handleKeyDown}>
 
+        var roomImageStyle = {};
+        if (this.state.room.tracks.length > 0) {
+            roomImageStyle.backgroundImage = 'url(' + this.state.room.tracks[0].img + ')'
+        }
+
+        return (
+            <div id="room"onDrop={this.handleDrop} onDragOver={this.dragOver} onDragEnter={this.dragOver} onKeyDown={this.handleKeyDown}>
+
+                <div id="roombackgroundimage" style={roomImageStyle}></div>
+                <div id="roombackgroundcover" />
                 <div id="nowplayingcontainer">
                     <NowPlaying
                         track={this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null}
