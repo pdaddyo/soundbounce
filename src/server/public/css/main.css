@@ -255,6 +255,8 @@ h1 {
 .track-search-container .form-control {
     border-bottom: 1px solid #ccc;
     text-indent:20px;
+    color: rgba(255,255,255,0.8);
+
 }
 
 .track-search-container ::-webkit-input-placeholder {
@@ -350,7 +352,7 @@ h1 {
 }
 
 #spotifyResultsContainer p{
-    color:#666;
+    color: rgba(255,255,255,0.8);
 }
 
 #spotifyResultsContainer .well{
@@ -516,7 +518,7 @@ h1 {
     height:110%;
     z-index: 0;
 
-    -webkit-filter: blur(15px);
+    -webkit-filter: blur(10px);
     background-size: cover;
 }
 
@@ -527,7 +529,6 @@ h1 {
     width:100%;
     height:100%;
     z-index: 0;
-
     background-color: rgba(150,150,150,0.5);
 }
 
