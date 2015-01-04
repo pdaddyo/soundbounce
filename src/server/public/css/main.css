@@ -552,7 +552,12 @@ h1 {
     background-color: rgba(255, 255, 255, 0.6);
 }
 
-
+.chat-panel ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.chat-panel ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
 
 .room-list-item {
     height: 96px;
