@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/css/bootstrap.min.css">
-    
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.6/css/ripples.css">
@@ -34,7 +34,7 @@
 
             try {
                 $('.version').text('Client v' + spotifyBrowserApi.getVersion());
-            } catch(err){
+            } catch (err) {
                 alert("Oops - cannot find libspotify.  Please double-check the installation instructions for your platform.");
             }
 
@@ -65,7 +65,7 @@
                 // $('#loginContainer').css({opacity:0.2});
 
                 // save login name
-                localStorage.setItem("username",$('#inputEmail').val());
+                localStorage.setItem("username", $('#inputEmail').val());
 
                 var remember = $('#remember')[0].checked;
 
@@ -90,16 +90,26 @@
             padding-top: 13px !important;
 
         }
+
         .version {
-            color:#666;
-            font-size:12px;
-            position:absolute;
-            bottom:20px;
-            right:20px;
+            color: #666;
+            font-size: 12px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
         }
-        .logos
-        {
-            color: black;
+
+        .logos, .logos a {
+            text-align: left;
+            color: #aaa;
+        }
+
+        .logos a {
+            margin-right: 5px;
+        }
+
+        .logos a:hover {
+            color: #666;
         }
     </style>
 </head>
@@ -155,10 +165,15 @@
                             </div>
                         </fieldset>
                     </form>
-                    Visit us:
-                    <a href="javascript:spotifyBrowserApi.openUrl('https://www.facebook.com/soundbounce.org');"><i class="fa fa-facebook-square fa-2x logos"></i></a>
-                    <a href="javascript:spotifyBrowserApi.openUrl('https://twitter.com/_soundbounce_');"><i class="fa fa-twitter-square fa-2x logos"></i></a>
-                    <a href="javascript:spotifyBrowserApi.openUrl('https://github.com/pdaddyo/soundbounce/');"><i class="fa fa-github-square fa-2x logos"></i></a>
+                    <hr/>
+                    <div class="logos">
+                        <a href="javascript:spotifyBrowserApi.openUrl('https://www.facebook.com/soundbounce.org');"><i
+                                class="fa fa-facebook-square fa-2x"></i></a>
+                        <a href="javascript:spotifyBrowserApi.openUrl('https://twitter.com/_soundbounce_');"><i
+                                class="fa fa-twitter-square fa-2x"></i></a>
+                        <a href="javascript:spotifyBrowserApi.openUrl('https://github.com/pdaddyo/soundbounce/');"><i
+                                class="fa fa-github-square fa-2x"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
