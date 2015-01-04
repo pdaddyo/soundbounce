@@ -91,7 +91,7 @@
 
         }
 
-        .version {
+        footer {
             color: #666;
             font-size: 12px;
             position: absolute;
@@ -99,7 +99,7 @@
             right: 20px;
         }
 
-        .logos, .logos a {
+        .logos a {
             text-align: left;
             color: #aaa;
         }
@@ -165,15 +165,6 @@
                             </div>
                         </fieldset>
                     </form>
-                    <hr/>
-                    <div class="logos">
-                        <a href="javascript:spotifyBrowserApi.openUrl('https://www.facebook.com/soundbounce.org');"><i
-                                class="fa fa-facebook-square fa-2x"></i></a>
-                        <a href="javascript:spotifyBrowserApi.openUrl('https://twitter.com/_soundbounce_');"><i
-                                class="fa fa-twitter-square fa-2x"></i></a>
-                        <a href="javascript:spotifyBrowserApi.openUrl('https://github.com/pdaddyo/soundbounce/');"><i
-                                class="fa fa-github-square fa-2x"></i></a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -184,7 +175,16 @@
 
 
 <footer>
-    <p class="version">version</p>
+    <p>
+        <span class="version"> Libspotify not loaded?</span>
+    <span class="logos">
+        <a href="javascript:spotifyBrowserApi.openUrl('https://www.facebook.com/soundbounce.org');"><i
+                class="fa fa-facebook-square fa-2x"></i></a>
+        <a href="javascript:spotifyBrowserApi.openUrl('https://twitter.com/_soundbounce_');"><i
+                class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="javascript:spotifyBrowserApi.openUrl('https://github.com/pdaddyo/soundbounce/');"><i
+                class="fa fa-github-square fa-2x"></i></a>
+    </span></p>
 </footer>
 
 <script>
