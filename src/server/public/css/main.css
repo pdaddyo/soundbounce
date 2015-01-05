@@ -171,6 +171,10 @@ h1 {
     line-height: 31px;
 }
 
+.list-group .artist{
+    color:#333;
+}
+
 .list-group .artist:hover {
     text-decoration:underline;
     cursor:pointer;
