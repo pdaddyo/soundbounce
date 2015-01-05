@@ -8,8 +8,8 @@ android {
         applicationId "org.soundbounce.soundbounce"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.2"
     }
     buildTypes {
         release {
@@ -34,4 +34,5 @@ dependencies {
     compile 'org.xwalk:xwalk_core_library:9.38.208.10'
     compile 'com.spotify.sdk:spotifysdk:1.0.0-beta6@aar'
     compile 'commons-codec:commons-codec:1.10'
+    compile 'ch.acra:acra:4.5.0'
 }
