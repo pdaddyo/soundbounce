@@ -26,6 +26,7 @@ Requirements
 - Windows 7+ / OSX 10.7+
 - Spotify Premium account
 - .NET Framework 4.5 (on Windows)
+- OSX 10.7+ (on Mac)
 
 Installation instructions
 =============
