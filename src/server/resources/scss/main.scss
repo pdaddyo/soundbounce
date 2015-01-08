@@ -315,6 +315,11 @@ h1 {
     margin-bottom: 0;
 }
 
+.now-playing .progress-bar {
+    transition: none !important;
+    -webkit-animation:none !important;
+}
+
 .now-playing .list-group .list-group-item .row-content {
     width: calc(100% - 160px);
 }

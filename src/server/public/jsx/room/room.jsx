@@ -1,5 +1,5 @@
 var RoomPage = React.createClass({
-    UPDATE_STATE_DELAY: 500,
+    UPDATE_STATE_DELAY: 1000,
     socket: null,
     intervalId: null,
     lastPlayedTrackId: null,
@@ -220,6 +220,10 @@ var RoomPage = React.createClass({
     },
 
     playTrack: function (trackId, position) {
+        // play from start if we hadn't ticked since track should have started
+        if(position<this.UPDATE_STATE_DELAY)
+            position=0;
+
         try {
             spotifyBrowserApi.playTrack(trackId, position);
         } catch (err) {
