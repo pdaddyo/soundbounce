@@ -221,7 +221,13 @@ var soundbounceServer = {
             if (!room)
                 return;
 
-            server.deleteRoom(room);
+            if (!_.contains(room.admins, req.session.user.id)) {
+                console.log("attempted delete room " + room.name.yellow + " by non-admin " + req.session.user.name);
+                res.send(JSON.stringify({authorised: false}));
+                return;
+            }
+
+            server.deleteRoom(room, req.session.user);
 
             res.send(JSON.stringify({success: true}));
         });
@@ -412,18 +418,14 @@ var soundbounceServer = {
     },
 
 
-    deleteRoom: function (room){
+    deleteRoom: function (room, user){
+        var server = this;
+
         var roomIndex = server.rooms.indexOf(room);
 
-        if (!_.contains(room.admins, req.session.user.id)) {
-            console.log("attempted delete room " + room.name.yellow + " by non-admin " + req.session.user.name);
-            res.send(JSON.stringify({authorised: false}));
-            return;
-        }
-
-        // remove this user from the room before we send the broadcast
+          // remove this user from the room before we send the broadcast
         room.listeners = _.filter(room.listeners, function (listener) {
-            return listener.id != req.session.user.id;
+            return listener.id != user.id;
         });
 
         // broadcast to the room that it's gone
@@ -431,7 +433,7 @@ var soundbounceServer = {
 
         // remove the room
         server.rooms.splice(roomIndex, 1);
-        console.log("" + room.name.red + " deleted by " + req.session.user.name);
+        console.log("" + room.name.red + " deleted by " + user.name);
 
     },
 
@@ -658,7 +660,7 @@ var soundbounceServer = {
             {name: "addadmin", handler: this.commandAddAdmin, admin: true},
             {name: "removeadmin", handler: this.commandRemoveAdmin, admin: true},
             {name: "topup", handler: this.commandTopUp, admin: true},
-            {name: "permanentlydeleteroom", handler: this.commandDeleteRoom, admin:true}
+            {name: "deleteroom", handler: this.commandDeleteRoom, admin:true}
         ];
 
         var foundCommand = false;
@@ -778,7 +780,9 @@ var soundbounceServer = {
             return;
         }
 
-        server.deleteRoom(room);
+        this.deleteRoom(room, user);
+        this.sendPrivateChat(room, user.id, "This room has been deleted.  Time for you to leave!");
+
     },
 
     sendPrivateChat: function (room, userId, message) {
