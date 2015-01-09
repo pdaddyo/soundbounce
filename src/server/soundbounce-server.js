@@ -408,11 +408,11 @@ var soundbounceServer = {
 
         console.log('Startup OK'.green);
 
-        // top up rooms and save every 10 mins
+        // top up rooms and save every 15 mins
         setInterval(function () {
             server.topUpRooms();
             server.saveDataAsync();
-        }, 1000 * 60 * 10);
+        }, 1000 * 60 * 15);
 
         server.topUpRooms();
     },
@@ -511,15 +511,20 @@ var soundbounceServer = {
     },
 
     topUpRooms: function () {
-        // automatically top up rooms using linked playlists
         var server = this;
+        // always update playlists
+        _.forEach(server.rooms, function (room) {
+            soundbounceShared.updatePlaylist(room, server);
+        });
+
+        // automatically top up rooms using linked playlists
+
         server.spotify.clientCredentialsGrant()
             .then(function (data) {
                 server.spotifyAccessToken = data['access_token'];
                 server.spotify.setAccessToken(server.spotifyAccessToken);
                 _.forEach(server.rooms, function (room) {
                     if (!_.isEmpty(room.topUpURI)) {
-                        soundbounceShared.updatePlaylist(room, server);
                         server.topUpRoomWithPlaylist(room, room.topUpURI);
                     }
                 });
