@@ -59,7 +59,7 @@ RoomList = React.createClass({
                                         _.delay(function () { component.setState({loading:null});}, 1500);
                                     }} style={{backgroundColor: room.color}} onMouseEnter={component.handleMouseOver} onMouseLeave={component.handleMouseOut} data-trackid={room.nowPlaying ? room.nowPlaying.id : null} >
                                         <div className="img-holder">
-                                            <img src={room.nowPlaying ? room.nowPlaying.img : "some-url"} style={{display: room.nowPlaying ? "block" : "none"}} />
+                                            <img src={room.nowPlaying ? room.nowPlaying.img : ""} style={{display: room.nowPlaying ? "block" : "none"}} />
                                         </div>
                                         <div className="color-bar" style={{backgroundColor: room.color}}></div>
                                         <div className="text-bg">
