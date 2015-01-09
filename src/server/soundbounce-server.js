@@ -701,10 +701,14 @@ var soundbounceServer = {
     },
 
     commandTopUp: function (room, user, params) {
+        if(_.isEmpty(params))
+            params = room.topUpURI;
+
         if (_.isEmpty(params)) {
-            this.sendPrivateChat(room, user.id, "Usage: /topup spotify:playlist:uri");
+            this.sendPrivateChat(room, user.id, "Usage: /topup spotify:playlist:uri - room has no auto top-up");
             return;
         }
+
         this.topUpRoomWithPlaylist(room, params);
         this.sendPrivateChat(room, user.id, "Topping up playlist.");
 
