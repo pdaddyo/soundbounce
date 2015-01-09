@@ -1,3 +1,6 @@
 # Created by .gitignore support plugin (hsz.mobi)
 sessions
 .idea
+node_modules/
+tmp/
+config.js

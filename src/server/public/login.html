@@ -13,11 +13,12 @@
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/css/bootstrap.min.css">
 
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.6/css/ripples.css">
     <link rel="stylesheet"
           href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.1/css/material-wfont.min.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/main.min.css">
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.js"></script>
@@ -31,15 +32,23 @@
         $(function () {
             $.material.init();
 
-            $('.version').text('Client v' + spotifyBrowserApi.getVersion());
+            try {
+                $('.version').text('v' + spotifyBrowserApi.getVersion());
+            } catch (err) {
+                alert("Oops - cannot find libspotify.  Please double-check the installation instructions for your platform.");
+            }
 
-            var user = $.cookie('username');
-            var pass = $.cookie('pass');
+
+            var user = localStorage.getItem('username');
+            var pass = localStorage.getItem('pass');
+
+            // clear old cookie storage method
+            $.cookie('pass', '', {expires: -1});
 
             if (user) {
                 $('#inputEmail').val(user);
                 if (pass) {
-                    $('#inputPassword').val(pass);
+                    $('#inputPassword').val(atob(pass));
                     $('.btn-success').focus();
                 }
                 else {
@@ -56,20 +65,20 @@
                 // $('#loginContainer').css({opacity:0.2});
 
                 // save login name
-                $.cookie('username', $('#inputEmail').val(), {expires: 30});
+                localStorage.setItem("username", $('#inputEmail').val());
 
                 var remember = $('#remember')[0].checked;
 
                 if (remember) {
-                    $.cookie('pass', $('#inputPassword').val(), {expires: 30});
+                    localStorage.setItem("pass", btoa($('#inputPassword').val()));
                 }
                 else {
-                    $.cookie('pass', '', {expires: -1});
+                    localStorage.setItem("pass", null);
                 }
 
-                // c# handles the login
+                // the host browser Spotify API handles the login
                 spotifyBrowserApi.login($('#inputEmail').val(), $('#inputPassword').val());
-                $('#loginForm').html('Connecting to Spotify...');
+                $('#loginForm').html("Just a moment - we're connecting to Spotify...");
 
                 return false;
             });
@@ -81,12 +90,31 @@
             padding-top: 13px !important;
 
         }
+
+        footer {
+            color: #666;
+            font-size: 12px;
+            position: absolute;
+            bottom: 13px;
+            right: 20px;
+        }
+
+        .logos a {
+            text-align: left;
+            color: #aaa;
+        }
+
+        .logos a {
+            margin-right: 5px;
+        }
+
+        .logos a:hover {
+            color: #666;
+        }
+
         .version {
-            color:#666;
-            font-size:12px;
-            position:absolute;
-            bottom:20px;
-            right:20px;
+            display: inline-block;
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -142,7 +170,6 @@
                             </div>
                         </fieldset>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -153,7 +180,16 @@
 
 
 <footer>
-    <p class="version">version</p>
+    <p>
+        <span class="version"> Libspotify not loaded?</span>
+    <span class="logos">
+        <a href="javascript:spotifyBrowserApi.openUrl('https://www.facebook.com/soundbounce.org');"><i
+                class="fa fa-facebook-square fa-2x"></i></a>
+        <a href="javascript:spotifyBrowserApi.openUrl('https://twitter.com/_soundbounce_');"><i
+                class="fa fa-twitter-square fa-2x"></i></a>
+        <a href="javascript:spotifyBrowserApi.openUrl('https://github.com/pdaddyo/soundbounce/');"><i
+                class="fa fa-github-square fa-2x"></i></a>
+    </span></p>
 </footer>
 
 <script>

@@ -1,3 +1,6 @@
+@import 'lib/jquery-colorpicker';
+@import 'components/animations';
+
 /* perfect scrollbar  */
 
 .ps-container.ps-active-x > .ps-scrollbar-x-rail, .ps-container.ps-active-y > .ps-scrollbar-y-rail {
@@ -171,6 +174,10 @@ h1 {
     line-height: 31px;
 }
 
+.list-group .artist{
+    color:#333;
+}
+
 .list-group .artist:hover {
     text-decoration:underline;
     cursor:pointer;
@@ -255,13 +262,19 @@ h1 {
 .track-search-container .form-control {
     border-bottom: 1px solid #ccc;
     text-indent:20px;
+    color: rgba(255,255,255,0.8);
+
 }
 
-.track-search-container i.mdi-action-search{
+.track-search-container ::-webkit-input-placeholder {
+    color:rgba(255,255,255,0.5);
+}
+
+ i.mdi-action-search{
     position: absolute;
     left: 0;
     top: 7px;
-    color: #999;
+    color:rgba(255,255,255,0.5);
 }
 .track-search-container i.mdi-content-clear{
     position: absolute;
@@ -300,6 +313,11 @@ h1 {
 
 .now-playing .progress {
     margin-bottom: 0;
+}
+
+.now-playing .progress-bar {
+    transition: none !important;
+    -webkit-animation:none !important;
 }
 
 .now-playing .list-group .list-group-item .row-content {
@@ -346,7 +364,7 @@ h1 {
 }
 
 #spotifyResultsContainer p{
-    color:#666;
+    color: rgba(255,255,255,0.8);
 }
 
 #spotifyResultsContainer .well{
@@ -504,6 +522,28 @@ h1 {
     height: calc(100% - 104px);
 }
 
+#roombackgroundimage{
+    position: fixed;
+    left: -5%;
+    top:-5%;
+    width:110%;
+    height:110%;
+    z-index: 0;
+
+    -webkit-filter: blur(15px);
+    background-size: cover;
+}
+
+#roombackgroundcover{
+    position: fixed;
+    left: 0;
+    top:0;
+    width:100%;
+    height:100%;
+    z-index: 0;
+    background-color: rgba(150,150,150,0.5);
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -515,13 +555,20 @@ h1 {
 
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: rgba(90, 90, 90, 0.2);
+    background-color: rgba(255, 255, 255, 0.4);
     transition: background-color 0.38s cubic-bezier(0.4, 0, 0.2, 1)
 }
 
 ::-webkit-scrollbar-thumb:hover {
 
-    background-color: rgba(90, 90, 90, 0.3);
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.chat-panel ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.chat-panel ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .room-list-item {
@@ -776,7 +823,7 @@ h1 {
     padding: 0 0 0 10px;
     overflow-x: hidden;
     overflow-y: hidden;
-    background-color: #eee;
+    background-color: rgba(255,255,255,0.5);
     border-left: 1px solid #eee;
     width: 35%;
     -webkit-user-select:text;
@@ -1064,4 +1111,77 @@ img.emojione {
 
 button.close {
     opacity: 0.5;
+}
+
+
+/* AutoComplete styles for Emoji One */
+
+body > .dropdown-menu {
+    list-style: none;
+    padding: .3em 0 0;
+    margin: 0;
+    border: 1px solid #6E6E6E;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    font-size: inherit;
+    letter-spacing: .025em;
+    box-shadow: 3px 3px 3px rgba(0,0,0,.2);
+    bottom: 35px !important;
+    top:auto !important;
+}
+body >.dropdown-menu a:hover {
+    cursor: pointer;
+}
+body >.dropdown-menu li {
+    letter-spacing: 0;
+    display: block;
+    float: none;
+    margin: 0;
+    padding: 0;
+    border:none;
+}
+body >.dropdown-menu li:before {
+    display: none;
+}
+body >.dropdown-menu .textcomplete-footer {
+    margin-top: .3em;
+    background: #e6e6e6;
+}
+body >.dropdown-menu .textcomplete-footer a {
+    color: #999999;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    line-height: 2.1818em;
+    padding-left: 1.8181em;
+    font-size: .84em;
+}
+body >.dropdown-menu .textcomplete-footer .arrow {
+    margin-left: .8em;
+    font-size: 1.3em;
+}
+body >.dropdown-menu li .emojione {
+    vertical-align: middle;
+    font-size: 1.23em;
+    width: 1em;
+    height: 1em;
+    top: -1px;
+    margin: 0 .3em 0 0;
+}
+body >.dropdown-menu li a {
+    display: block;
+    height: 100%;
+    line-height: 1.8em;
+    padding: 0 1.54em 0 .615em;
+    color: #4f4f4f;
+}
+body >.dropdown-menu .active,
+body >.dropdown-menu li:hover {
+    background: #6E6E6E;
+    color: white;
+}
+body >.dropdown-menu .active a,
+body >.dropdown-menu li:hover a {
+    color: inherit;
 }

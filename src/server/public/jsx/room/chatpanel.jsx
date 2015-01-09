@@ -1,4 +1,4 @@
-String.prototype.endsWith = function(suffix) {
+String.prototype.endsWith = function (suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
@@ -17,6 +17,8 @@ var ChatPanel = React.createClass({
 
         // set up dropdown
         $('.dropdown-toggle').dropdown();
+
+        this.setupEmojiAutocomplete();
     },
 
     componentWillUnmount: function () {
@@ -25,6 +27,54 @@ var ChatPanel = React.createClass({
 
     getInitialState: function () {
         return {showJustChat: false};
+    },
+
+    setupEmojiAutocomplete: function () {
+        $("#chatText").textcomplete([{
+            match: /\B:([\-+\w]*)$/,
+            search: function (term, callback) {
+                var results = [];
+                var results2 = [];
+                var results3 = [];
+                $.each(emojiStrategy, function (shortname, data) {
+                    if (shortname.indexOf(term) > -1) {
+                        results.push(shortname);
+                    }
+                    else {
+                        if ((data.aliases !== null) && (data.aliases.indexOf(term) > -1)) {
+                            results2.push(shortname);
+                        }
+                        else if ((data.keywords !== null) && (data.keywords.indexOf(term) > -1)) {
+                            results3.push(shortname);
+                        }
+                    }
+                });
+
+                if (term.length >= 3) {
+                    results.sort(function (a, b) {
+                        return (a.length > b.length);
+                    });
+                    results2.sort(function (a, b) {
+                        return (a.length > b.length);
+                    });
+                    results3.sort();
+                }
+                var newResults = results.concat(results2).concat(results3);
+
+                callback(newResults);
+            },
+            template: function (shortname) {
+                return '<img class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/' + emojiStrategy[shortname].unicode + '.png"> :' + shortname + ':';
+            },
+            replace: function (shortname) {
+                return ':' + shortname + ': ';
+            },
+            index: 1,
+            maxCount: 10
+        }
+        ], {
+            footer: '<a href="http://www.emoji.codes" target="_blank">Browse All<span class="arrow">»</span></a>'
+        });
     },
 
     toggleChatsClick: function () {
@@ -70,10 +120,9 @@ var ChatPanel = React.createClass({
                     var protocol = url.split(":")[0];
                     if (_.contains(["http", "https", "spotify"], protocol)) {
 
-                        if(url.endsWith(".gif") || url.endsWith(".png") || url.endsWith(".jpg"))
-                        {
+                        if (url.endsWith(".gif") || url.endsWith(".png") || url.endsWith(".jpg")) {
                             result.push(<a href="javascript:void(0)" onClick={this.clickLinkInChat} data-url={url} target="_blank"
-                                data-toggle="tooltip" data-placement="top" data-original-title={'<img src="'+url+'" style="width:180px; height:auto;" />'} data-html="true" >{split[i]}</a>);
+                                data-toggle="tooltip" data-placement="top" data-original-title={'<img src="' + url + '" style="width:180px; height:auto;" />'} data-html="true" >{split[i]}</a>);
                         }
                         else {
                             result.push(<a href="javascript:void(0)" onClick={this.clickLinkInChat} data-url={url} target="_blank">{split[i]}</a>);
@@ -93,7 +142,7 @@ var ChatPanel = React.createClass({
         var result = [];
         reactArray.forEach(function (chunk) {
             if (typeof chunk === 'string') {
-                chunk = chunk.replace(":)", ":grinning:");
+                chunk = chunk.replace(":)", ":blush:");
                 chunk = chunk.replace(":D", ":smiley:");
                 chunk = chunk.replace(";)", ":wink:");
                 chunk = chunk.replace(":|", ":neutral_face:");
@@ -138,12 +187,12 @@ var ChatPanel = React.createClass({
         return result;
     },
 
-    clickVoteInChat: function (e){
+    clickVoteInChat: function (e) {
         var trackId = $(e.currentTarget).data("track");
         eventbus.trigger("track-vote-id", trackId);
     },
 
-    trackNameWithVoteSpan: function(voteTrack){
+    trackNameWithVoteSpan: function (voteTrack) {
         // if the user hasn't voted for this track, show a tooltip
 
         var component = this;
@@ -153,18 +202,22 @@ var ChatPanel = React.createClass({
             }).join(", "));
 
         // find track in actual room (may have already played, and don't include playing track)
-        var track = _.find(_.rest(this.props.tracks), function (t){ return t.id == voteTrack.id;});
+        var track = _.find(_.rest(this.props.tracks), function (t) {
+            return t.id == voteTrack.id;
+        });
 
-        if(!track)
+        if (!track)
             return <span>{text}</span>;
 
-        var hasVoted = _.filter(track.votes, function (v){ return v.id==component.props.user.id;}).length>0;
+        var hasVoted = _.filter(track.votes, function (v) {
+                return v.id == component.props.user.id;
+            }).length > 0;
 
-        if(hasVoted) {
+        if (hasVoted) {
             return <span>{text}</span>;
         }
         else {
-            return <span className="vote-chat" data-toggle="tooltip" data-placement="top" data-original-title={'Vote for '+track.name} onClick={component.clickVoteInChat} data-track={track.id}>{text}</span>;
+            return <span className="vote-chat" data-toggle="tooltip" data-placement="top" data-original-title={'Vote for ' + track.name} onClick={component.clickVoteInChat} data-track={track.id}>{text}</span>;
         }
     },
 
@@ -216,13 +269,21 @@ var ChatPanel = React.createClass({
                 }
 
                 if (groupedMessages.length > 1) {
-                        text = <p onClick={function (e){ $(e.currentTarget).parent().find('.messages-expand').slideToggle(); $(e.currentTarget).parent().find('.album-art').toggle(); }}>{nextMsg.type == "add" ? "Added " : "Voted for "}<a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a></p>;
+                    text = <p onClick={function (e) {
+                        $(e.currentTarget).parent().find('.messages-expand').slideToggle();
+                        $(e.currentTarget).parent().find('.album-art').toggle();
+                    }}>{nextMsg.type == "add" ? "Added " : "Voted for "}
+                        <a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a>
+                    </p>;
                     //expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function(m){return <p>{m}</p>;}))}</div>;
-                    expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function(m){return <p>{m}</p>;}))}</div>;
+                    expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function (m) {
+                        return <p>{m}</p>;
+                    }))}</div>;
                     // albumArt = null;
                 }
                 else {
-                    text = <p><span>{(msg.type == "add" ? "Added " : "Voted for ")}</span>{groupedMessages[0]}</p>;
+                    text = <p>
+                        <span>{(msg.type == "add" ? "Added " : "Voted for ")}</span>{groupedMessages[0]}</p>;
                 }
 
 

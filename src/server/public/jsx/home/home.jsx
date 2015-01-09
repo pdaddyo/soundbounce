@@ -29,8 +29,6 @@ HomePage = React.createClass({
                 component.setRoomList(component.state.search);
             }.bind(this),
             error: function (xhr, status, err) {
-
-                // todo: display friendly error popups
                 console.error(status, err.toString());
                 router.alert(err.toString(),"Ooops! Something went wrong...");
             }.bind(this)
@@ -95,13 +93,13 @@ HomePage = React.createClass({
                             <div  className="col-sm-12  ">
                                 <div className="well">
                                     <button type="button" className="close pull-right" data-dismiss="modal" aria-hidden="true" onClick={this.hideMOTD}>×</button>
-
                                     <p>Welcome to Soundbounce, where music sounds better together.</p>
 
+<hr/>
                                     <p>
-                                    Choose a room below to start listening and contributing, or create your own room. Feedback welcome:&nbsp;
-                                        <a href="http://twitter.com/pdaddyo" target="_blank">@pdaddyo</a> or via the Github <a href="https://github.com/pdaddyo/soundbounce/issues" target="_blank">project page</a>.
+                                        Please get involved and suggest features, report bugs and look at future plans on our <a href="javascript:eventbus.trigger('open-url', 'https://github.com/pdaddyo/soundbounce/issues');">project page on Github</a>.
                                     </p>
+
 
                                 </div>
                             </div>

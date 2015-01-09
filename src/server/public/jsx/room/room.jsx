@@ -1,5 +1,5 @@
 var RoomPage = React.createClass({
-    UPDATE_STATE_DELAY: 500,
+    UPDATE_STATE_DELAY: 1000,
     socket: null,
     intervalId: null,
     lastPlayedTrackId: null,
@@ -112,14 +112,6 @@ var RoomPage = React.createClass({
             }
         });
 
-        eventbus.on("open-url", function (url) {
-            try {
-                spotifyBrowserApi.openUrl(url);
-            } catch (err) {
-                console.warn("No spotifyBrowserApi found!? ", err);
-            }
-        });
-
         eventbus.on("playing-track-is-starred", function () {
             $('.now-playing .star-button-holder').hide();
         });
@@ -167,7 +159,6 @@ var RoomPage = React.createClass({
         eventbus.off("delete-room");
         eventbus.off("track-load-failed");
         eventbus.off("star-track");
-        eventbus.off("open-url");
         eventbus.off("playing-track-is-starred");
         eventbus.off("remove-track");
         eventbus.off("preview-start");
@@ -229,6 +220,10 @@ var RoomPage = React.createClass({
     },
 
     playTrack: function (trackId, position) {
+        // play from start if we hadn't ticked since track should have started
+        if(position<this.UPDATE_STATE_DELAY)
+            position=0;
+
         try {
             spotifyBrowserApi.playTrack(trackId, position);
         } catch (err) {
@@ -250,7 +245,7 @@ var RoomPage = React.createClass({
         var updatedRoom = this.state.room;
         var playlistUpdated = soundbounceShared.updatePlaylist(updatedRoom);
 
-        if(playlistUpdated) {
+        if (playlistUpdated) {
             // only update the whole room state if the playlist changed
             this.setState({room: updatedRoom});
         }
@@ -507,6 +502,16 @@ var RoomPage = React.createClass({
         return _.contains(this.state.room.admins, this.state.user.id);
     },
 
+    convertHexColor: function (hex, opacity) {
+        var hex = hex.replace('#', '')
+            ,r = parseInt(hex.substring(0, 2), 16)
+            ,g = parseInt(hex.substring(2, 4), 16)
+            ,b = parseInt(hex.substring(4, 6), 16);
+
+        var res = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
+        return res;
+    },
+
     render: function () {
         var component = this;
         if (_.isEmpty(this.state.room)) {
@@ -546,9 +551,17 @@ var RoomPage = React.createClass({
             });
         }
 
-        return (
-            <div id="room" onDrop={this.handleDrop} onDragOver={this.dragOver} onDragEnter={this.dragOver} onKeyDown={this.handleKeyDown}>
 
+        var roomImageStyle = {};
+        if (this.state.room.tracks.length > 0) {
+            roomImageStyle.backgroundImage = 'url(' + this.state.room.tracks[0].img + ')'
+        }
+
+        return (
+            <div id="room"onDrop={this.handleDrop} onDragOver={this.dragOver} onDragEnter={this.dragOver} onKeyDown={this.handleKeyDown}>
+
+                <div id="roombackgroundimage" style={roomImageStyle}></div>
+                <div id="roombackgroundcover" />
                 <div id="nowplayingcontainer">
                     <NowPlaying
                         track={this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null}
@@ -610,8 +623,8 @@ var RoomPage = React.createClass({
 
                 <ChatPanel chat={this.state.room.chat} color={this.state.room.color} user={this.state.user} tracks={this.state.room.tracks} />
 
-                <div className="panel panel-room-top panel-success">
-                    <div className="panel-heading" style={{backgroundColor: this.state.room.color}}>
+                <div className="panel panel-room-top panel-success" style={{backgroundColor:'transparent !important'}}>
+                    <div className="panel-heading" style={{backgroundColor: this.convertHexColor(this.state.room.color, 80)}}>
                         <div className="container-fluid">
                             <div className="row">
 

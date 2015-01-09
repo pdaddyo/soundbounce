@@ -46,11 +46,16 @@ var soundbounceServer = {
 
             // clear listeners
 
+            var trackCount =0;
             this.rooms.forEach(function (r) {
                 r.listeners = [];
+                trackCount+= r.tracks.length;
             });
 
-            console.log("loaded data from disk.");
+
+            console.log("loaded data from disk:");
+            console.log(this.rooms.length+" rooms containing "+trackCount+" tracks, "+this.users.length," users");
+
         },
 
         init: function (app, httpServer, sessionHandler) {
@@ -257,7 +262,7 @@ var soundbounceServer = {
                 }).forEach(function (r) {
                     result += ('<h2>' + r.name + '</h2>');
                     result += r.listeners.map(function (l) {
-                        return "<img style='width:20%' src='" + l.img + "'/> ";
+                        return "<img src='" + l.img + "'/> ";
                     }).join('') + "<br/>";
 
                     if (r.listeners.length > 0) {
@@ -491,7 +496,7 @@ var soundbounceServer = {
                 // add in a few moments, to avoid it appearing before track ends for clients that are slightly behind
                 _.delay(function () {
                     server.processAdds(room, track.addedBy, [track.id], true);
-                }, 10 * 2000);
+                }, 10 * 10000);
             }
 
         },
@@ -879,7 +884,7 @@ var soundbounceServer = {
             // save backups first to history folders
 
             var usersJson = JSON.stringify(this.users, null, "\t");
-            var roomsJson = JSON.stringify(this.rooms, null, "\t");
+            var roomsJson = JSON.stringify(this.rooms);
 
             fs.writeFileSync(this.getNewHistoryFileName("users"), usersJson);
             fs.writeFileSync(this.getNewHistoryFileName("rooms"), roomsJson);
@@ -894,7 +899,7 @@ var soundbounceServer = {
             // save backups first to history folders
 
             var usersJson = JSON.stringify(this.users, null, "\t");
-            var roomsJson = JSON.stringify(this.rooms, null, "\t");
+            var roomsJson = JSON.stringify(this.rooms);
 
             fs.writeFile(this.getNewHistoryFileName("users"), usersJson);
             fs.writeFile(this.getNewHistoryFileName("rooms"), roomsJson);
