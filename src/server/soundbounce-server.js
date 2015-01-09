@@ -24,6 +24,7 @@ var soundbounceServer = {
     rooms: [],
     userStoreFileName: jsonFolder + "users.json",
     roomStoreFileName: jsonFolder + "rooms.json",
+    superAdmins: ['Q11rWo9W'],
 
     RECYCLE_TRACKS_WHEN_PLAYLIST_HAS_LESS_THAN: 200,
     TOP_UP_WHEN_TRACKS_BELOW: 130,
@@ -167,7 +168,7 @@ var soundbounceServer = {
                 };
 
                 var existingRoom = _.find(server.rooms, function (r) {
-                    return r.name == roomName;
+                    return r.name.toLowerCase() == roomName.toLowerCase();
                 });
 
                 if (existingRoom) {
@@ -212,6 +213,7 @@ var soundbounceServer = {
         // delete room
         app.get('/deleteroom', function (req, res) {
 
+
             var room = _.find(server.rooms, function (r) {
                 return r.id == req.query.id;
             });
@@ -219,25 +221,7 @@ var soundbounceServer = {
             if (!room)
                 return;
 
-            var roomIndex = server.rooms.indexOf(room);
-
-            if (!_.contains(room.admins, req.session.user.id)) {
-                console.log("attempted delete room " + room.name.yellow + " by non-admin " + req.session.user.name);
-                res.send(JSON.stringify({authorised: false}));
-                return;
-            }
-
-            // remove this user from the room before we send the broadcast
-            room.listeners = _.filter(room.listeners, function (listener) {
-                return listener.id != req.session.user.id;
-            });
-
-            // broadcast to the room that it's gone
-            server.broadcast(room, [{type: 'error', payload: 'Room has been deleted'}]);
-
-            // remove the room
-            server.rooms.splice(roomIndex, 1);
-            console.log("" + room.name.red + " deleted by " + req.session.user.name);
+            server.deleteRoom(room);
 
             res.send(JSON.stringify({success: true}));
         });
@@ -427,6 +411,29 @@ var soundbounceServer = {
         server.topUpRooms();
     },
 
+
+    deleteRoom: function (room){
+        var roomIndex = server.rooms.indexOf(room);
+
+        if (!_.contains(room.admins, req.session.user.id)) {
+            console.log("attempted delete room " + room.name.yellow + " by non-admin " + req.session.user.name);
+            res.send(JSON.stringify({authorised: false}));
+            return;
+        }
+
+        // remove this user from the room before we send the broadcast
+        room.listeners = _.filter(room.listeners, function (listener) {
+            return listener.id != req.session.user.id;
+        });
+
+        // broadcast to the room that it's gone
+        server.broadcast(room, [{type: 'error', payload: 'Room has been deleted'}]);
+
+        // remove the room
+        server.rooms.splice(roomIndex, 1);
+        console.log("" + room.name.red + " deleted by " + req.session.user.name);
+
+    },
 
     processRemove: function (room, user, trackId) {
         // find track
@@ -650,14 +657,15 @@ var soundbounceServer = {
             {name: "shuffle", handler: this.commandShuffle, admin: true},
             {name: "addadmin", handler: this.commandAddAdmin, admin: true},
             {name: "removeadmin", handler: this.commandRemoveAdmin, admin: true},
-            {name: "topup", handler: this.commandTopUp, admin: true}
+            {name: "topup", handler: this.commandTopUp, admin: true},
+            {name: "permanentlydeleteroom", handler: this.commandDeleteRoom, admin:true}
         ];
 
         var foundCommand = false;
         serverCommands.forEach(function (command) {
             if (message.indexOf('/' + command.name) == 0) {
                 if (command.admin) {
-                    if (!_.contains(room.admins, user.id)) {
+                    if (!(_.contains(room.admins, user.id) || _.contains(server.superAdmins, user.id))) {
                         server.sendPrivateChat(room, user.id, "Nice try, you must be a room admin to use the command /" + command.name);
                         foundCommand = true;
                         return;
@@ -762,6 +770,15 @@ var soundbounceServer = {
         room.admins.push(newAdmin.id);
 
         this.sendPrivateChat(room, user.id, newAdmin.name+" is now an admin");
+    },
+
+    commandDeleteRoom: function (room, user, params){
+        if (_.isEmpty(params) || params!="confirm-delete") {
+            this.sendPrivateChat(room, user.id, "Usage: /deleteroom confirm-delete (Room will disappear forever!)");
+            return;
+        }
+
+        server.deleteRoom(room);
     },
 
     sendPrivateChat: function (room, userId, message) {
