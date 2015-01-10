@@ -218,6 +218,24 @@ var RoomPage = React.createClass({
         }
     },
 
+    toggleUserListClick: function(e)
+    {
+        var userlist = $('.userlist');
+        if(userlist.is(':hidden'))
+            userlist.slideDown();
+        else
+            userlist.slideUp();
+    },
+
+    openSpotifyProfile: function(id)
+    {
+        try {
+            spotifyBrowserApi.openUrl("spotify:user:" + id);
+        } catch (err) {
+            console.warn("No spotifyBrowserApi found!? ", err);
+        }
+    },
+
     playTrack: function (trackId, position) {
         // play from start if we hadn't ticked since track should have started
         if(position<this.UPDATE_STATE_DELAY)
@@ -640,7 +658,7 @@ var RoomPage = React.createClass({
                                             <span className="playlist-state" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Search for tracks below, or <br/>drag and drop from Spotify."}  data-html="true">
                                                 <i className={'' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")}/>
                                             </span>
-                                            <span className="room-listeners " data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.listeners.map(function (l) {
+                                            <span className="room-listeners " onClick={this.toggleUserListClick} data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.listeners.map(function (l) {
                                                 return l.name + '<br/>';
                                             }).join('')}  data-html="true">{this.state.room.listeners.length}
                                                 <i className="mdi-social-person"/>
@@ -664,6 +682,25 @@ var RoomPage = React.createClass({
                         <div className="toolbar">
                             <i className="mdi-navigation-close" id="roomClose" title="Back to room list" onClick={this.handleRoomCloseClick} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Back to room list" data-delay="500"></i>
                         </div>
+                    </div>
+                    <div className="userlist">
+                        <i className="mdi-navigation-close userlist-close pull-right" onClick={this.toggleUserListClick} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Close"></i>
+                        <ul className="list-group">
+                            {this.state.room.listeners.map(function (user,index,arr) {
+                                return <li className="list-group-item userentry">
+                                    <div>
+                                        <img className="useravatar" src={user.img} onClick={component.openSpotifyProfile.bind(this, user.spotifyUsername)}/>
+                                        <span>{user.name}</span>
+                                        <div className="pull-right userentry-right">
+                                            <a href="javascript:void(0)" onClick={component.openSpotifyProfile.bind(this, user.spotifyUsername)} className={'btn btn-fab btn-spotify fa fa-spotify'} data-toggle="tooltip" data-placement="left" title="" data-original-title="Show User in Spotify" style={{
+                                                overflow: 'visible',
+                                                backgroundColor: component.state.room.color
+                                            }} data-delay='{"show": 500, "hide": 0}'></a>
+                                        </div>
+                                    </div>
+                                </li>
+                            })}
+                        </ul>
                     </div>
                 </div>
 
