@@ -105,6 +105,9 @@ var RoomPage = React.createClass({
         });
 
         eventbus.on("star-track", function (track) {
+            // notify server
+            component.send({type: "star", payload: track});
+            // tell spotify
             try {
                 spotifyBrowserApi.starTrack(track.id);
             } catch (err) {
@@ -408,7 +411,7 @@ var RoomPage = React.createClass({
     },
 
     sendAddOrVote: function (trackIds) {
-        this.send({type: "add-or-vote", payload: trackIds})
+        this.send({type: "add-or-vote", payload: trackIds});
     },
 
     dragOver: function (e) {

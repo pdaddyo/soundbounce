@@ -892,11 +892,14 @@ h1 {
     cursor:pointer;
 }
 
-.vote .messages, .add .messages {
-    background-color: #fdfdfd;
+.vote .messages, .add .messages, .star .messages {
+    background-color: #fafafa;
+    border-radius:5px !important;
+    padding-left:32px;
+    width: 100%;
 }
 
-.vote .avatar:after, .add .avatar:after {
+.vote .avatar:after, .add .avatar:after, .star .avatar:after {
     display: none;
 }
 
@@ -912,6 +915,7 @@ h1 {
 
 .self .messages i {
     left: 10px;
+
 }
 
 .self .avatar {
@@ -964,12 +968,9 @@ h1 {
     font-size: 17px;
     line-height: 18px;
     position: absolute;
+    width:20px;
 }
 
-.vote .messages, .add .messages {
-    /* make room for icon */
-    padding-left: 32px;
-}
 
 .messages .album-art {
     float: right;
@@ -991,10 +992,7 @@ h1 {
 .messages-expand{
     display:none;
 }
-.discussion .add .messages, .discussion .vote .messages {
-    width: 100%;
 
-}
 
 .chat-input-area {
     background-color: #f9f9f9;

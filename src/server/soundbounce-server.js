@@ -278,7 +278,7 @@ var soundbounceServer = {
 
         // send admin message to all people in rooms
         app.get('/adminmessage', function (req, res) {
-            if(!_.contains(soundbounceServer.superAdmins, req.session.user.id)){
+            if (!_.contains(soundbounceServer.superAdmins, req.session.user.id)) {
                 req.send("you're not super admin!");
                 return;
             }
@@ -398,6 +398,9 @@ var soundbounceServer = {
                     switch (msg.type) {
                         case "add-or-vote":
                             server.processAdds(room, user, msg.payload);
+                            break;
+                        case "star":
+                            server.processStar(room, user, msg.payload);
                             break;
                         case "chat":
                             server.processChat(room, user, msg.payload);
@@ -621,6 +624,34 @@ var soundbounceServer = {
             name: "Soundbounce",
             img: '/img/soundbounce.png'
         };
+    },
+
+    processStar: function (room, user, payload) {
+
+        var server = this;
+        var nowPlaying = null;
+
+        // make sure we have correct now playing track
+        soundbounceShared.updatePlaylist(room, server);
+
+
+        if (room.tracks.length > 0) {
+            nowPlaying = room.tracks[0];
+        }
+
+        var chatmsg = {
+            type: "star",
+            id: shortId(),
+            track: payload,
+            timestamp: soundbounceShared.serverNow(),
+            user: this.simpleUser(user),
+            context: nowPlaying
+        };
+
+        soundbounceShared.addChatToRoom(room, chatmsg);
+
+        soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
+
     },
 
     processChat: function (room, user, payload) {

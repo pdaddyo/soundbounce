@@ -221,6 +221,19 @@ var ChatPanel = React.createClass({
         }
     },
 
+    getMessageVerb: function (msg) {
+        var verb = "Added ";
+        switch (msg.type) {
+            case "vote":
+                verb = "Voted for ";
+                break;
+            case "star":
+                verb = "Starred ";
+                break;
+        }
+        return verb;
+    },
+
     render: function () {
         var index = 0;
         var component = this;
@@ -233,7 +246,7 @@ var ChatPanel = React.createClass({
             var icon = <i/>, albumArt = null, expand = null;
             var timestamp = moment(msg.timestamp).from(soundbounceShared.serverNow());
 
-            if (msg.type == "add" || msg.type == "vote") {
+            if (msg.type == "add" || msg.type == "vote" || msg.type == "star") {
 
                 if (component.state.showJustChat)
                     continue;
@@ -242,8 +255,10 @@ var ChatPanel = React.createClass({
                     'pull-left': true,
                     'mdi-file-file-upload': msg.type == "vote",
                     'mdi-av-playlist-add': msg.type == "add",
+                    'mdi-action-grade': msg.type == "star",
                     'icon': true
                 });
+
 
                 albumArt = <img className="album-art" src={msg.track.img} />
 
@@ -272,7 +287,7 @@ var ChatPanel = React.createClass({
                     text = <p onClick={function (e) {
                         $(e.currentTarget).parent().find('.messages-expand').slideToggle();
                         $(e.currentTarget).parent().find('.album-art').toggle();
-                    }}>{nextMsg.type == "add" ? "Added " : "Voted for "}
+                    }}>{component.getMessageVerb(nextMsg)}
                         <a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a>
                     </p>;
                     //expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function(m){return <p>{m}</p>;}))}</div>;
@@ -282,8 +297,9 @@ var ChatPanel = React.createClass({
                     // albumArt = null;
                 }
                 else {
+
                     text = <p>
-                        <span>{(msg.type == "add" ? "Added " : "Voted for ")}</span>{groupedMessages[0]}</p>;
+                        <span>{component.getMessageVerb(msg)}</span>{groupedMessages[0]}</p>;
                 }
 
 
@@ -317,7 +333,7 @@ var ChatPanel = React.createClass({
             if (timestamp.indexOf("seconds") > -1)
                 timestamp = "Just now";
 
-            allMessages.push(<li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type+(msg.user.id=="1"?" soundbounce":"")}   >
+            allMessages.push(<li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type + (msg.user.id == "1" ? " soundbounce" : "")}   >
 
                 <div className="avatar">
                     <img className="circle" src={msg.user.img} />
