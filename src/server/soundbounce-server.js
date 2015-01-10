@@ -418,12 +418,12 @@ var soundbounceServer = {
     },
 
 
-    deleteRoom: function (room, user){
+    deleteRoom: function (room, user) {
         var server = this;
 
         var roomIndex = server.rooms.indexOf(room);
 
-          // remove this user from the room before we send the broadcast
+        // remove this user from the room before we send the broadcast
         room.listeners = _.filter(room.listeners, function (listener) {
             return listener.id != user.id;
         });
@@ -518,7 +518,6 @@ var soundbounceServer = {
         });
 
         // automatically top up rooms using linked playlists
-
         server.spotify.clientCredentialsGrant()
             .then(function (data) {
                 server.spotifyAccessToken = data['access_token'];
@@ -662,10 +661,11 @@ var soundbounceServer = {
         var serverCommands = [
             {name: "clearall", handler: this.commandClearAll, admin: true},
             {name: "shuffle", handler: this.commandShuffle, admin: true},
+            {name: "listadmins", handler: this.commandListAdmins},
             {name: "addadmin", handler: this.commandAddAdmin, admin: true},
             {name: "removeadmin", handler: this.commandRemoveAdmin, admin: true},
             {name: "topup", handler: this.commandTopUp, admin: true},
-            {name: "deleteroom", handler: this.commandDeleteRoom, admin:true}
+            {name: "deleteroom", handler: this.commandDeleteRoom, admin: true}
         ];
 
         var foundCommand = false;
@@ -716,7 +716,7 @@ var soundbounceServer = {
     },
 
     commandTopUp: function (room, user, params) {
-        if(_.isEmpty(params))
+        if (_.isEmpty(params))
             params = room.topUpURI;
 
         if (_.isEmpty(params)) {
@@ -726,7 +726,16 @@ var soundbounceServer = {
 
         this.topUpRoomWithPlaylist(room, params);
         this.sendPrivateChat(room, user.id, "Topping up playlist.");
+    },
 
+    commandListAdmins: function (room, user, params) {
+        var server = this;
+        server.sendPrivateChat(room, user.id, "Admins of '"+room.name+"'");
+        room.admins.map(function (adminId) {
+            server.sendPrivateChat(room, user.id, " - "+_.find(server.users, function (u) {
+                return u.id == adminId;
+            }).name);
+        });
     },
 
     commandRemoveAdmin: function (room, user, params) {
@@ -734,27 +743,31 @@ var soundbounceServer = {
             this.sendPrivateChat(room, user.id, "Usage: /removeadmin john smith");
             return;
         }
-        var removeAdmin = _.find(room.listeners, function (l){ return l.name.toLowerCase() == params.toLowerCase();});
+        var removeAdmin = _.find(room.listeners, function (l) {
+            return l.name.toLowerCase() == params.toLowerCase();
+        });
 
-        if(!removeAdmin){
-            this.sendPrivateChat(room, user.id, "No connected user: "+params);
+        if (!removeAdmin) {
+            this.sendPrivateChat(room, user.id, "No connected user: " + params);
             return;
         }
 
-        if(!_.contains(room.admins, removeAdmin.id)){
-            this.sendPrivateChat(room, user.id, removeAdmin.name+" is not a room admin anyway");
+        if (!_.contains(room.admins, removeAdmin.id)) {
+            this.sendPrivateChat(room, user.id, removeAdmin.name + " is not a room admin anyway");
             return;
         }
 
-        if(removeAdmin.id == user.id){
+        if (removeAdmin.id == user.id) {
             this.sendPrivateChat(room, user.id, "You cannot remove yourself as an admin.");
             return;
         }
 
         // remove admin
-        room.admins = _.filter(room.admins, function(id){ return id!=removeAdmin.id;});
+        room.admins = _.filter(room.admins, function (id) {
+            return id != removeAdmin.id;
+        });
 
-        this.sendPrivateChat(room, user.id, removeAdmin.name+" is no longer an admin");
+        this.sendPrivateChat(room, user.id, removeAdmin.name + " is no longer an admin");
     },
 
     commandAddAdmin: function (room, user, params) {
@@ -762,25 +775,27 @@ var soundbounceServer = {
             this.sendPrivateChat(room, user.id, "Usage: /addadmin john smith");
             return;
         }
-        var newAdmin = _.find(room.listeners, function (l){ return l.name.toLowerCase() == params.toLowerCase();});
+        var newAdmin = _.find(room.listeners, function (l) {
+            return l.name.toLowerCase() == params.toLowerCase();
+        });
 
-        if(!newAdmin){
-            this.sendPrivateChat(room, user.id, "No connected user: "+params);
+        if (!newAdmin) {
+            this.sendPrivateChat(room, user.id, "No connected user: " + params);
             return;
         }
 
-        if(_.contains(room.admins, newAdmin.id)){
-            this.sendPrivateChat(room, user.id, newAdmin.name+" is already a room admin");
+        if (_.contains(room.admins, newAdmin.id)) {
+            this.sendPrivateChat(room, user.id, newAdmin.name + " is already a room admin");
             return;
         }
 
         room.admins.push(newAdmin.id);
 
-        this.sendPrivateChat(room, user.id, newAdmin.name+" is now an admin");
+        this.sendPrivateChat(room, user.id, newAdmin.name + " is now an admin");
     },
 
-    commandDeleteRoom: function (room, user, params){
-        if (_.isEmpty(params) || params!="confirm-delete") {
+    commandDeleteRoom: function (room, user, params) {
+        if (_.isEmpty(params) || params != "confirm-delete") {
             this.sendPrivateChat(room, user.id, "Usage: /deleteroom confirm-delete (Room will disappear forever!)");
             return;
         }
