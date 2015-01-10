@@ -914,8 +914,11 @@ h1 {
 }
 
 .self .messages i {
-    left: 10px;
+    left: 8px;
+}
 
+.self.star .messages i {
+    left: 10px;
 }
 
 .self .avatar {
@@ -969,6 +972,10 @@ h1 {
     line-height: 18px;
     position: absolute;
     width:20px;
+}
+
+.other.star .messages i{
+    left: 58px;
 }
 
 
