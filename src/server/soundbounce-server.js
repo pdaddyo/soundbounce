@@ -730,9 +730,9 @@ var soundbounceServer = {
 
     commandListAdmins: function (room, user, params) {
         var server = this;
-        server.sendPrivateChat(room, user.id, "Admins of '"+room.name+"'");
+        server.sendPrivateChat(room, user.id, "Admins of '" + room.name + "'");
         room.admins.map(function (adminId) {
-            server.sendPrivateChat(room, user.id, " - "+_.find(server.users, function (u) {
+            server.sendPrivateChat(room, user.id, " - " + _.find(server.users, function (u) {
                 return u.id == adminId;
             }).name);
         });

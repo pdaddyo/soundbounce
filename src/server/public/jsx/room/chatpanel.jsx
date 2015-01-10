@@ -317,17 +317,12 @@ var ChatPanel = React.createClass({
             if (timestamp.indexOf("seconds") > -1)
                 timestamp = "Just now";
 
-            var classes = React.addons.classSet({
-                'message': true,
-                'info': msg.type != "chat"
-            });
-
-            allMessages.push(<li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type}   >
+            allMessages.push(<li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type+(msg.user.id=="1"?" soundbounce":"")}   >
 
                 <div className="avatar">
                     <img className="circle" src={msg.user.img} />
                 </div>
-                <div className="messages" title={msg.context ? "Sent during '" + msg.context.name + "' by " + msg.context.artists[0].name : ""}>
+                <div className="messages">
                         {albumArt} {icon}
                     {text}
                 {expand}
