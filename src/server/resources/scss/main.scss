@@ -837,6 +837,7 @@ h1 {
     overflow-y: auto;
     overflow-x: visible;
 
+    height:calc(100% - 39px);
 }
 
 .chat-panel .messagescontainer .ps-scrollbar-y-rail {
@@ -964,9 +965,7 @@ h1 {
 }
 
 .messages i {
-
     padding-right: 3px;
-
     left: 56px;
     font-size: 17px;
     line-height: 18px;

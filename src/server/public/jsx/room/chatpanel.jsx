@@ -5,16 +5,6 @@ String.prototype.endsWith = function (suffix) {
 var ChatPanel = React.createClass({
 
     componentDidMount: function () {
-
-        var $messages = $('.messagescontainer');
-
-        $messages.height($(document).height() - 136);
-        //  $messages.perfectScrollbar();
-        $(window).on("resize.chat", function () {
-            $messages.height($(window).height() - 136);
-            //    $messages.perfectScrollbar("update");
-        });
-
         // set up dropdown
         $('.dropdown-toggle').dropdown();
 
@@ -22,7 +12,7 @@ var ChatPanel = React.createClass({
     },
 
     componentWillUnmount: function () {
-        $(window).off("resize.chat");
+
     },
 
     getInitialState: function () {

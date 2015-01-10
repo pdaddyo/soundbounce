@@ -33,9 +33,6 @@ var RoomPage = React.createClass({
 
     setupEvents: function () {
         var component = this;
-        $(window).on("resize.room", function () {
-            //       component.updateScrollbars();
-        });
 
         eventbus.on("send-chat", function (chatText) {
             component.send({type: "chat", payload: {message: chatText}});
@@ -149,7 +146,6 @@ var RoomPage = React.createClass({
             this.socket.close(1000, "normal close");
         }
 
-        $(window).off("resize.room");
         eventbus.off("send-chat");
         eventbus.off("update-scrollbars");
         eventbus.off("edit-room");
