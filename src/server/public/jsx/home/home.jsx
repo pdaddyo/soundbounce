@@ -72,7 +72,7 @@ HomePage = React.createClass({
 
     render: function () {
         var totalUsers = _.reduce(
-                            this.state.rooms.map(function (r) {
+                            this.allRooms.map(function (r) {
                                 return r.listeners;
                             }),
                             function (a, b) {
