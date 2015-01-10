@@ -88,7 +88,7 @@ module.exports = function(session){
                 //try {
                 if (!data) {
                     // no session file
-                    if (err) return fn();
+                    if (err) return fn(null, null);
                     // something wrong
                     else return fn(null, null);
                 }
