@@ -29,8 +29,8 @@ var TrackVoteDisplay = React.createClass({
                                         index++;
 
                                         // only show first 4 votes for now
-                                        if(index==5){
-                                            return  "+";
+                                        if(index==0){
+                                            return  <span style={{color:component.props.color, top: '-3px',position: 'relative',display: 'inline-block'}}>+</span>;
                                         }
 
                                         if(index>5){
@@ -38,7 +38,7 @@ var TrackVoteDisplay = React.createClass({
                                         }
 
                                         return (
-                                            <span key={vote.id} className="pull-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={'<p class="top-line">'+(useOutline?'Vote from':'Added by')+'</p><img src=' + vote.img + '/><p>'+vote.name+'</p>'} data-html="true" data-delay='{"show": 50, "hide": 0}' >
+                                        <span key={vote.id} className="pull-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={'<p class="top-line">'+(useOutline?'Vote from':'Added by')+'</p><img src=' + vote.img + '/><p>'+vote.name+'</p>'} data-html="true" data-delay='{"show": 50, "hide": 0}' >
                                                 <i className={iconClasses} style={{color:component.props.color}}></i>
 
                                             </span>);
