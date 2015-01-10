@@ -840,10 +840,6 @@ h1 {
     height:calc(100% - 39px);
 }
 
-.chat-panel .messagescontainer .ps-scrollbar-y-rail {
-    /*   right:-8px !important;*/
-}
-
 .discussion {
     list-style: none;
     background: transparent;
@@ -1191,4 +1187,10 @@ body >.dropdown-menu li:hover {
 body >.dropdown-menu .active a,
 body >.dropdown-menu li:hover a {
     color: inherit;
+}
+
+.home-stats{
+    color:#999;
+    padding-top:4px;
+
 }

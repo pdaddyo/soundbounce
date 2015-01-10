@@ -30,7 +30,7 @@ HomePage = React.createClass({
             }.bind(this),
             error: function (xhr, status, err) {
                 console.error(status, err.toString());
-                router.alert(err.toString(),"Ooops! Something went wrong...");
+                router.alert(err.toString(), "Ooops! Something went wrong...");
             }.bind(this)
         });
     },
@@ -71,6 +71,14 @@ HomePage = React.createClass({
     },
 
     render: function () {
+        var totalUsers = _.reduce(
+                            this.state.rooms.map(function (r) {
+                                return r.listeners;
+                            }),
+                            function (a, b) {
+                                return a + b;
+                            },0);
+
         return (
             <div id="homecontainer">
                 <div className="jumbotron">
@@ -89,15 +97,17 @@ HomePage = React.createClass({
                 </div>
                 <div  id="roomlistcontainer" className="fancy-scrollbar" >
                     <div className="row" >
-                        <div className="container" id="motd">
+                        <div className="container" id="motd" style={{display: 'none'}}>
                             <div  className="col-sm-12  ">
                                 <div className="well">
                                     <button type="button" className="close pull-right" data-dismiss="modal" aria-hidden="true" onClick={this.hideMOTD}>×</button>
                                     <p>Welcome to Soundbounce, where music sounds better together.</p>
 
-<hr/>
+                                    <hr/>
                                     <p>
-                                        Please get involved and suggest features, report bugs and look at future plans on our <a href="javascript:eventbus.trigger('open-url', 'https://github.com/pdaddyo/soundbounce/issues');">project page on Github</a>.
+                                        Please get involved and suggest features, report bugs and look at future plans on our
+                                        <a href="javascript:eventbus.trigger('open-url', 'https://github.com/pdaddyo/soundbounce/issues');">project page on Github</a>
+                                        .
                                     </p>
 
 
@@ -108,14 +118,17 @@ HomePage = React.createClass({
 
                     <div className="row ">
                         <div className="container">
-                            <div className="col-sm-8">
-                                <h2 className="home-title" style={{display: this.state.rooms.length == 0 ? 'block' : 'none'}}>Sorry, no rooms match '{this.state.search}':</h2>
+                            <div className="col-sm-8 home-stats">
+                                <i className={'mdi-social-person'}></i> {totalUsers} listeners online
                             </div>
                             <div className="col-xs-12 col-sm-4 col-lg-3 pull-right room-search-container">
                                 <div className="form-control-wrapper">
                                     <i className="mdi-action-search" />
                                     <input type="text" className="form-control empty" placeholder="Search" onChange={this.onSearchChange} onKeyDown={this.handleKeyDown} value={this.state.search} />
                                 </div>
+                            </div>
+                            <div className="col-sm-12" style={{display: this.state.rooms.length == 0 ? 'block' : 'none'}}>
+                                <h2 className="home-title" >Sorry, no rooms match '{this.state.search}':</h2>
                             </div>
                         </div>
                     </div>
