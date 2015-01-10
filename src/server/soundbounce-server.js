@@ -748,18 +748,28 @@ var soundbounceServer = {
         }
     },
 
-    commandClearAll: function (room, user, params) {
-        room.tracks = [];
+    commandClearAll: function (room, user, params){
+        if(room.tracks.length==0)
+            return;
+
+        var nowPlaying = room.tracks[0];
+        room.tracks = [nowPlaying];
+
         soundbounceServer.reSyncAllUsers(room);
     },
 
     commandShuffle: function (room, user, params) {
+        if(room.tracks.length==0)
+            return;
+
         // strip votes + shuffle
-        room.tracks = _.shuffle(room.tracks.map(function (track) {
-            return _.extend(track, {votes: []});
-        }));
-        room.currentTrackPosition = 0;
-        room.currentTrackStartedAt = soundbounceShared.serverNow();
+        var nowPlaying = room.tracks[0];
+        var newTracks = [nowPlaying];
+        _.shuffle(_.rest(room.tracks)).map(function (track) {
+            newTracks.push(_.extend(track, {votes: []}));
+        });
+
+        room.tracks = newTracks;
 
         this.reSyncAllUsers(room);
         this.sendPrivateChat(room, user.id, "Playlist shuffled, votes removed");
