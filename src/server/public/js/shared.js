@@ -148,10 +148,18 @@ var soundbounceShared = {
     },
 
     simpleTrack: function (spotifyTrack) {
+        var imgUrl = '/img/empty-artwork.png';
+
+        if (spotifyTrack.album.images.length > 1) {
+            imgUrl = spotifyTrack.album.images[1].url;
+        } else if (spotifyTrack.album.images.length > 0) {
+            imgUrl = spotifyTrack.album.images[0].url;
+        }
+
         return {
             id: spotifyTrack.id,
             name: spotifyTrack.name,
-            img: spotifyTrack.album.images.length > 1 ? spotifyTrack.album.images[1].url : spotifyTrack.album.images[0].url, // image 1 is 300x300 ish
+            img: imgUrl,
             artists: spotifyTrack.artists.map(function (artist) {
                 return {id: artist.id, name: artist.name};
             }),
