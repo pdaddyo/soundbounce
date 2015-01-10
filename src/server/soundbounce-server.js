@@ -550,6 +550,10 @@ var soundbounceServer = {
         var TOP_UP_TRACKS_TO_ADD = 50;
         var server = this;
 
+        if(_.isEmpty(playlistURI)){
+            return;
+        }
+
         if (room.tracks.length < server.TOP_UP_WHEN_TRACKS_BELOW) {
             // we need to top up! go get the playlist
             var uriSplit = playlistURI.split(':');
@@ -614,6 +618,7 @@ var soundbounceServer = {
                         catch
                             (err) {
                             console.log("error topping up " + room.name + ": " + err);
+                            console.log(err.stack);
                         }
                     });
                 },
@@ -866,8 +871,13 @@ var soundbounceServer = {
 
         // remove querystrings e.g. ?action=browse
         trackIds = trackIds.map(function (t) {
-            return t.split("?")[0];
+            if(t)
+                return t.split("?")[0];
+            else
+                return null;
         });
+
+        trackIds = _.compact(trackIds);
 
         //console.log(user.name + " added/voted " + trackIds.length + " tracks in " + room.name, trackIds);
 
