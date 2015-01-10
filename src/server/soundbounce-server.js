@@ -278,6 +278,10 @@ var soundbounceServer = {
 
         // send admin message to all people in rooms
         app.get('/adminmessage', function (req, res) {
+            if(!_.contains(soundbounceServer.superAdmins, req.session.user.id)){
+                req.send("you're not super admin!");
+                return;
+            }
             _.keys(soundbounceServer.sockets).forEach(function (key) {
                 var socket = soundbounceServer.sockets[key];
                 try {
