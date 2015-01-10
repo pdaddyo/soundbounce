@@ -362,7 +362,11 @@ var soundbounceServer = {
                 soundbounceShared.updatePlaylist(room, server);
 
                 // send initial sync of room state and user info
-                socket.send(JSON.stringify([server.createSyncMessage(room, user)]));
+                try {
+                    socket.send(JSON.stringify([server.createSyncMessage(room, user)]));
+                }catch(err) {
+                    console.log("socket error for sync send to ".red + user.name + ", " + err);
+                }
 
                 // setup pinger to keep firewalls open
                 var pingTimerId = setInterval(function () {
@@ -1125,7 +1129,12 @@ var soundbounceServer = {
 };
 
 process.on('uncaughtException', function (err) {
+    if(String(err) == "Error: not opened")
+    {
+        console.log("Not opened exception!!!".red);
+    }
     console.log('Uncaught exception: ' + err);
+    console.log("Stack: "+err.stack);
     console.log("Saving before restart...");
     soundbounceServer.saveData();
     console.log("Saved, restarting...");
