@@ -955,7 +955,7 @@ var soundbounceServer = {
     },
 
     simpleUser: function (user) {
-        return {id: user.id, name: user.name, img: user.img};
+        return {id: user.id, name: user.name, img: user.img, spotifyUsername:user.spotifyUsername};
     },
 
     processVotes: function (room, user, trackIds) {

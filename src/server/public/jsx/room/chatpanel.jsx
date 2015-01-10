@@ -224,6 +224,14 @@ var ChatPanel = React.createClass({
         return verb;
     },
 
+    clickUser: function (e) {
+        var username = $(e.currentTarget).data('spotify');
+
+        if (username) {
+            eventbus.trigger("open-url", "spotify:user:" + username);
+        }
+    },
+
     render: function () {
         var index = 0;
         var component = this;
@@ -325,14 +333,14 @@ var ChatPanel = React.createClass({
 
             allMessages.push(<li className={(component.props.user.id == msg.user.id ? "self " : "other ") + msg.type + (msg.user.id == "1" ? " soundbounce" : "")}   >
 
-                <div className="avatar">
+                <div className="avatar" data-spotify={msg.user.spotifyUsername} onClick={component.clickUser} style={{cursor: (msg.user.spotifyUsername && msg.user.spotifyUsername.indexOf('@')==-1) ? "pointer" : "inherit"}}>
                     <img className="circle" src={msg.user.img} />
                 </div>
                 <div className="messages">
                         {albumArt} {icon}
                     {text}
                 {expand}
-                    <time>{msg.user.name} {timestamp == "" ? "" : "• "}
+                    <time><span data-spotify={msg.user.spotifyUsername} onClick={component.clickUser} style={{cursor: (msg.user.spotifyUsername && msg.user.spotifyUsername.indexOf('@')==-1) ? "pointer" : "inherit"}}>{msg.user.name}</span> {timestamp == "" ? "" : "• "}
                         <span data-toggle="tooltip" data-placement="top" title="" data-original-title={msg.context ? '<img style="width:90px;height:90px;" src=' + msg.context.img + ' /><br/>' + msg.context.name + ' by ' + msg.context.artists[0].name : ''} data-html="true">{timestamp}</span>
                     </time>
                 </div>
