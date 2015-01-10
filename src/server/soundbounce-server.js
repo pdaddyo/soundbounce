@@ -490,7 +490,11 @@ var soundbounceServer = {
                 return;
             }
 
-            soundbounceServer.sockets[listener.id].send(JSON.stringify([server.createSyncMessage(room, listener)]));
+            try {
+                soundbounceServer.sockets[listener.id].send(JSON.stringify([server.createSyncMessage(room, listener)]));
+            }catch(err){
+                console.log("resync socket.send failed for listener "+listener.id+" in room "+room.name);
+            }
         });
     },
 
@@ -860,7 +864,11 @@ var soundbounceServer = {
             user: this.getSoundbounceUser(),
             context: null
         };
-        soundbounceServer.sockets[userId].send(JSON.stringify([{type: "chat", payload: chatmsg}]));
+        try {
+            soundbounceServer.sockets[userId].send(JSON.stringify([{type: "chat", payload: chatmsg}]));
+        }catch(err){
+            console.log("send private chat failed in socket.send for user "+userId);
+        }
     },
 
     processAdds: function (room, user, trackIds, dontVote) {
@@ -1091,8 +1099,7 @@ var soundbounceServer = {
     },
 
     shutdown: function () {
-        console.log("\nSaving JSON...");
-
+        console.log("\n Shutting down, saving JSON...");
         this.saveData();
         console.log("Shutdown OK ".bgGreen.white);
     },
