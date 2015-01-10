@@ -366,6 +366,8 @@ var soundbounceServer = {
                     socket.send(JSON.stringify([server.createSyncMessage(room, user)]));
                 }catch(err) {
                     console.log("socket error for sync send to ".red + user.name + ", " + err);
+                    socket.close();
+                    return;
                 }
 
                 // setup pinger to keep firewalls open
