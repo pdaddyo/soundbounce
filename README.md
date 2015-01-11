@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/pdaddyo/soundbounce.png?label=ready&title=Ready)](https://waffle.io/pdaddyo/soundbounce)
 ![Soundbounce](http://soundbounce.org/images/soundbounce-white-bg.png)
 
 ###Music sounds better together.
