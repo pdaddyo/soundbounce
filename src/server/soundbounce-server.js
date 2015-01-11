@@ -715,7 +715,8 @@ var soundbounceServer = {
             {name: "addadmin", handler: this.commandAddAdmin, admin: true},
             {name: "removeadmin", handler: this.commandRemoveAdmin, admin: true},
             {name: "topup", handler: this.commandTopUp, admin: true},
-            {name: "deleteroom", handler: this.commandDeleteRoom, admin: true}
+            {name: "deleteroom", handler: this.commandDeleteRoom, admin: true},
+            {name: "find", handler: this.commandFind}
         ];
 
         var foundCommand = false;
@@ -863,6 +864,26 @@ var soundbounceServer = {
         this.deleteRoom(room, user);
         this.sendPrivateChat(room, user.id, "This room has been deleted.  Time for you to leave!");
 
+    },
+
+    commandFind: function (room, user, params) {
+        var server = this;
+        if(_.isEmpty(params)) {
+            this.sendPrivateChat(room, user.id, "Usage: /find john smith");
+            return;
+        }
+        var l = null;
+        server.rooms.forEach(function (room) {
+            l = _.find(room.listeners, (function(listener) {
+                return listener.name.toLowerCase() == params.toLowerCase();
+            }));
+            if(l) {
+                server.sendPrivateChat(room, user.id, l.name + " is listening to music in '" + room.name + "'");
+                return false;
+            }
+        });
+        if(!l)
+            server.sendPrivateChat(room,user.id, "User " + params + " not found/online");
     },
 
     sendPrivateChat: function (room, userId, message) {
