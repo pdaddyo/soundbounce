@@ -33,6 +33,7 @@ var soundbounceShared = {
     // returns true if the playlist has changed, false if it hasn't
     updatePlaylist: function (room, server) {
         var done = false;
+        var hasUpdatedPlaylist = false;
         while (!done) {
             done = true;
 
@@ -52,7 +53,7 @@ var soundbounceShared = {
                 // set top track to play
                 room.currentTrackStartedAt = this.serverNow();
                 room.currentTrackPosition = 0;
-                return true;
+                hasUpdatedPlaylist = true;
             }
 
             // if we get here we have a track currently "playing"
@@ -84,19 +85,24 @@ var soundbounceShared = {
 
                 // the server may want to re-add this track, so let it know (if we're on the server, remember this code could be running on client!)
                 if (server) {
-                    server.handleRemovedTrack(trackRemoved, room);
+                    try {
+                        server.handleRemovedTrack(trackRemoved, room);
+                    } catch (err) {
+                        console.log("error re-adding track " + trackRemoved.name + " in room " + room.name);
+                    }
                 }
 
                 // and loop around, update again
                 done = false;
+                hasUpdatedPlaylist = true;
             }
             else {
                 //    console.log(room.name+" currently ", msPlayed, "ms into track " + nowPlaying.name);
                 room.currentTrackPosition = msPlayed;
-                return false;
+
             }
 
-            return true;
+            return hasUpdatedPlaylist;
         }
     },
 
