@@ -624,10 +624,12 @@ i.mdi-action-search {
 	position: relative;
 	top: -8px;
 	margin-right: 10px;
+	transition:all 0.58s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.room-listeners {
+.room-listeners:hover {
 	cursor: pointer;
+	border: 1px solid rgba(252, 255, 255, 0.6);
 }
 
 .room-listeners i, .playlist-state i {
