@@ -683,27 +683,22 @@ var RoomPage = React.createClass({
                             <i className="mdi-navigation-close" id="roomClose" title="Back to room list" onClick={this.handleRoomCloseClick} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Back to room list" data-delay="500"></i>
                         </div>
                     </div>
-                    <div className="userlist">
-                        <i className="mdi-navigation-close userlist-close pull-right" onClick={this.toggleUserListClick} data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Close"></i>
-                        <ul className="list-group">
+                </div>
+                <div className="userlist">
+                    <ul className="list-group">
                             {this.state.room.listeners.map(function (user,index,arr) {
                                 return <li className="list-group-item userentry">
                                     <div>
-                                        <img className="useravatar" src={user.img} onClick={component.openSpotifyProfile.bind(this, user.spotifyUsername)}/>
+                                        <img className="useravatar" src={user.img} onClick={component.openSpotifyProfile.bind(component, user.spotifyUsername)}/>
                                         <span>{user.name}</span>
-                                        <div className="pull-right userentry-right">
-                                            <a href="javascript:void(0)" onClick={component.openSpotifyProfile.bind(this, user.spotifyUsername)} className={'btn btn-fab btn-spotify fa fa-spotify'} data-toggle="tooltip" data-placement="left" title="" data-original-title="Show User in Spotify" style={{
-                                                overflow: 'visible',
-                                                backgroundColor: component.state.room.color
-                                            }} data-delay='{"show": 500, "hide": 0}'></a>
-                                        </div>
+
                                     </div>
                                 </li>
                             })}
-                        </ul>
-                    </div>
-                </div>
+                    </ul>
+                    <i className="mdi-navigation-close userlist-close pull-right" onClick={this.toggleUserListClick}></i>
 
+                </div>
             </div>
 
         );
