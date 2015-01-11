@@ -80,15 +80,13 @@ var soundbounceServer = {
             var loginSecret = server.hash(username.toLowerCase() + config.spotify.loginPepper);
 
             if (req.query.secret != loginSecret) {
-                console.log(("Incorrect secret sent by username " + username).red);
-
+                console.log(("Incorrect secret sent by username " + username).red+" ");
                 res.send("internal auth fail");
                 return;
             }
             // if we get here then the secret was good - we can trust the desktop app to have really logged into spotify
 
             // find user
-
             var user = _.find(server.users, function (user) {
                 return user.spotifyUsername == req.params.username.toLowerCase();
 
@@ -332,7 +330,21 @@ var soundbounceServer = {
                 user = req.session.user;
 
                 if (server.sockets[user.id]) {
-                    console.warn(user.name + " tried to open multiple websockets");
+                    console.warn(user.name + " tried to open multiple websockets...closing all of them!");
+
+                    try {
+                        server.sockets[user.id].close();
+                    }catch(err){
+                        console.log("error closing existing socket.");
+                    }
+                    server.sockets[user.id] = null;
+
+                    // remove user from room
+                    room.listeners = _.filter(room.listeners, function (l) {
+                        return user.id != l.id;
+                    });
+
+                    // bail
                     return;
                 }
 
@@ -365,8 +377,9 @@ var soundbounceServer = {
                 try {
                     socket.send(JSON.stringify([server.createSyncMessage(room, user)]));
                 }catch(err) {
-                    console.log("socket error for sync send to ".red + user.name + ", " + err);
+                    console.log("socket error for sync send to ".red + user.name + ", " + err +" - closing socket");
                     socket.close();
+                    server.sockets[user.id] = null;
                     return;
                 }
 
@@ -376,7 +389,16 @@ var soundbounceServer = {
                         socket.send('[{"type":"ping"}]');
                     }
                     catch (err) {
-                        console.error("unable to send ping to client " + user.name);
+                        console.error("unable to send ping to client " + user.name+", closing socket");
+                        try{socket.close();}catch(errr){}
+                        clearInterval(pingTimerId);
+                        server.sockets[user.id] = null;
+                        // remove user from room
+                        room.listeners = _.filter(room.listeners, function (l) {
+                            return user.id != l.id;
+                        });
+                        return;
+
                     }
                 }, 5000);
 
@@ -1125,6 +1147,15 @@ var soundbounceServer = {
 
     broadcast: function (room, messages) {
         room.listeners.forEach(function (listener) {
+
+            try {
+                soundbounceServer.sockets[listener.id].send(JSON.stringify(messages));
+            }catch(err){
+                console.log("failed to broadcast (socket.send) to "+listener.id);
+                // drop the socket
+                server.sockets[listener.id] = null;
+            }
+
             // has the socket been dropped?
             if (!soundbounceServer.sockets[listener.id]) {
                 // remove user from room
@@ -1132,12 +1163,6 @@ var soundbounceServer = {
                     return listener.id != l.id;
                 });
                 return;
-            }
-
-            try {
-                soundbounceServer.sockets[listener.id].send(JSON.stringify(messages));
-            }catch(err){
-                console.log("failed to broadcast (socket.send) to "+listener.id);
             }
         });
     },
