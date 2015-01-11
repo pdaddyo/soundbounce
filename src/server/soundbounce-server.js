@@ -896,7 +896,7 @@ var soundbounceServer = {
             }
         });
         if(!foundUser)
-            server.sendPrivateChat(room,user.id, "User " + systemUser.name + " is not currently listening to Soundbounce.");
+            server.sendPrivateChat(room,user.id, "" + systemUser.name + " is not currently listening to Soundbounce.");
     },
 
     sendPrivateChat: function (room, userId, message) {
