@@ -872,18 +872,31 @@ var soundbounceServer = {
             this.sendPrivateChat(room, user.id, "Usage: /find john smith");
             return;
         }
-        var l = null;
+
+        // check user exists in system
+        var systemUser = _.find(server.users, function (u){return u.name && (u.name.toLowerCase() == params.toLowerCase()); });
+
+        if(!systemUser){
+            server.sendPrivateChat(room,user.id, "User '" + params + "' does not exist.");
+            return;
+        }
+
+        var foundUser = null;
+
         server.rooms.forEach(function (room) {
-            l = _.find(room.listeners, (function(listener) {
+            if(foundUser)
+                return; // we've already found the user in another room
+
+            foundUser = _.find(room.listeners, (function(listener) {
                 return listener.name.toLowerCase() == params.toLowerCase();
             }));
-            if(l) {
-                server.sendPrivateChat(room, user.id, l.name + " is listening to music in '" + room.name + "'");
+            if(foundUser) {
+                server.sendPrivateChat(room, user.id, foundUser.name + " is listening to music in room '" + room.name + "'");
                 return false;
             }
         });
-        if(!l)
-            server.sendPrivateChat(room,user.id, "User " + params + " not found/online");
+        if(!foundUser)
+            server.sendPrivateChat(room,user.id, "User " + systemUser.name + " is not currently listening to Soundbounce.");
     },
 
     sendPrivateChat: function (room, userId, message) {
