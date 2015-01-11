@@ -1152,6 +1152,7 @@ var soundbounceServer = {
                 soundbounceServer.sockets[listener.id].send(JSON.stringify(messages));
             }catch(err){
                 console.log("failed to broadcast (socket.send) to "+listener.id);
+                try{  soundbounceServer.sockets[listener.id].close()}catch(errr){}
                 // drop the socket
                 server.sockets[listener.id] = null;
             }
