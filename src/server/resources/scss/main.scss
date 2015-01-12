@@ -461,10 +461,6 @@ i.mdi-action-search {
 	color: rgba(255, 255, 255, 0.6);
 }
 
-.room-description {
-	margin-left: 30px;
-}
-
 .tooltip, .tooltip.in {
 	opacity: 0.9;
 
@@ -614,7 +610,20 @@ i.mdi-action-search {
 	left: 10px;
 }
 
-.room-listeners, .playlist-state {
+.room-description {
+	top: -7px;
+	position: relative;
+	margin-right: 10px;
+}
+
+.room-track-count {
+	top: -7px;
+	position: relative;
+	max-width: 300px;
+	margin-right: 10px;
+}
+
+.room-listeners, .playlist-state, .room-track-count {
 	font-size: 12px;
 	font-weight: normal;
 	border: 1px solid rgba(252, 255, 255, 0.3);
@@ -624,7 +633,7 @@ i.mdi-action-search {
 	position: relative;
 	top: -8px;
 	margin-right: 10px;
-	transition:all 0.58s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: all 0.58s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .room-listeners:hover {
@@ -632,13 +641,16 @@ i.mdi-action-search {
 	border: 1px solid rgba(252, 255, 255, 0.6);
 }
 
-.room-listeners i, .playlist-state i {
+.room-listeners i, .playlist-state i, .room-track-count i  {
 	font-size: 13px;
 	position: relative;
 	top: 1px;
 	left: 1px;
 }
 
+.room-track-count i {
+	left:2px;
+}
 .playlist-state {
 	padding-right: 21px;
 }

@@ -644,7 +644,6 @@ var RoomPage = React.createClass({
                     <div className="panel-heading" style={{backgroundColor: this.convertHexColor(this.state.room.color, 80)}}>
                         <div className="container-fluid">
                             <div className="row">
-
                                 <div className="col-xs-12">
                                     <div className="play-pause-container pull-left">
                                         <a href="javascript:void(0)" onClick={this.onClickPlayPause} className={'btn btn-fab btn-success btn-pause-play ' + (this.state.playing ? 'mdi-av-pause' : 'mdi-av-play-arrow')} style={{color: this.state.room.color}}> </a>
@@ -658,15 +657,15 @@ var RoomPage = React.createClass({
                                             <span className="playlist-state" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Search for tracks below, or <br/>drag and drop from Spotify."}  data-html="true">
                                                 <i className={'' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")}/>
                                             </span>
-                                            <span className="room-listeners " onClick={this.toggleUserListClick} data-toggle="tooltip" data-placement="top" title="" data-original-title="Show listeners" data-delay="500">{this.state.room.listeners.length}
+                                            <span className="room-track-count " data-toggle="tooltip" data-placement="bottom" title={this.state.room.tracks.length+" tracks queued"} data-original-title="Show listeners" data-delay="0">
+                                                {this.state.room.tracks.length}
+                                                <i className="mdi-av-album"/>
+                                            </span>
+                                            <span className="room-listeners " onClick={this.toggleUserListClick} data-toggle="tooltip" data-placement="top" title="" data-original-title="Show listeners" data-delay="0">{this.state.room.listeners.length}
                                                 <i className="mdi-social-person"/>
                                             </span>
-                                            <span style={{
-                                                top: '-7px',
-                                                position: 'relative',
-                                                maxWidth: '300px',
-                                                marginRight: '10px'
-                                            }}>
+
+                                            <span className="room-description">
                                             {this.state.room.description}
                                             </span>
 
