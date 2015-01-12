@@ -133,7 +133,7 @@ var RoomPage = React.createClass({
         });
 
         eventbus.on("click-artist", function (artistName) {
-            component.setState({search: artistName});
+            component.setState({search: 'artist:"'+artistName+'"'});
             component.searchSpotify();
         });
     },
@@ -657,7 +657,7 @@ var RoomPage = React.createClass({
                                             <span className="playlist-state" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.state.room.locked ? "Playlist is closed. <br/> You may vote up curated tracks." : "Playlist is open. <br/>Search for tracks below, or <br/>drag and drop from Spotify."}  data-html="true">
                                                 <i className={'' + (this.state.room.locked ? "mdi-action-lock-outline" : "mdi-av-playlist-add")}/>
                                             </span>
-                                            <span className="room-track-count " data-toggle="tooltip" data-placement="bottom" title={this.state.room.tracks.length+" tracks queued"} data-original-title="Show listeners" data-delay="0">
+                                            <span className="room-track-count " data-toggle="tooltip" data-placement="bottom" data-original-title="Tracks queued" data-delay="0">
                                                 {this.state.room.tracks.length}
                                                 <i className="mdi-av-album"/>
                                             </span>

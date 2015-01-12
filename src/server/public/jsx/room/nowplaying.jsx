@@ -37,10 +37,6 @@ var NowPlaying = React.createClass({
         }
     },
 
-    onClickArtist: function (e){
-        eventbus.trigger("click-artist",$(e.currentTarget).text() );
-    },
-
     minSec: function(ms){
         var min = Math.floor(ms/1000/60),
             sec = Math.floor((ms/1000) % 60);
@@ -83,11 +79,9 @@ var NowPlaying = React.createClass({
                                     </span>
                                 </div>
                                 <h4 className="list-group-item-heading" dangerouslySetInnerHTML={{__html: this.props.track.name}} />
-                                <p className="list-group-item-text hide-overflow artist" onClick={this.onClickArtist} dangerouslySetInnerHTML={{
-                                    __html: this.props.track.artists.map(function (a) {
-                                        return a.name;
-                                    }).join(", ")
-                                }} />
+                                <p className="list-group-item-text hide-overflow" >
+                                    <ArtistList artists={this.props.track.artists} />
+                                </p>
                                 <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} addedBy={this.props.track.addedBy} />
                             </div>
                         </div>
