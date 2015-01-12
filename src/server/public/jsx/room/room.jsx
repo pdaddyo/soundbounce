@@ -669,7 +669,6 @@ var RoomPage = React.createClass({
                                             {this.state.room.description}
                                             </span>
 
-
                                         </p>
                                     </div>
                                 </div>

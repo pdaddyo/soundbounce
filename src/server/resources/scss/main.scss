@@ -261,21 +261,20 @@ h1 {
 }
 
 .track-search-container .form-control {
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.6);
 	text-indent: 20px;
-	color: rgba(255, 255, 255, 0.8);
-
+	color: rgba(255, 255, 255, 1);
 }
 
 .track-search-container ::-webkit-input-placeholder {
-	color: rgba(255, 255, 255, 0.5);
+	color: rgba(255, 255, 255, 0.7);
 }
 
 i.mdi-action-search {
 	position: absolute;
 	left: 0;
 	top: 7px;
-	color: rgba(255, 255, 255, 0.5);
+	color: rgba(255, 255, 255, 0.7);
 }
 
 .track-search-container i.mdi-content-clear {
@@ -283,12 +282,12 @@ i.mdi-action-search {
 	right: 0;
 	top: 7px;
 	cursor: pointer;
-	color: #999;
+	color: rgba(255,255,255,1);
 	font-size: 17px;
 }
 
 .track-search-container i.mdi-content-clear:hover {
-	color: #333;
+	color: rgba(255,255,255,0.8);
 }
 
 /* now playing */
@@ -367,7 +366,7 @@ i.mdi-action-search {
 }
 
 #spotifyResultsContainer p {
-	color: rgba(255, 255, 255, 0.8);
+	color: rgba(255, 255, 255, 0.9);
 }
 
 #spotifyResultsContainer .well {
@@ -545,7 +544,7 @@ i.mdi-action-search {
 	width: 100%;
 	height: 100%;
 	z-index: 0;
-	background-color: rgba(150, 150, 150, 0.5);
+	background-color: rgba(100, 100, 100, 0.5);
 }
 
 ::-webkit-scrollbar {
