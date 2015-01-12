@@ -498,7 +498,7 @@ var soundbounceServer = {
 
     reSyncAllUsers: function (room) {
 
-        soundbounceShared.updatePlaylist(room);
+        soundbounceShared.updatePlaylist(room, server);
 
         var server = this;
         // send a sync message to each connected user
