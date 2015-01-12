@@ -605,6 +605,11 @@ i.mdi-action-search {
 	text-overflow: ellipsis;
 }
 
+
+.room-list-item:hover h2 {
+	height:48px;
+}
+
 .room-list-item:hover .desc {
 	opacity: 0.8;
 	left: 10px;
