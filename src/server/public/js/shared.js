@@ -43,9 +43,8 @@ var soundbounceShared = {
             // if we're out of tracks, bail
             if (_.isEmpty(room.tracks)) {
                 room.currentTrackStartedAt = null;
-                return false;
+                return true;
             }
-
 
             // now we have at least one track on list
             // check if the top track is playing (probably a new add to a blank playlist if its not, so start it)
@@ -53,7 +52,7 @@ var soundbounceShared = {
                 // set top track to play
                 room.currentTrackStartedAt = this.serverNow();
                 room.currentTrackPosition = 0;
-                hasUpdatedPlaylist = true;
+                return true;
             }
 
             // if we get here we have a track currently "playing"
@@ -99,17 +98,18 @@ var soundbounceShared = {
             else {
                 //    console.log(room.name+" currently ", msPlayed, "ms into track " + nowPlaying.name);
                 room.currentTrackPosition = msPlayed;
-
+                return hasUpdatedPlaylist;
             }
 
-            return hasUpdatedPlaylist;
+            hasUpdatedPlaylist = true;
         }
+        return true;
     },
 
     // shared code when adding to a room
-    addTrackToRoom: function (room, track, user) {
+    addTrackToRoom: function (room, track, user, server) {
 
-        this.updatePlaylist(room);
+        this.updatePlaylist(room, server);
 
         var insertIndex = 0;
         if (track.insertAfter) {
@@ -120,8 +120,6 @@ var soundbounceShared = {
                 }
             }
         }
-
-        // console.log("inserting " + track.name + " (" + track.id + ") at index ", insertIndex, " insertafter=" + track.insertAfter);
 
         if (room.tracks.length > 0 && insertIndex == 0) {
             // you can't insert above the playing track, even if it has more votes.

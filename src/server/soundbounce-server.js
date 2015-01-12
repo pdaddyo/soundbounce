@@ -80,7 +80,7 @@ var soundbounceServer = {
             var loginSecret = server.hash(username.toLowerCase() + config.spotify.loginPepper);
 
             if (req.query.secret != loginSecret) {
-                console.log(("Incorrect secret sent by username " + username).red+" ");
+                console.log(("Incorrect secret sent by username " + username).red + " ");
                 res.send("internal auth fail");
                 return;
             }
@@ -334,7 +334,7 @@ var soundbounceServer = {
 
                     try {
                         server.sockets[user.id].close();
-                    }catch(err){
+                    } catch (err) {
                         console.log("error closing existing socket.");
                     }
                     server.sockets[user.id] = null;
@@ -376,8 +376,8 @@ var soundbounceServer = {
                 // send initial sync of room state and user info
                 try {
                     socket.send(JSON.stringify([server.createSyncMessage(room, user)]));
-                }catch(err) {
-                    console.log("socket error for sync send to ".red + user.name + ", " + err +" - closing socket");
+                } catch (err) {
+                    console.log("socket error for sync send to ".red + user.name + ", " + err + " - closing socket");
                     socket.close();
                     server.sockets[user.id] = null;
                     return;
@@ -389,8 +389,11 @@ var soundbounceServer = {
                         socket.send('[{"type":"ping"}]');
                     }
                     catch (err) {
-                        console.error("unable to send ping to client " + user.name+", closing socket");
-                        try{socket.close();}catch(errr){}
+                        console.error("unable to send ping to client " + user.name + ", closing socket");
+                        try {
+                            socket.close();
+                        } catch (errr) {
+                        }
                         clearInterval(pingTimerId);
                         server.sockets[user.id] = null;
                         // remove user from room
@@ -443,12 +446,27 @@ var soundbounceServer = {
 
         console.log('Startup OK'.green);
 
-        // top up rooms and save every 15 mins
+        // top up rooms every 15 mins
         setInterval(function () {
+            console.log("[topup]".green + " topping up rooms....");
             server.topUpRooms();
-            server.saveDataAsync();
         }, 1000 * 60 * 15);
 
+        // save data every hour  (saves pretty reliably on crashes anyway, has never failed to)
+        setInterval(function () {
+            console.log("[backup]".green + "saving data....");
+            server.saveDataAsync();
+            console.log("[backup]".green + " done");
+        }, 1000 * 60 * 60);
+
+        // update playlists every 10 seconds so all tracks recycle properly
+        setInterval(function () {
+            server.rooms.forEach(function (room) {
+                soundbounceShared.updatePlaylist(room, server);
+            });
+        }, 1000 * 10);
+
+        // topup on launch
         server.topUpRooms();
     },
 
@@ -514,8 +532,8 @@ var soundbounceServer = {
 
             try {
                 soundbounceServer.sockets[listener.id].send(JSON.stringify([server.createSyncMessage(room, listener)]));
-            }catch(err){
-                console.log("resync socket.send failed for listener "+listener.id+" in room "+room.name);
+            } catch (err) {
+                console.log("resync socket.send failed for listener " + listener.id + " in room " + room.name);
             }
         });
     },
@@ -536,17 +554,19 @@ var soundbounceServer = {
     // recycle tracks that were added by users, if there's room in playlist
     handleRemovedTrack: function (track, room) {
         var server = this;
+        //  console.log(room.name.green + " handleRemovedTrack " + track.name + "" + track.addedBy.id);
 
         // if there's room, and it wasn't added by soundbounce automatically
         if (room.tracks.length < server.RECYCLE_TRACKS_WHEN_PLAYLIST_HAS_LESS_THAN && track.addedBy.id != "1") {
             //    console.log("recycling track "+track.name+" in room "+room.name);
-
+            // console.log(room.name.green + " recycling " + track.name + "");
             // add in a few moments, to avoid it appearing before track ends for clients that are slightly behind
             _.delay(function () {
+                //  console.log("adding track... " + track.name + "");
                 server.processAdds(room, track.addedBy, [track.id], true);
-            }, 10 * 10000);
+                //  console.log(room.name.green + " re-added " + track.name + "");
+            }, 2000);
         }
-
     },
 
     topUpRooms: function () {
@@ -576,7 +596,7 @@ var soundbounceServer = {
         var TOP_UP_TRACKS_TO_ADD = 50;
         var server = this;
 
-        if(_.isEmpty(playlistURI)){
+        if (_.isEmpty(playlistURI)) {
             return;
         }
 
@@ -771,8 +791,8 @@ var soundbounceServer = {
         }
     },
 
-    commandClearAll: function (room, user, params){
-        if(room.tracks.length==0)
+    commandClearAll: function (room, user, params) {
+        if (room.tracks.length == 0)
             return;
 
         var nowPlaying = room.tracks[0];
@@ -782,7 +802,7 @@ var soundbounceServer = {
     },
 
     commandShuffle: function (room, user, params) {
-        if(room.tracks.length==0)
+        if (room.tracks.length == 0)
             return;
 
         // strip votes + shuffle
@@ -890,35 +910,37 @@ var soundbounceServer = {
 
     commandFind: function (room, user, params) {
         var server = this;
-        if(_.isEmpty(params)) {
+        if (_.isEmpty(params)) {
             this.sendPrivateChat(room, user.id, "Usage: /find john smith");
             return;
         }
 
         // check user exists in system
-        var systemUser = _.find(server.users, function (u){return u.name && (u.name.toLowerCase() == params.toLowerCase()); });
+        var systemUser = _.find(server.users, function (u) {
+            return u.name && (u.name.toLowerCase() == params.toLowerCase());
+        });
 
-        if(!systemUser){
-            server.sendPrivateChat(room,user.id, "User '" + params + "' does not exist.");
+        if (!systemUser) {
+            server.sendPrivateChat(room, user.id, "User '" + params + "' does not exist.");
             return;
         }
 
         var foundUser = null;
 
         server.rooms.forEach(function (room) {
-            if(foundUser)
+            if (foundUser)
                 return; // we've already found the user in another room
 
-            foundUser = _.find(room.listeners, (function(listener) {
+            foundUser = _.find(room.listeners, (function (listener) {
                 return listener.name.toLowerCase() == params.toLowerCase();
             }));
-            if(foundUser) {
+            if (foundUser) {
                 server.sendPrivateChat(room, user.id, foundUser.name + " is listening to music in room '" + room.name + "'");
                 return false;
             }
         });
-        if(!foundUser)
-            server.sendPrivateChat(room,user.id, "" + systemUser.name + " is not currently listening to Soundbounce.");
+        if (!foundUser)
+            server.sendPrivateChat(room, user.id, "" + systemUser.name + " is not currently listening to Soundbounce.");
     },
 
     sendPrivateChat: function (room, userId, message) {
@@ -932,8 +954,8 @@ var soundbounceServer = {
         };
         try {
             soundbounceServer.sockets[userId].send(JSON.stringify([{type: "chat", payload: chatmsg}]));
-        }catch(err){
-            console.log("send private chat failed in socket.send for user "+userId);
+        } catch (err) {
+            console.log("send private chat failed in socket.send for user " + userId);
         }
     },
 
@@ -945,7 +967,7 @@ var soundbounceServer = {
 
         // remove querystrings e.g. ?action=browse
         trackIds = trackIds.map(function (t) {
-            if(t)
+            if (t)
                 return t.split("?")[0];
             else
                 return null;
@@ -1006,7 +1028,7 @@ var soundbounceServer = {
 
                         if (canAdd) {
                             // add it to the room on the server
-                            soundbounceShared.addTrackToRoom(room, simpleTrack, simpleUser);
+                            soundbounceShared.addTrackToRoom(room, simpleTrack, simpleUser, server);
                         }
                     });
 
@@ -1029,7 +1051,7 @@ var soundbounceServer = {
     },
 
     simpleUser: function (user) {
-        return {id: user.id, name: user.name, img: user.img, spotifyUsername:user.spotifyUsername};
+        return {id: user.id, name: user.name, img: user.img, spotifyUsername: user.spotifyUsername};
     },
 
     processVotes: function (room, user, trackIds) {
@@ -1150,9 +1172,12 @@ var soundbounceServer = {
 
             try {
                 soundbounceServer.sockets[listener.id].send(JSON.stringify(messages));
-            }catch(err){
-                console.log("failed to broadcast (socket.send) to "+listener.id);
-                try{  soundbounceServer.sockets[listener.id].close()}catch(errr){}
+            } catch (err) {
+                console.log("failed to broadcast (socket.send) to " + listener.id);
+                try {
+                    soundbounceServer.sockets[listener.id].close()
+                } catch (errr) {
+                }
                 // drop the socket
                 server.sockets[listener.id] = null;
             }
@@ -1222,12 +1247,11 @@ var soundbounceServer = {
 };
 
 process.on('uncaughtException', function (err) {
-    if(String(err) == "Error: not opened")
-    {
+    if (String(err) == "Error: not opened") {
         console.log("Not opened exception!!!".red);
     }
     console.log('Uncaught exception: ' + err);
-    console.log("Stack: "+err.stack);
+    console.log("Stack: " + err.stack);
     console.log("Saving before restart...");
     soundbounceServer.saveData();
     console.log("Saved, restarting...");
