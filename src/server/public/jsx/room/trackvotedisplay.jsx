@@ -28,9 +28,10 @@ var TrackVoteDisplay = React.createClass({
                                         });
                                         index++;
 
-                                        // only show first 4 votes for now
-                                        if(index==0){
-                                            return  <span style={{color:component.props.color, top: '-3px',position: 'relative',display: 'inline-block'}}>+</span>;
+                                        // only show first 4 votes
+                                        if(index==5){
+                                            return  <span style={{color:component.props.color, top: '-3px',position: 'relative',display: 'inline-block'}}
+                                                data-toggle="tooltip" data-placement="bottom" title="" data-original-title={component.props.votes.length+' votes'}>+</span>;
                                         }
 
                                         if(index>5){
