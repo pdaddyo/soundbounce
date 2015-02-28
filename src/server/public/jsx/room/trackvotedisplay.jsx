@@ -14,7 +14,6 @@ var TrackVoteDisplay = React.createClass({
 
         var index=0, component = this;
         return (
-
             <span className="votes">
                                     {this.props.votes.map(function (vote) {
 
@@ -28,13 +27,13 @@ var TrackVoteDisplay = React.createClass({
                                         });
                                         index++;
 
-                                        // only show first 4 votes
-                                        if(index==5){
+                                        // only show first 5 votes
+                                        if(index==6){
                                             return  <span style={{color:component.props.color, top: '-3px',position: 'relative',display: 'inline-block'}}
                                                 data-toggle="tooltip" data-placement="bottom" title="" data-original-title={component.props.votes.length+' votes'}>+</span>;
                                         }
 
-                                        if(index>5){
+                                        if(index>6){
                                             return <span></span>;
                                         }
 

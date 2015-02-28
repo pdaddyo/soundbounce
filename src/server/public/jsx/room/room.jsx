@@ -473,6 +473,7 @@ var RoomPage = React.createClass({
     },
 
     clearSearch: function (e) {
+        this.searchNext = null;
         this.setState({search: '', spotifySearchResults: []});
     },
 
@@ -483,9 +484,11 @@ var RoomPage = React.createClass({
         if (_.isEmpty(this.state.search.trim()))
             return;
         $.ajax({
-            url: 'https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(this.state.search),
+            url: 'https://api.spotify.com/v1/search?type=track&offset=0&limit=50&q=' + encodeURIComponent(this.state.search),
             dataType: 'json',
             success: function (data) {
+                console.log(data);
+                component.searchNext = data.tracks.next;
                 var tracks = data.tracks.items.map(function (spotifyTrack) {
                     return soundbounceShared.simpleTrack(spotifyTrack);
                 });
@@ -499,19 +502,20 @@ var RoomPage = React.createClass({
             error: function (xhr, status, err) {
                 // todo: display friendly error popups
                 console.error(status, err.toString());
-                router.alert("search error - " + err.toString(), "Ooops! Something went wrong...");
+                //router.alert("search error - " + err.toString(), "Ooops! Something went wrong...");
             }.bind(this)
         });
     },
 
     searchSpotify: _.debounce(function () {
         this.searchSpotifyImmediately();
-    }, 200),
+    }, 500),
 
     handleKeyDown: function (e) {
         if (e.keyCode == 27) {
             // escape
             this.setState({search: '', spotifySearchResults: []});
+            this.searchNext = null;
         }
     },
 
@@ -527,6 +531,34 @@ var RoomPage = React.createClass({
 
         var res = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
         return res;
+    },
+
+    clickMoreResults: function (){
+        var component = this;
+        if (_.isEmpty(this.state.search.trim()))
+            return;
+        $.ajax({
+            url: component.searchNext,
+            dataType: 'json',
+            success: function (data) {
+                component.searchNext = data.tracks.next;
+                var tracks = data.tracks.items.map(function (spotifyTrack) {
+                    return soundbounceShared.simpleTrack(spotifyTrack);
+                });
+                tracks = _.filter(tracks, function (t) {
+                    return !_.contains(component.state.room.tracks.map(function (t) {
+                        return t.id;
+                    }), t.id);
+                });
+
+                component.setState({spotifySearchResults: _.union(this.state.spotifySearchResults,tracks)});
+            }.bind(this),
+            error: function (xhr, status, err) {
+                // todo: display friendly error popups
+                console.error(status, err.toString());
+                //router.alert("search error - " + err.toString(), "Ooops! Something went wrong...");
+            }.bind(this)
+        });
     },
 
     render: function () {
@@ -574,6 +606,13 @@ var RoomPage = React.createClass({
             roomImageStyle.backgroundImage = 'url(' + this.state.room.tracks[0].img + ')'
         }
 
+        var moreResultsButton = <span></span>;
+
+        if(component.searchNext)
+        {
+            moreResultsButton = <div ><div className="list-group-separator"></div><div className="row-content" style={{marginLeft:72}}><div className="list-group-item" onClick={component.clickMoreResults} style={{cursor:'pointer'}}><h4 className="list-group-item-heading">More results...</h4></div></div></div>;
+        }
+
         return (
             <div id="room"onDrop={this.handleDrop} onDragOver={this.dragOver} onDragEnter={this.dragOver} onKeyDown={this.handleKeyDown}>
 
@@ -599,7 +638,7 @@ var RoomPage = React.createClass({
                                 <div className="well playlist" style={{display: tracksForRoomPlaylist.length == 0 ? "none" : "block"}}>
                                        {emptyPlaylistMessage}
                                     <div className="list-group">
-                                              {tracksForRoomPlaylist.map(function (track, index, arr) {
+                                              {this.state.room.tracks.map(function (track, index, arr) {
                                                   var canVote = !_.contains(track.votes.map(function (v) {
                                                       return v.id;
                                                   }), component.state.user.id);
@@ -612,6 +651,7 @@ var RoomPage = React.createClass({
                                                       canAdd={false}
                                                       canRemove={component.isCurrentUserRoomAdmin() || (track.addedBy.id == component.state.user.id)}
                                                       isLast={index == arr.length - 1}
+                                                      visible={_.contains(tracksForRoomPlaylist, track)}
                                                   />
                                               })}
                                     </div>
@@ -628,8 +668,10 @@ var RoomPage = React.createClass({
                                                   }), t.id);
                                               }).map(function (track, index, arr) {
 
-                                                  return <PlaylistItem track={track} key={track.id} color={component.state.room.color} canVote={false} canAdd={true} isLast={index == arr.length - 1}/>
+                                                  return <PlaylistItem track={track} key={track.id} color={component.state.room.color} canVote={false} canAdd={true} isLast={index == arr.length - 1} visible={true} />
                                               })}
+
+                                        {moreResultsButton}
                                         </div>
                                     </div>
                                 </div>

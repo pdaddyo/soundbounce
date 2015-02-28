@@ -64,7 +64,7 @@ var PlaylistItem = React.createClass({
         }
 
         return (
-            <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result":""}>
+            <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result":""} style={{display:this.props.visible?"block":"none"}}>
                 <div className="list-group-item">
                     <div className="row-picture">
 

@@ -786,6 +786,27 @@ var soundbounceServer = {
             return;
         }
 
+        if(message.indexOf("/deleteuser ") == 0 && _.contains(server.superAdmins, user.id)){
+
+            var params = message.substr(12).trim();
+
+            var userToDelete = _.find(server.users, function (l) {
+                return l.spotifyUsername.toLowerCase() == params.toLowerCase();
+            });
+
+            if(!userToDelete) {
+                this.sendPrivateChat(room, user.id, "Unknown user: " + params);
+                return;
+            }
+
+            server.users = _.filter(server.users, function (user) {
+                return user.id != userToDelete.id;
+            });
+
+            this.sendPrivateChat(room, user.id, userToDelete.name + " has been deleted");
+            foundCommand = true;
+        }
+
         if (!foundCommand) {
             this.sendPrivateChat(room, user.id, "No such command: " + message);
         }
@@ -906,6 +927,41 @@ var soundbounceServer = {
         this.deleteRoom(room, user);
         this.sendPrivateChat(room, user.id, "This room has been deleted.  Time for you to leave!");
 
+    },
+
+    commandDeleteUser: function (room, user, params) {
+        var server = this;
+        if (_.isEmpty(params)) {
+            this.sendPrivateChat(room, user.id, "Usage: /find john smith");
+            return;
+        }
+
+        // check user exists in system
+        var systemUser = _.find(server.users, function (u) {
+            return u.name && (u.name.toLowerCase() == params.toLowerCase());
+        });
+
+        if (!systemUser) {
+            server.sendPrivateChat(room, user.id, "User '" + params + "' does not exist.");
+            return;
+        }
+
+        var foundUser = null;
+
+        server.rooms.forEach(function (room) {
+            if (foundUser)
+                return; // we've already found the user in another room
+
+            foundUser = _.find(room.listeners, (function (listener) {
+                return listener.name.toLowerCase() == params.toLowerCase();
+            }));
+            if (foundUser) {
+                server.sendPrivateChat(room, user.id, foundUser.name + " is listening to music in room '" + room.name + "'");
+                return false;
+            }
+        });
+        if (!foundUser)
+            server.sendPrivateChat(room, user.id, "" + systemUser.name + " is not currently listening to Soundbounce.");
     },
 
     commandFind: function (room, user, params) {
