@@ -3,35 +3,11 @@ RoomList = React.createClass({
     currentlyPreviewing: null,
 
     handleMouseOver: function (e) {
-        /*
-         play preview track on hover
 
-         var trackid = $(e.currentTarget).data('trackid');
-
-         if(trackid==null || this.currentlyPreviewing==trackid)
-         return;
-
-         e.stopPropagation();
-
-         this.currentlyPreviewing = trackid;
-         if (!_.isEmpty(trackid)) {
-         try {
-         spotifyBrowserApi.playTrack(trackid, 1000 * 75);
-         } catch (err) {
-         console.warn("No spotifyBrowserApi found!? ", err);
-         }
-         }*/
     },
 
     handleMouseOut: function (e) {
-        /*    console.log('out');
-         this.currentlyPreviewing = null;
-         e.stopPropagation();
-         try {
-         spotifyBrowserApi.pauseTrack();
-         } catch (err) {
-         console.warn("No spotifyBrowserApi found!? ", err);
-         }*/
+
     },
 
     getInitialState: function () {
@@ -40,11 +16,7 @@ RoomList = React.createClass({
 
     render: function () {
         var component = this;
-        var rooms = _(this.props.rooms).chain().sortBy( function (r) {
-            return -r.visits;
-        }).sortBy( function(r){
-            return -r.listeners;
-        }).value();
+        var rooms = this.props.rooms;
 
         return (
             <div id="roomlist">

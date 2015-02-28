@@ -1,10 +1,10 @@
 HomePage = React.createClass({
 
-    allRooms: [],
+    downloadedRooms: [],
 
     componentDidMount: function () {
 
-        this.updateRoomList();
+        this.updateRoomList(false);
 
         eventbus.on("update-room-list", this.updateRoomList);
     },
@@ -13,19 +13,22 @@ HomePage = React.createClass({
     },
 
     getInitialState: function () {
-        return {rooms: [], search: ""};
+        return {rooms: [], search: "", hasLoadedFullList: false};
     },
 
     componentDidUpdate: function (prevProps, prevState) {
     },
 
-    updateRoomList: function () {
+    updateRoomList: function (loadFullList) {
         var component = this;
         $.ajax({
-            url: '/roomlist',
+            url: '/roomlist' +(loadFullList ? "" : "?top30=true"),  // if we've clicked "show all", grab all of them
             dataType: 'json',
             success: function (data) {
-                component.allRooms = data;
+                if(loadFullList){
+                    component.setState({hasLoadedFullList: true});
+                }
+                component.downloadedRooms = data;
                 component.setRoomList(component.state.search);
             }.bind(this),
             error: function (xhr, status, err) {
@@ -38,11 +41,14 @@ HomePage = React.createClass({
     setRoomList: function (search) {
         var component = this;
         if (this.state.search == '') {
-            this.setState({rooms: this.allRooms, search: search});
+            this.setState({rooms: this.downloadedRooms, search: search});
         }
         else {
+            if(!this.state.hasLoadedFullList){
+                this.updateRoomList(true);
+            }
             this.setState({
-                rooms: _.filter(component.allRooms, function (r) {
+                rooms: _.filter(component.downloadedRooms, function (r) {
                         return (r.name.toLowerCase().indexOf(search.toLowerCase()) != -1);
                     }
                 ),
@@ -70,14 +76,27 @@ HomePage = React.createClass({
         $('#motd').slideUp();
     },
 
+    clickMoreResults: function () {
+        this.updateRoomList(true);
+    },
+
     render: function () {
-        var totalUsers = _.reduce(
-                            this.allRooms.map(function (r) {
+
+        var component = this,
+            totalUsers = _.reduce(
+                            this.downloadedRooms.map(function (r) {
                                 return r.listeners;
                             }),
                             function (a, b) {
                                 return a + b;
                             },0);
+
+        var moreResultsButton = <span></span>;
+
+        if(!this.state.hasLoadedFullList)
+        {
+            moreResultsButton = <div className="col-sm-6 col-md-4 col-lg-3 "  onClick={component.clickMoreResults} style={{cursor:'pointer',height:80}}><h3 className="list-group-item-heading">More rooms...</h3></div>;
+        }
 
         return (
             <div id="homecontainer">
@@ -134,6 +153,7 @@ HomePage = React.createClass({
                     </div>
                     <div className="container">
                         <RoomList rooms={this.state.rooms} />
+                        {moreResultsButton}
                     </div>
                 </div>
             </div>

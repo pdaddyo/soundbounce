@@ -24,7 +24,7 @@ var soundbounceServer = {
     rooms: [],
     userStoreFileName: jsonFolder + "users.json",
     roomStoreFileName: jsonFolder + "rooms.json",
-    superAdmins: ['Q11rWo9W'],
+    superAdmins: [/*'Q11rWo9W'*/],
 
     RECYCLE_TRACKS_WHEN_PLAYLIST_HAS_LESS_THAN: 200,
     TOP_UP_WHEN_TRACKS_BELOW: 130,
@@ -121,6 +121,7 @@ var soundbounceServer = {
                 soundbounceShared.updatePlaylist(r, server);
             });
 
+
             var simpleRoomList = _.map(server.rooms, function (room) {
                 return {
                     id: room.id,
@@ -133,8 +134,16 @@ var soundbounceServer = {
                 }
             });
 
+            var orderedRoomList = _(simpleRoomList).chain().sortBy( function (r) {
+                return -r.visits;
+            }).sortBy( function(r){
+                return -r.listeners;
+            }).value();
+
+            var top30 = _.first(orderedRoomList , 30);
+
             if (req.session.user != null)
-                res.send(JSON.stringify(simpleRoomList));
+                res.send(JSON.stringify(req.query["top30"] ? top30 : orderedRoomList));
             else
                 res.send(JSON.stringify([{id: 0, name: 'ERROR: NOT AUTHORISED', listeners: 0}]));
         });
@@ -275,7 +284,7 @@ var soundbounceServer = {
         });
 
         // send admin message to all people in rooms
-        app.get('/adminmessage', function (req, res) {
+      /*  app.get('/adminmessage', function (req, res) {
             if (!_.contains(soundbounceServer.superAdmins, req.session.user.id)) {
                 req.send("you're not super admin!");
                 return;
@@ -292,7 +301,7 @@ var soundbounceServer = {
 
             console.log("sent admin message -->", req.query.message);
             res.send("sent to " + _.keys(soundbounceServer.sockets.length) + " users");
-        });
+        });*/
 
         // web sockets handle all communication with the <Room />
         var wss = new WebSocketServer({server: httpServer});
@@ -1235,7 +1244,7 @@ var soundbounceServer = {
                 } catch (errr) {
                 }
                 // drop the socket
-                server.sockets[listener.id] = null;
+                soundbounceServer.sockets[listener.id] = null;
             }
 
             // has the socket been dropped?
