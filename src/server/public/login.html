@@ -80,6 +80,12 @@
 
         #loginContainer {
             height: 100%;
+            opacity:0;
+            transition: opacity 1.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #loginContainer.showHome{
+            opacity:1;
         }
 
         .glass-surround{
@@ -183,6 +189,10 @@
     }
 
     $(function () {
+        setTimeout(function () {
+            $('#loginContainer').addClass('showHome');
+            }, 500);
+
         randomBg();
         $('#loginlogo img').click(function (){ randomBg();});
         $.material.init();
