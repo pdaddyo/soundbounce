@@ -27,64 +27,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/noUiSlider/6.2.0/jquery.nouislider.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
-    <script>
 
-        $(function () {
-            $.material.init();
-
-            try {
-                $('.version').text('v' + spotifyBrowserApi.getVersion());
-            } catch (err) {
-                alert("Oops - cannot find libspotify.  Please double-check the installation instructions for your platform.");
-            }
-
-
-            var user = localStorage.getItem('username');
-            var pass = localStorage.getItem('pass');
-
-            // clear old cookie storage method
-            $.cookie('pass', '', {expires: -1});
-
-            if (user) {
-                $('#inputEmail').val(user);
-                if (pass) {
-                    $('#inputPassword').val(atob(pass));
-                    $('.btn-success').focus();
-                }
-                else {
-                    $('#inputPassword').focus();
-                }
-
-            }
-            else {
-                $('#inputEmail').focus();
-            }
-
-            $('#loginForm').submit(function (e) {
-                e.preventDefault();
-                // $('#loginContainer').css({opacity:0.2});
-
-                // save login name
-                localStorage.setItem("username", $('#inputEmail').val());
-
-                var remember = $('#remember')[0].checked;
-
-                if (remember) {
-                    localStorage.setItem("pass", btoa($('#inputPassword').val()));
-                }
-                else {
-                    localStorage.setItem("pass", null);
-                }
-
-                // the host browser Spotify API handles the login
-                spotifyBrowserApi.login($('#inputEmail').val(), $('#inputPassword').val());
-                $('#loginForm').html("Just a moment - we're connecting to Spotify...");
-
-                return false;
-            });
-
-        });
-    </script>
     <style>
         .checkbox {
             padding-top: 13px !important;
@@ -101,7 +44,7 @@
 
         .logos a {
             text-align: left;
-            color: #aaa;
+           color:rgba(255,255,255,0.7);
         }
 
         .logos a {
@@ -109,18 +52,52 @@
         }
 
         .logos a:hover {
-            color: #666;
+            color:rgba(255,255,255,1);
         }
 
         .version {
+            position:absolute;
+            left:20px;
+            bottom:20px;
+
+            color:rgba(255,255,255,0.7);
             display: inline-block;
             margin-right: 5px;
+        }
+
+        #login-box {
+            position: relative;
+            top: calc(50% - 250px);
+        }
+
+        #homebackgroundimage {
+            background-image: url(img/backgrounds/11.jpg);
+        }
+        #homebackgroundcover {
+
+            background-color: rgba(120, 120, 120, 0.2);
+        }
+
+        #loginContainer {
+            height: 100%;
+        }
+
+        .glass-surround{
+            background-color:rgba(200,200,200,0.3);
+            border-radius:3px;
+            padding:15px;
+        }
+
+        #loginlogo{
+            text-align:center;
+            padding-top:15px;
+            padding-bottom:25px;
         }
     </style>
 </head>
 <body>
 
-
+<!--
 <div class="jumbotron">
     <div class="container">
         <img src="img/soundbounce-white-bg.png"/>
@@ -128,48 +105,55 @@
         <p>Music sounds better together.</p>
     </div>
 </div>
-
+-->
+<div id="homebackgroundimage"></div>
+<div id="homebackgroundcover"></div>
 <div class="container" id="loginContainer">
     <div class="row" style="padding-top: 20px;" id="login-box">
-        <div class="col-sm-8 col-md-6 col-lg-5 ">
-            <div class="panel panel-default">
+        <div class="col-md-offset-3 col-sm-offset-2 col-sm-8 col-md-6 col-lg-5 ">
+            <div class="glass-surround">
+                <div id="loginlogo">
+                  <img src="img/soundbounce-white-text.png" style="width:300px;  height:auto;" />
+                </div>
+                <div class="panel panel-default">
 
-                <div class="panel-body">
-                    <form class="form-horizontal" id="loginForm">
-                        <fieldset>
+                    <div class="panel-body">
+                        <form class="form-horizontal" id="loginForm">
+                            <fieldset>
 
-                            <div class="form-group">
-                                <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
                                     <span class="help-block">You'll need a <span
                                             class="text-success">Spotify Premium</span> account to use Soundbounce.</span>
-                                    <hr>
-                                    <!--<h3>Login</h3>-->
-                                    <input type="text" class="form-control" id="inputEmail"
-                                           placeholder="Spotify username or facebook email">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-
-                                    <input type="password" class="form-control" id="inputPassword"
-                                           placeholder="Password">
-                                </div>
-                                <div class="col-sm-12">
-
-                                    <div class="checkbox pull-left">
-                                        <label>
-                                            <input type="checkbox" id="remember" checked="checked"><span
-                                                class="toggle"></span> Remember
-                                            password?
-                                        </label>
+                                        <hr>
+                                        <!--<h3>Login</h3>-->
+                                        <input type="text" class="form-control" id="inputEmail"
+                                               placeholder="Spotify username or facebook email">
                                     </div>
-
-                                    <input type="submit" class="btn btn-success  pull-right" value="Log in »"/>
-
                                 </div>
-                            </div>
-                        </fieldset>
-                    </form>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+
+                                        <input type="password" class="form-control" id="inputPassword"
+                                               placeholder="Password">
+                                    </div>
+                                    <div class="col-sm-12">
+
+                                        <div class="checkbox pull-left">
+                                            <label>
+                                                <input type="checkbox" id="remember" checked="checked"><span
+                                                    class="toggle"></span> Remember
+                                                password?
+                                            </label>
+                                        </div>
+
+                                        <input type="submit" class="btn btn-success  pull-right" value="Log in »"/>
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -178,10 +162,10 @@
 
 </div>
 
-
+<span class="version"> Libspotify not loaded?</span>
 <footer>
     <p>
-        <span class="version"> Libspotify not loaded?</span>
+
     <span class="logos">
         <a href="javascript:spotifyBrowserApi.openUrl('https://www.facebook.com/soundbounce.org');"><i
                 class="fa fa-facebook-square fa-2x"></i></a>
@@ -191,6 +175,72 @@
                 class="fa fa-github-square fa-2x"></i></a>
     </span></p>
 </footer>
+
+<script>
+
+    function randomBg(){
+        $('#homebackgroundimage').css({backgroundImage:"url(img/backgrounds/"+(Math.floor(Math.random()*10)+1)+".jpg)"});
+    }
+
+    $(function () {
+        randomBg();
+        $('#loginlogo img').click(function (){ randomBg();});
+        $.material.init();
+
+        try {
+            $('.version').text('v' + spotifyBrowserApi.getVersion());
+        } catch (err) {
+            alert("Oops - cannot find libspotify.  Please double-check the installation instructions for your platform.");
+        }
+
+
+        var user = localStorage.getItem('username');
+        var pass = localStorage.getItem('pass');
+
+        // clear old cookie storage method
+        $.cookie('pass', '', {expires: -1});
+
+        if (user) {
+            $('#inputEmail').val(user);
+            if (pass) {
+                $('#inputPassword').val(atob(pass));
+                $('.btn-success').focus();
+            }
+            else {
+                $('#inputPassword').focus();
+            }
+
+        }
+        else {
+            $('#inputEmail').focus();
+        }
+
+        $('#loginForm').submit(function (e) {
+            e.preventDefault();
+            // $('#loginContainer').css({opacity:0.2});
+
+            // save login name
+            localStorage.setItem("username", $('#inputEmail').val());
+
+            var remember = $('#remember')[0].checked;
+
+            if (remember) {
+                localStorage.setItem("pass", btoa($('#inputPassword').val()));
+            }
+            else {
+                localStorage.setItem("pass", null);
+            }
+
+            // the host browser Spotify API handles the login
+            spotifyBrowserApi.login($('#inputEmail').val(), $('#inputPassword').val());
+            $('#loginForm').html("Just a moment - we're connecting to Spotify...");
+
+            return false;
+        });
+
+    });
+</script>
+
 
 <script>
     (function (i, s, o, g, r, a, m) {
@@ -209,6 +259,7 @@
     ga('send', 'pageview');
 
 </script>
+
 
 </body>
 </html>

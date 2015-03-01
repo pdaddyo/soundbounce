@@ -100,16 +100,15 @@ HomePage = React.createClass({
 
         return (
             <div id="homecontainer">
-                <div className="jumbotron">
+                <div id="homebackgroundimage"></div>
+                <div id="homebackgroundcover"></div>
+                <div className="jumbotron" id="homeheader">
                     <div className="container">
-                        <div  className="col-sm-8  ">
-                            <img src="img/soundbounce-white-bg.png" />
+                        <div  className="col-sm-8">
+                           <img src="img/soundbounce.png" className="logo"/><span>Rooms</span>
                         </div>
-                        <div className="col-xs-12 col-sm-4 col-lg-3 pull-right">
-                            <button className="btn btn-primary btn-lg" style={{
-                                width: '100%',
-                                marginTop: '17px'
-                            }} onClick={this.clickCreateRoom}>+ Create room
+                        <div className="col-xs-12 col-sm-4 col-md-3 col-lg-3 pull-right">
+                            <button className="btn btn-primary btn-lg" class="create-room" onClick={this.clickCreateRoom}>+ Create room
                             </button>
                         </div>
                     </div>
@@ -135,10 +134,10 @@ HomePage = React.createClass({
                         </div>
                     </div>
 
-                    <div className="row ">
+                    <div className="row " style={{marginTop:10,marginBottom:10}}>
                         <div className="container">
                             <div className="col-sm-8 home-stats">
-                                <i className={'mdi-social-person'}></i> {totalUsers} listeners online
+                                <i className={'mdi-social-person'} style={{position: 'relative',top: 1}}></i> {totalUsers} listeners online
                             </div>
                             <div className="col-xs-12 col-sm-4 col-lg-3 pull-right room-search-container">
                                 <div className="form-control-wrapper">
