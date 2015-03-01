@@ -3,10 +3,18 @@ HomePage = React.createClass({
     downloadedRooms: [],
 
     componentDidMount: function () {
-
+        var component = this;
         this.updateRoomList(false);
+        this.randomBg();
 
-        eventbus.on("update-room-list", this.updateRoomList);
+        eventbus.on("update-room-list", function () {
+            component.updateRoomList();
+            component.randomBg();
+        });
+    },
+
+    randomBg: function (){
+        $('#homebackgroundimage').css({backgroundImage:"url(img/backgrounds/"+(Math.floor(Math.random()*10)+1)+".jpg)"});
     },
 
     componentWillUnmount: function () {
@@ -105,7 +113,7 @@ HomePage = React.createClass({
                 <div className="jumbotron" id="homeheader">
                     <div className="container">
                         <div  className="col-sm-8">
-                           <img src="img/soundbounce.png" className="logo"/><span>Rooms</span>
+                           <img src="img/soundbounce.png" className="logo" onClick={this.randomBg}/><span>Rooms</span>
                         </div>
                         <div className="col-xs-12 col-sm-4 col-md-3 col-lg-3 pull-right">
                             <button className="btn btn-primary btn-lg" class="create-room" onClick={this.clickCreateRoom}>+ Create room

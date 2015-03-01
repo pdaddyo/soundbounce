@@ -4,3 +4,4 @@ sessions
 node_modules/
 tmp/
 config.js
+json/
