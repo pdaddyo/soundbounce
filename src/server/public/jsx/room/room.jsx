@@ -415,7 +415,7 @@ var RoomPage = React.createClass({
         if (e.preventDefault) e.preventDefault();
         var text = e.dataTransfer.getData("Text");
         // strip to just the track ids, and remove empties
-        var trackIds = _.map(text.split("\r\n"), function (url) {
+        var trackIds = _.map(text.split("\n"), function (url) {
             return url.substr(url.lastIndexOf("/") + 1);
         }).filter(function (e) {
             return e;
