@@ -99,6 +99,12 @@
             padding-top:15px;
             padding-bottom:25px;
         }
+        .advanced-link{
+            font-size:10px;
+        }
+        .advanced-options{
+            display:none;
+        }
     </style>
 </head>
 <body>
@@ -156,6 +162,14 @@
                                         <input type="submit" class="btn btn-success  pull-right" value="Log in »"/>
 
                                     </div>
+                                    <div class="col-sm-12">
+
+                                        <a href="#advanced" class="advanced-link">Having trouble connecting to rooms?</a>
+                                        <div class="advanced-options">
+                                            Websocket port: <select id="websocket"><option value="80">80 (default)</option><option value="443">443</option><option value="8080">8080</option></select>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </fieldset>
                         </form>
@@ -184,11 +198,19 @@
 
 <script>
 
+    $('.advanced-link').click(function () {
+        $('.advanced-link').hide();
+        $('.advanced-options').slideDown();
+    });
     function randomBg(){
         $('#homebackgroundimage').css({backgroundImage:"url(img/backgrounds/"+(Math.floor(Math.random()*10)+1)+".jpg)"});
     }
 
     $(function () {
+        var storedPort = $.cookie('port');
+        if(storedPort){
+            $('#websocket').val(storedPort);
+        }
         setTimeout(function () {
             $('#loginContainer').addClass('showHome');
             }, 500);
@@ -200,7 +222,7 @@
         try {
             $('.version').text('v' + spotifyBrowserApi.getVersion());
         } catch (err) {
-            alert("Oops - cannot find libspotify.  Please double-check the installation instructions for your platform.");
+            $('.help-block').text("Oops - cannot find libspotify.  Please double-check the installation instructions for your platform (there is an extra step detailed in the download for OSX).").css({color:'red'});
         }
 
 
@@ -240,6 +262,8 @@
             else {
                 localStorage.setItem("pass", null);
             }
+
+            $.cookie('port', $('#websocket').val(),{ expires: 300 });
 
             // the host browser Spotify API handles the login
             spotifyBrowserApi.login($('#inputEmail').val(), $('#inputPassword').val());

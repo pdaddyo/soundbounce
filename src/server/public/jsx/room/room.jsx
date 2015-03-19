@@ -7,7 +7,7 @@ var RoomPage = React.createClass({
 
     componentDidMount: function () {
         var host = window.document.location.host.replace(/:.*/, '');
-        this.socket = new ReconnectingWebSocket('ws://' + host + '/' + this.props.roomid);
+        this.socket = new ReconnectingWebSocket('ws://' + host + ':' + $.cookie('port') + '/' + this.props.roomid);
         var component = this;
 
         this.socket.onmessage = (function (event) {
