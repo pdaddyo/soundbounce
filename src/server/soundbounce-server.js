@@ -13,7 +13,8 @@ var WebSocketServer = require('ws').Server
     , moment = require('moment')
     , spotifyApi = require('spotify-web-api-node')
     , soundbounceShared = require('./public/js/shared.js')
-    , shortId = require('shortid');
+    , shortId = require('shortid')
+    , youtube = require('./soundbounce-youtube');
 
 var jsonFolder = "json/";
 var historyFolder = jsonFolder + "history/";
@@ -64,6 +65,9 @@ var soundbounceServer = {
 
         // load the stores into memory
         this.loadFromDisk();
+
+        // load youtube module
+        youtube.init(app, this);
 
         // login
         // called from our spotify desktop client (called after libspotify successfully auths the spotify username)
