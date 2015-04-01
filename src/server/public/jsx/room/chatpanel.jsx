@@ -177,8 +177,7 @@ var ChatPanel = React.createClass({
         return result;
     },
 
-    clickVoteInChat: function (e) {
-        var trackId = $(e.currentTarget).data("track");
+    clickVoteInChat: function (trackId) {
         eventbus.trigger("track-vote-id", trackId);
     },
 
@@ -207,7 +206,7 @@ var ChatPanel = React.createClass({
             return <span>{text}</span>;
         }
         else {
-            return <span className="vote-chat" data-toggle="tooltip" data-placement="top" data-original-title={'Vote for ' + track.name} onClick={component.clickVoteInChat} data-track={track.id}>{text}</span>;
+            return <span className="vote-chat" data-toggle="tooltip" data-placement="top" data-original-title={'Vote for ' + track.name} onMouseDown={component.clickVoteInChat.bind(this, track.id)}>{text}</span>;
         }
     },
 
@@ -288,11 +287,9 @@ var ChatPanel = React.createClass({
                     }}>{component.getMessageVerb(nextMsg)}
                         <a href="javascript:void(0)">{groupedMessages.length + " tracks..."}</a>
                     </p>;
-                    //expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function(m){return <p>{m}</p>;}))}</div>;
                     expand = <div className="messages-expand">{_.flatten(groupedMessages.map(function (m) {
                         return <p>{m}</p>;
                     }))}</div>;
-                    // albumArt = null;
                 }
                 else {
 
