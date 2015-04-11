@@ -2,15 +2,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.soundbounce.soundbounce" >
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required permissions for WebView to load pages from server -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Required permissions for background checking of network connectivity -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <!-- Required permissions to wake device periodically on a timer for tracking -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <!-- Required permissions to store persistent data -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- Required for Spotify -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true"
+        android:anyDensity="true" >
+    </supports-screens>
 
     <application
         android:name=".SoundbounceApplication"
@@ -22,8 +38,7 @@
             android:name=".activities.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme"
-            android:launchMode="singleInstance" >
+            android:theme="@style/FullscreenTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,6 +57,20 @@
                     android:scheme="soundbounce"/>
             </intent-filter>
         </activity>
+
+        // Spotify Authentication modal
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        // ACRA crash reporting dialog
+        <activity android:name="org.acra.CrashReportDialog"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:process=":error_report"
+            android:theme="@android:style/Theme.Dialog" />
+
     </application>
 
 </manifest>

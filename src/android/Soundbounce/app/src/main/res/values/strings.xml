@@ -2,4 +2,8 @@
 <resources>
     <string name="app_name">Soundbounce</string>
     <string name="crash_toast_text">Soundbounce crashed! Please wait while a report is captured.</string>
+    <string name="crash_dialog_title">Soundbounce has crashed</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the application to stop. Please help us fix this by sending us error data, all you have to do is click OK.</string>
+    <string name="crash_dialog_comment_prompt">You may add any comments about the problem below, such as what you were doing when the crash occurred:</string>
+    <string name="crash_dialog_ok_toast">Thank you!</string>
 </resources>

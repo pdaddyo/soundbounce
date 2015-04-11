@@ -1,7 +1,7 @@
 package org.soundbounce.soundbounce.helpers;
 
-import android.app.Activity;
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 
 import org.soundbounce.soundbounce.activities.MainActivity;
@@ -11,8 +11,8 @@ public class CustomXWalkView extends XWalkView {
 
     protected final String LOG_TAG = "CustomXWalkView";
 
-    public CustomXWalkView(Context context, Activity activity) {
-        super(context, activity);
+    public CustomXWalkView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
     @Override

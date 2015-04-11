@@ -1,14 +1,13 @@
 package org.soundbounce.soundbounce.interfaces;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 
-import com.spotify.sdk.android.authentication.SpotifyAuthentication;
 import com.spotify.sdk.android.playback.PlayConfig;
 
-import org.soundbounce.soundbounce.R;
+import org.acra.ACRA;
 import org.soundbounce.soundbounce.activities.MainActivity;
+import org.soundbounce.soundbounce.helpers.CustomLog;
 import org.xwalk.core.JavascriptInterface;
 
 public class SpotifyBrowserAPIInterface {
@@ -17,6 +16,7 @@ public class SpotifyBrowserAPIInterface {
 
     }
 
+    protected final String LOG_TAG = "SpotifyBrowserAPIInterface";
     protected String username;
 
     @JavascriptInterface
@@ -34,8 +34,10 @@ public class SpotifyBrowserAPIInterface {
 
         try {
             versionName = MainActivity.getInstance().getPackageManager().getPackageInfo(MainActivity.getInstance().getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            CustomLog.exception(LOG_TAG, e);
+
+            ACRA.getErrorReporter().handleException(e, true);
         }
 
         return versionName;
@@ -43,47 +45,81 @@ public class SpotifyBrowserAPIInterface {
 
     @JavascriptInterface
     public void login(String username, String password) {
-        MainActivity.getInstance().runOnUiThread(new Runnable() {
-            public void run() {
-                SpotifyAuthentication.openAuthWindow(
-                        MainActivity.getInstance().getString(R.string.client_id),
-                        "token",
-                        MainActivity.getInstance().getString(R.string.redirect_uri),
-                        new String[]{"user-read-private", "streaming"},
-                        null,
-                        MainActivity.getInstance());
-            }
-        });
+        try {
+            launchSpotifyAuth();
+
+        } catch (Exception e) {
+            CustomLog.exception(LOG_TAG, e);
+
+            ACRA.getErrorReporter().handleException(e, true);
+        }
+    }
+
+    @JavascriptInterface
+    public void launchSpotifyAuth() {
+        try {
+            MainActivity.getInstance().runOnUiThread(new Runnable() {
+                public void run() {
+                    MainActivity.getInstance().launchSpotifyAuthentication();
+                }
+            });
+
+        } catch (Exception e) {
+            CustomLog.exception(LOG_TAG, e);
+
+            ACRA.getErrorReporter().handleException(e, true);
+        }
     }
 
     @JavascriptInterface
     public void openInSpotify(String trackId) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("spotify:track:" + trackId + "?action=browse"));
-        MainActivity.getInstance().startActivity(browserIntent);
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("spotify:track:" + trackId + "?action=browse"));
+            MainActivity.getInstance().startActivity(browserIntent);
+
+        } catch (Exception e) {
+            CustomLog.exception(LOG_TAG, e);
+
+            ACRA.getErrorReporter().handleException(e, true);
+        }
     }
 
     @JavascriptInterface
     public void pauseTrack() {
-        MainActivity.getInstance().runOnUiThread(new Runnable() {
-            public void run() {
-                MainActivity.getInstance().getPlayer().pause();
-            }
-        });
+        try {
+            MainActivity.getInstance().runOnUiThread(new Runnable() {
+                public void run() {
+                    MainActivity.getInstance().getPlayer().pause();
+                }
+            });
+
+        } catch (Exception e) {
+            CustomLog.exception(LOG_TAG, e);
+
+            ACRA.getErrorReporter().handleException(e, true);
+        }
     }
 
     // plays the given track at the given position in ms
     @JavascriptInterface
     public void playTrack(String trackId, int position) {
-        final String trackURI = "spotify:track:" + trackId;
+        try {
+            final String trackURI = "spotify:track:" + trackId;
 
-        final PlayConfig trackPositionPlayConfig = PlayConfig.createFor(trackURI);
-        trackPositionPlayConfig.withInitialPosition(position);
+            final PlayConfig trackPositionPlayConfig = PlayConfig.createFor(trackURI);
+            trackPositionPlayConfig.withInitialPosition(position);
 
-        MainActivity.getInstance().runOnUiThread(new Runnable() {
-            public void run() {
-                MainActivity.getInstance().getPlayer().play(trackPositionPlayConfig);
-            }
-        });
+            MainActivity.getInstance().runOnUiThread(new Runnable() {
+                public void run() {
+                    MainActivity.getInstance().getPlayer().play(trackPositionPlayConfig);
+                }
+            });
+
+        } catch (Exception e) {
+            CustomLog.exception(LOG_TAG, e);
+
+            ACRA.getErrorReporter().handleException(e, true);
+        }
     }
 
     @JavascriptInterface
@@ -92,8 +128,16 @@ public class SpotifyBrowserAPIInterface {
 
     @JavascriptInterface
     public void openUrl(String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        MainActivity.getInstance().startActivity(browserIntent);
+        try {
+
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            MainActivity.getInstance().startActivity(browserIntent);
+
+        } catch (Exception e) {
+            CustomLog.exception(LOG_TAG, e);
+
+            ACRA.getErrorReporter().handleException(e, true);
+        }
     }
 
 }
