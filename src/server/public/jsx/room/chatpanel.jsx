@@ -242,7 +242,24 @@ var ChatPanel = React.createClass({
             var text = msg.message;
             var icon = <i/>, albumArt = null, expand = null;
             var timestamp = moment(msg.timestamp).from(soundbounceShared.serverNow());
+            
+            if (msg.type == "me")
+            {
+                if( this.props.chat[chatIndex].user.id != 1 )
+                {
+                    this.props.chat[chatIndex].message = msg.user.name + " " + text;
 
+                    this.props.chat[chatIndex].user = {
+                        id: "1",
+                        name: "Soundbounce",
+                        img: '/img/soundbounce.png'
+                    };
+
+                    msg = this.props.chat[chatIndex];
+                    text = msg.message;
+                }
+            }
+            
             if (msg.type == "add" || msg.type == "vote" || msg.type == "star") {
 
                 if (component.state.showJustChat)

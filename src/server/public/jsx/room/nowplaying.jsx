@@ -23,6 +23,10 @@ var NowPlaying = React.createClass({
         eventbus.trigger("star-track", this.props.track);
     },
 
+    onClickVoteToSkipTrack: function (e) {
+        eventbus.trigger("vote-to-skip-track", this.props.track);
+    },
+
     onClickRemoveTrack: function (e) {
         var component = this;
 
@@ -61,16 +65,25 @@ var NowPlaying = React.createClass({
                             </div>
                             <div className="row-content">
                                 <div className="track-icons">
+                                    
                                     <a href="javascript:void(0)" onClick={this.onClickRemoveTrack} className={'btn btn-fab btn-spotify fa fa-trash'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Remove track" style={{
                                         overflow: 'visible',
                                         backgroundColor: this.props.color,
                                         display:this.props.canRemove?"inline-block":"none"
                                     }} data-delay='{"show": 500, "hide": 0}'></a>
-
+                                    
                                     <a href="javascript:void(0)" onClick={this.onClickOpenSpotify} className={'btn btn-fab btn-spotify fa fa-spotify'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Show in Spotify" style={{
                                         overflow: 'visible',
                                         backgroundColor: this.props.color
                                     }} data-delay='{"show": 500, "hide": 0}'></a>
+                                    
+                                    <span className="skip-button-holder">
+                                        <a href="javascript:void(0)" onClick={this.onClickVoteToSkipTrack} className={'btn btn-fab btn-remove mdi-action-highlight-remove'}  data-toggle="tooltip" data-placement="bottom" title=""  data-html="true" data-original-title="Vote to skip track" style={{
+                                            overflow: 'visible',
+                                            backgroundColor: this.props.color
+                                        }} data-delay='{"show": 500, "hide": 0}'></a>
+                                    </span>
+                                    
                                     <span className="star-button-holder">
                                         <a href="javascript:void(0)" onClick={this.onClickStarTrack} className={'btn btn-fab btn-star mdi-action-grade'}  data-toggle="tooltip" data-placement="bottom" title=""  data-html="true" data-original-title="Add to Starred list in Spotify" style={{
                                             overflow: 'visible',

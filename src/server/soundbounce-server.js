@@ -452,6 +452,9 @@ var soundbounceServer = {
                         case "remove-track":
                             server.processRemove(room, user, msg.payload);
                             break;
+                        case "vote-to-skip-track":
+                            server.processVoteToSkip(room, user, msg.payload);
+                            break;
                     }
                 })
             });
@@ -525,6 +528,52 @@ var soundbounceServer = {
             return t.id != trackId;
         });
         this.reSyncAllUsers(room);
+    },
+
+    processVoteToSkip: function (room, user, trackId) {
+        console.log("processVoteToSkip for trackId " + trackId + " in room " + room.name);
+
+        if( ! room.tracks[0].votesToSkip )
+        {
+            room.tracks[0].votesToSkip = [];
+        }
+        
+        // Only do anything if the voted to skip track is the currently playing track in this room
+        if (room.tracks[0].id == trackId) {
+            
+            // Add the user to the list of people who voted to skip this track if they aren't already in it, in case we want to display that info in future
+            if (!_.contains(room.tracks[0].votesToSkip, user.id)) {
+                room.tracks[0].votesToSkip.push(user.id);
+            }
+            
+            var trackToSkip = room.tracks[0];
+            
+            // If there are now more votes to skip than there were votes to play this track, skip it
+            if( trackToSkip.votesToSkip.length > trackToSkip.votes.length )
+            {
+                // Move the currently playing track to end of room playlist
+                room.tracks.push( room.tracks.shift() );
+                
+                // Reset room current track playback position so the new currently playing track starts at the beginning
+                room.currentTrackStartedAt = soundbounceShared.serverNow();
+                room.currentTrackPosition = 0;
+
+                this.reSyncAllUsers(room);
+
+                var chatmsg = {
+                    type: "chat",
+                    id: shortId(),
+                    message: trackToSkip.name + " skipped by " + trackToSkip.votesToSkip.length + " vote" + (trackToSkip.votesToSkip.length > 1 ? "s" : "") + "!",
+                    timestamp: (new Date()),
+                    user: soundbounceServer.getSoundbounceUser(),
+                    context: trackToSkip
+                };
+                
+                soundbounceShared.addChatToRoom(room, chatmsg);
+
+                soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
+            }
+        }
     },
 
     reSyncAllUsers: function (room) {
@@ -771,6 +820,7 @@ var soundbounceServer = {
             {name: "removeadmin", handler: this.commandRemoveAdmin, admin: true},
             {name: "topup", handler: this.commandTopUp, admin: true},
             {name: "deleteroom", handler: this.commandDeleteRoom, admin: true},
+            {name: "me", handler: this.commandMe},
             {name: "find", handler: this.commandFind}
         ];
 
@@ -1012,6 +1062,38 @@ var soundbounceServer = {
             server.sendPrivateChat(room, user.id, "" + systemUser.name + " is not currently listening to Soundbounce.");
     },
 
+    commandMe: function (room, user, params) {
+        var server = this;
+        if (_.isEmpty(params)) {
+            this.sendPrivateChat(room, user.id, "Usage: /me is coding");
+            return;
+        }
+        
+        var nowPlaying = null;
+
+        // make sure we have correct now playing track
+        soundbounceShared.updatePlaylist(room, server);
+
+        if (room.tracks.length > 0) {
+            nowPlaying = room.tracks[0];
+        }
+
+        var chatmsg = {
+            type: "me",
+            id: shortId(),
+            message: params,
+            timestamp: (new Date()),
+            user: this.simpleUser(user),
+            context: nowPlaying
+        };
+
+        console.log("[" + room.name.green + "]" + " me from " + user.name + ": " + params);
+
+        soundbounceShared.addChatToRoom(room, chatmsg);
+
+        soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
+    },
+
     sendPrivateChat: function (room, userId, message) {
         var chatmsg = {
             type: "chat",
@@ -1124,6 +1206,7 @@ var soundbounceServer = {
     },
 
     processVotes: function (room, user, trackIds) {
+       
         var server = this;
         var votes = [];
         trackIds.map(function (tid) {
