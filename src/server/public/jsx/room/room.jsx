@@ -98,7 +98,20 @@ var RoomPage = React.createClass({
         });
 
         eventbus.on("track-load-failed", function (error) {
-            router.alert("Spotify is not able to play this track, usually this is because it is unavailable in your region, sorry.", "Unable to play track");
+
+            component.handleChatMessage({
+                type: "chat",
+                id: 1,
+                message: "Spotify is not able to play track: " + component.state.room.tracks[0].name + " by " + component.state.room.tracks[0].artists[0].name +", usually this is because it is unavailable in your region.",
+                timestamp: (new Date()),
+                user: {
+                    id: "1",
+                    name: "Soundbounce",
+                    img: '/img/soundbounce.png'
+                },
+                context: component.state.room.tracks[0]
+            });
+            
         });
 
         eventbus.on("star-track", function (track) {
@@ -110,6 +123,10 @@ var RoomPage = React.createClass({
             } catch (err) {
                 console.warn("No spotifyBrowserApi found!? ", err);
             }
+        });
+
+        eventbus.on("vote-to-skip-track", function (track) {
+            component.send({type: "vote-to-skip-track", payload: track.id})
         });
 
         eventbus.on("playing-track-is-starred", function () {
@@ -208,6 +225,7 @@ var RoomPage = React.createClass({
                     this.lastPlayedTrackId = newTrackId;
                     component.playTrack(newTrackId, this.state.room.currentTrackPosition);
                     $('.now-playing .star-button-holder').show();
+                    $('.now-playing .skip-button-holder').show();
                 }
             }
         } else {
@@ -279,6 +297,24 @@ var RoomPage = React.createClass({
         });
     },
 
+    scrollChatToBottomWithUserOverride: function (scrollToBottomAfterDisplay) {
+        if(scrollToBottomAfterDisplay)
+        {
+            this.scrollChatToBottom();
+        }
+    },
+    
+    getScrollToBottomAfterDisplay: function () {
+        // Check the position of the chat messages scrollbar to decide whether to scroll down
+        var $messages = $('.messagescontainer');
+        if($messages && $messages[0])
+        {
+            return ($messages[0].scrollHeight - $messages.scrollTop() - $messages.height()) < 50;
+        }
+        
+        return true;
+    },
+
     send: function (data) {
         this.socket.send(JSON.stringify(data));
     },
@@ -304,6 +340,9 @@ var RoomPage = React.createClass({
             case "chat":
                 this.handleChatMessage(data.payload);
                 break;
+            case "me":
+                this.handleChatMessage(data.payload);
+                break;
             case "join":
                 this.handleJoinMessage(data.payload);
                 break;
@@ -323,10 +362,11 @@ var RoomPage = React.createClass({
     handleChatMessage: function (chatmsg) {
         var component = this;
         var updatedRoom = this.state.room;
+        var scrollToBottomAfterDisplay = this.getScrollToBottomAfterDisplay();
         updatedRoom.chat.push(chatmsg);
         this.setState({room: updatedRoom});
         _.defer(function () {
-            component.scrollChatToBottom();
+            component.scrollChatToBottomWithUserOverride(scrollToBottomAfterDisplay);
         });
     },
 
@@ -337,6 +377,8 @@ var RoomPage = React.createClass({
 
         console.log("ms difference from server:", soundbounceShared.timeAdjust);
 
+        var scrollToBottomAfterDisplay = this.getScrollToBottomAfterDisplay();
+        
         if (user) {
             this.setState({room: room, user: user});
         } else {
@@ -345,12 +387,14 @@ var RoomPage = React.createClass({
 
         var component = this;
         _.defer(function () {
-            component.scrollChatToBottom();
+            component.scrollChatToBottomWithUserOverride(scrollToBottomAfterDisplay);
         });
     },
 
     handleAddMessage: function (payload) {
         var component = this;
+        var scrollToBottomAfterDisplay = this.getScrollToBottomAfterDisplay();
+        
         payload.tracks.forEach(function (track) {
             soundbounceShared.addTrackToRoom(component.state.room, track, payload.user);
         });
@@ -358,12 +402,14 @@ var RoomPage = React.createClass({
         //console.log(this.state.room);
         this.setState({room: this.state.room});
 
-        this.scrollChatToBottom();
+        component.scrollChatToBottomWithUserOverride(scrollToBottomAfterDisplay);
     },
 
     handleVoteMessage: function (payload) {
         var component = this;
         var room = component.state.room;
+        var scrollToBottomAfterDisplay = this.getScrollToBottomAfterDisplay();
+        
         payload.votes.forEach(function (votemsg) {
             // trackId:track.id, moveToAfter: insertAfter, user:
 
@@ -393,7 +439,7 @@ var RoomPage = React.createClass({
         });
 
         this.setState({room: room});
-        this.scrollChatToBottom();
+        component.scrollChatToBottomWithUserOverride(scrollToBottomAfterDisplay);
     },
 
     handleJoinMessage: function (joiningUser) {

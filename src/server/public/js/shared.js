@@ -169,7 +169,8 @@ var soundbounceShared = {
             }),
             length: spotifyTrack.duration_ms,
             addedBy: {},
-            votes: []
+            votes: [],
+            votesToSkip: []
         }
     }
 

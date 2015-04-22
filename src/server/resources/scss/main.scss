@@ -428,6 +428,18 @@ i.mdi-action-search {
 	left: auto;
 }
 
+.track-icons .btn.mdi-action-highlight-remove {
+  font-size: 20px;
+  text-indent: -9px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.23), 0 2px 7px rgba(0, 0, 0, 0.19);
+}
+
+.mdi-action-highlight-remove:before {
+  position: absolute;
+  right: 5px;
+  left: auto;
+}
+
 .votes {
 	position: absolute;
 	right: 1px;
