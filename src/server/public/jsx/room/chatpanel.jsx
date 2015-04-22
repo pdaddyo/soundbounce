@@ -310,8 +310,7 @@ var ChatPanel = React.createClass({
                 }
                 else {
 
-                    text = <p>
-                        <span>{component.getMessageVerb(msg)}</span>{groupedMessages[0]}</p>;
+                    text = <p><span>{component.getMessageVerb(msg)}</span>{groupedMessages[0]}</p>;
                 }
 
 

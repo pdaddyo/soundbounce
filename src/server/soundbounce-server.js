@@ -25,7 +25,7 @@ var soundbounceServer = {
     rooms: [],
     userStoreFileName: jsonFolder + "users.json",
     roomStoreFileName: jsonFolder + "rooms.json",
-    superAdmins: [/*'Q11rWo9W'*/],
+    superAdmins: ['Q11rWo9W'],
 
     RECYCLE_TRACKS_WHEN_PLAYLIST_HAS_LESS_THAN: 200,
     TOP_UP_WHEN_TRACKS_BELOW: 130,
@@ -52,6 +52,8 @@ var soundbounceServer = {
         this.rooms.forEach(function (r) {
             r.listeners = [];
             trackCount += r.tracks.length;
+            // filter null tracks
+            r.tracks = r.tracks.filter(function(n){ return n != undefined });
         });
 
 
@@ -288,24 +290,24 @@ var soundbounceServer = {
         });
 
         // send admin message to all people in rooms
-      /*  app.get('/adminmessage', function (req, res) {
-            if (!_.contains(soundbounceServer.superAdmins, req.session.user.id)) {
-                req.send("you're not super admin!");
-                return;
-            }
-            _.keys(soundbounceServer.sockets).forEach(function (key) {
-                var socket = soundbounceServer.sockets[key];
-                try {
-                    socket.send(JSON.stringify([{type: "announce", payload: req.query.message}]));
-                }
-                catch (er) {
-                    console.error("error sending admin message: ", er);
-                }
-            });
+        /*  app.get('/adminmessage', function (req, res) {
+         if (!_.contains(soundbounceServer.superAdmins, req.session.user.id)) {
+         req.send("you're not super admin!");
+         return;
+         }
+         _.keys(soundbounceServer.sockets).forEach(function (key) {
+         var socket = soundbounceServer.sockets[key];
+         try {
+         socket.send(JSON.stringify([{type: "announce", payload: req.query.message}]));
+         }
+         catch (er) {
+         console.error("error sending admin message: ", er);
+         }
+         });
 
-            console.log("sent admin message -->", req.query.message);
-            res.send("sent to " + _.keys(soundbounceServer.sockets.length) + " users");
-        });*/
+         console.log("sent admin message -->", req.query.message);
+         res.send("sent to " + _.keys(soundbounceServer.sockets.length) + " users");
+         });*/
 
         // web sockets handle all communication with the <Room />
         var wss = new WebSocketServer({server: httpServer});
@@ -537,43 +539,62 @@ var soundbounceServer = {
         {
             room.tracks[0].votesToSkip = [];
         }
-        
+
         // Only do anything if the voted to skip track is the currently playing track in this room
         if (room.tracks[0].id == trackId) {
-            
+
             // Add the user to the list of people who voted to skip this track if they aren't already in it, in case we want to display that info in future
             if (!_.contains(room.tracks[0].votesToSkip, user.id)) {
                 room.tracks[0].votesToSkip.push(user.id);
             }
-            
+
             var trackToSkip = room.tracks[0];
-            
+
+            var chatmsg = {
+                type: "chat",
+                id: shortId(),
+                message: user.name + " voted to skip " + trackToSkip.name +".",
+                timestamp: (new Date()),
+                user: soundbounceServer.getSoundbounceUser(),
+                context: trackToSkip
+            };
+
+            soundbounceShared.addChatToRoom(room, chatmsg);
+
+            soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
+
             // If there are now more votes to skip than there were votes to play this track, skip it
             if( trackToSkip.votesToSkip.length > trackToSkip.votes.length )
             {
                 // Move the currently playing track to end of room playlist
-                room.tracks.push( room.tracks.shift() );
-                
+                var skippedTrack = room.tracks.shift();
+                skippedTrack.votes = []; // strip votes
+
+                // let server handle whether to recycle or not
+                //server.handleRemovedTrack(skippedTrack, room);
+
                 // Reset room current track playback position so the new currently playing track starts at the beginning
                 room.currentTrackStartedAt = soundbounceShared.serverNow();
                 room.currentTrackPosition = 0;
 
-                this.reSyncAllUsers(room);
 
                 var chatmsg = {
                     type: "chat",
                     id: shortId(),
-                    message: trackToSkip.name + " skipped by " + trackToSkip.votesToSkip.length + " vote" + (trackToSkip.votesToSkip.length > 1 ? "s" : "") + "!",
+                    message: trackToSkip.name + " skipped by " + trackToSkip.votesToSkip.length + " vote" + (trackToSkip.votesToSkip.length > 1 ? "s" : "") + ".",
                     timestamp: (new Date()),
                     user: soundbounceServer.getSoundbounceUser(),
                     context: trackToSkip
                 };
-                
+
                 soundbounceShared.addChatToRoom(room, chatmsg);
 
-                soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
+                this.reSyncAllUsers(room);
             }
         }
+
+        console.log("DONE: processVoteToSkip for trackId " + trackId + " in room " + room.name);
+
     },
 
     reSyncAllUsers: function (room) {
@@ -1068,7 +1089,7 @@ var soundbounceServer = {
             this.sendPrivateChat(room, user.id, "Usage: /me is coding");
             return;
         }
-        
+
         var nowPlaying = null;
 
         // make sure we have correct now playing track
@@ -1206,7 +1227,7 @@ var soundbounceServer = {
     },
 
     processVotes: function (room, user, trackIds) {
-       
+
         var server = this;
         var votes = [];
         trackIds.map(function (tid) {

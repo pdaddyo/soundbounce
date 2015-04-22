@@ -606,6 +606,10 @@ var RoomPage = React.createClass({
         });
     },
 
+    onClickYoutube: function () {
+        eventbus.trigger("open-url", "http://app.soundbounce.org/youtube?room="+escape(this.state.room.name));
+    },
+
     render: function () {
         var component = this;
         if (_.isEmpty(this.state.room)) {
@@ -684,6 +688,7 @@ var RoomPage = React.createClass({
                                        {emptyPlaylistMessage}
                                     <div className="list-group">
                                               {this.state.room.tracks.map(function (track, index, arr) {
+
                                                   var canVote = !_.contains(track.votes.map(function (v) {
                                                       return v.id;
                                                   }), component.state.user.id);
@@ -750,6 +755,10 @@ var RoomPage = React.createClass({
                                             </span>
                                             <span className="room-listeners " onClick={this.toggleUserListClick} data-toggle="tooltip" data-placement="top" title="" data-original-title="Show listeners" data-delay="0">{this.state.room.listeners.length}
                                                 <i className="mdi-social-person"/>
+                                            </span>
+
+                                            <span className="room-youtube"  onClick={this.onClickYoutube}  data-toggle="tooltip" data-placement="top" title="" data-original-title="View on YouTube (alpha)" data-delay="0">
+                                                <i className="mdi-hardware-desktop-windows" />
                                             </span>
 
                                             <span className="room-description">

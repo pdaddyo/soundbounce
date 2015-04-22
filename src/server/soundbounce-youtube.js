@@ -60,6 +60,7 @@ var youtube= {
                 // something has gone wrong!
                 secsLeft = 0;
             }
+
             // try and get the youtube vid
             youtube.getVideoId(track, function (id){
                 if(!id)

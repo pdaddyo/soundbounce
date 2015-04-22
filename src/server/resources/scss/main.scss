@@ -701,7 +701,7 @@ i.mdi-action-search {
 	margin-right: 10px;
 }
 
-.room-listeners, .playlist-state, .room-track-count {
+.room-listeners, .playlist-state, .room-track-count, .room-youtube {
 	font-size: 12px;
 	font-weight: normal;
 	border: 1px solid rgba(252, 255, 255, 0.3);
@@ -714,7 +714,7 @@ i.mdi-action-search {
 	transition: all 0.58s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.room-listeners:hover {
+.room-listeners:hover, .room-track-count:hover, .room-youtube:hover {
 	cursor: pointer;
 	border: 1px solid rgba(252, 255, 255, 0.6);
 }
@@ -731,6 +731,10 @@ i.mdi-action-search {
 }
 .playlist-state {
 	padding-right: 21px;
+}
+
+.room-youtube i{
+	top:2px;
 }
 
 .playlist-state i {
