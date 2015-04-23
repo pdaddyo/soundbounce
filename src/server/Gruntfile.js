@@ -11,6 +11,7 @@ module.exports = function(grunt) {
             src: {
                 fonts: srcDir + '/fonts',
                 images: srcDir + '/img',
+                react: distDir + '/jsx',
                 scripts: srcDir + '/js',
                 styles: srcDir + '/scss'
             },
@@ -34,6 +35,15 @@ module.exports = function(grunt) {
             },
             dist: [config.dist.styles],
             tmp: [tmpDir]
+        },
+        react: {
+            files: {
+              expand: true,
+              cwd: config.src.react,
+              src: ['**/*.jsx'],
+              dest: config.dist.scripts,
+              ext: '.jsx.js'
+            }
         },
         sass: {
             options: {
@@ -138,11 +148,12 @@ module.exports = function(grunt) {
             }
         },
         concurrent: {
-            build: ['styles', 'copy']
+            build: ['compile', 'styles', 'copy']
         }
     });
 
     grunt.registerTask('server', ['express']);
+    grunt.registerTask('compile', ['react']);
     grunt.registerTask('styles', ['sass', 'cssmin', 'notify:styles']);
     // grunt.registerTask('scripts', ['jshint', 'concat', 'uglify', 'notify:scripts']);
     grunt.registerTask('build', ['clean', 'concurrent:build', 'notify:build']);
