@@ -1,47 +1,57 @@
 // Gruntfile for easy frontend development of Soundbounce
 module.exports = function(grunt) {
-	"use strict";
+    "use strict";
 
-	require('load-grunt-tasks')(grunt);
+    require('load-grunt-tasks')(grunt);
 
-	var distDir = 'public',
-		tmpDir = 'tmp',
-		srcDir = 'resources',
-		config = {
-			src: {
-	            fonts: srcDir + '/fonts',
-	            images: srcDir + '/img',
-	            scripts: srcDir + '/js',
-	            styles: srcDir + '/scss'
-	        },
-	        tmp: {
-	            scripts: tmpDir + '/js',
-	            styles: tmpDir + '/css'
-	        },
-	        dist: {
-	            fonts: distDir + '/fonts',
-	            images: distDir + '/img',
-	            scripts: distDir + '/js',
-	            styles: distDir + '/css'
-	        }
-	    };
+    var distDir = 'public',
+        tmpDir = 'tmp',
+        srcDir = 'resources',
+        config = {
+            src: {
+                fonts: srcDir + '/fonts',
+                images: srcDir + '/img',
+                react: distDir + '/jsx',
+                scripts: srcDir + '/js',
+                styles: srcDir + '/scss'
+            },
+            tmp: {
+                scripts: tmpDir + '/js',
+                styles: tmpDir + '/css'
+            },
+            dist: {
+                fonts: distDir + '/fonts',
+                images: distDir + '/img',
+                scripts: distDir + '/js',
+                styles: distDir + '/css'
+            }
+        };
 
-	grunt.initConfig({
-		config: config,
-		clean: {
-	        options: {
-	            force: true
-	        },
-	        dist: [config.dist.styles],
-	        tmp: [tmpDir]
-	    },
-	    sass: {
+    grunt.initConfig({
+        config: config,
+        clean: {
+            options: {
+                force: true
+            },
+            dist: [config.dist.styles],
+            tmp: [tmpDir]
+        },
+        react: {
+            files: {
+              expand: true,
+              cwd: config.src.react,
+              src: ['**/*.jsx'],
+              dest: config.dist.scripts,
+              ext: '.jsx.js'
+            }
+        },
+        sass: {
             options: {
                 sourceMap: true,
                 style: 'expanded'
             },
             dist: {
-            	cwd: config.src.styles,
+                cwd: config.src.styles,
                 ext: '.css',
                 expand: true,
                 src: ['main.scss'],
@@ -60,7 +70,7 @@ module.exports = function(grunt) {
                 dest: config.dist.styles
             }
         },
-    	copy: {
+        copy: {
             fonts: {
                 cwd: config.src.fonts,
                 expand: true,
@@ -95,7 +105,7 @@ module.exports = function(grunt) {
             }
         },
         // connect: {
-        // 	dev: {
+        //     dev: {
         //         options: {
         //             port: 9000,
         //             hostname: 'localhost',
@@ -109,14 +119,14 @@ module.exports = function(grunt) {
         //     }
         // },
         express: {
-        	options: {},
-        	dev: {
-        		options: {
-        			port: 3000,
-        			script: 'server.js'
-        		}
-        	}
-    	},
+            options: {},
+            dev: {
+                options: {
+                    port: 3000,
+                    script: 'server.js'
+                }
+            }
+        },
         watch: {
             options: {
                 livereload: true
@@ -138,13 +148,14 @@ module.exports = function(grunt) {
             }
         },
         concurrent: {
-            build: ['styles', 'copy']
+            build: ['compile', 'styles', 'copy']
         }
-	});
+    });
 
-	grunt.registerTask('server', ['express']);
-	grunt.registerTask('styles', ['sass', 'cssmin', 'notify:styles']);
-	// grunt.registerTask('scripts', ['jshint', 'concat', 'uglify', 'notify:scripts']);
+    grunt.registerTask('server', ['express']);
+    grunt.registerTask('compile', ['react']);
+    grunt.registerTask('styles', ['sass', 'cssmin', 'notify:styles']);
+    // grunt.registerTask('scripts', ['jshint', 'concat', 'uglify', 'notify:scripts']);
     grunt.registerTask('build', ['clean', 'concurrent:build', 'notify:build']);
     grunt.registerTask('dev', ['build', 'server', 'watch']);
     grunt.registerTask('default', 'build');
