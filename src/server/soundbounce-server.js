@@ -659,14 +659,21 @@ var soundbounceServer = {
             soundbounceShared.updatePlaylist(room, server);
         });
 
+        var rateLimitDelay = 0;
+        console.log("rateLimitDelay = ", rateLimitDelay);
+
         // automatically top up rooms using linked playlists
         server.spotify.clientCredentialsGrant()
             .then(function (data) {
                 server.spotifyAccessToken = data['access_token'];
                 server.spotify.setAccessToken(server.spotifyAccessToken);
+
                 _.forEach(server.rooms, function (room) {
                     if (!_.isEmpty(room.topUpURI)) {
-                        server.topUpRoomWithPlaylist(room, room.topUpURI);
+                        var theRoom = room;
+                        setTimeout(function () {
+                            server.topUpRoomWithPlaylist(theRoom, theRoom.topUpURI);
+                        }, rateLimitDelay += 300);
                     }
                 });
             }, function (err) {
@@ -703,56 +710,57 @@ var soundbounceServer = {
                     if (data.total > 100) {
                         offset = server.getRandomInt(0, data.total - 100);
                     }
+                    _.delay(function () {
+                        //console.log("[top-up] " + room.name.yellow, "offset: ", offset);
+                        server.spotify.getPlaylistTracks(userId, playlistId, {
+                            offset: offset,
+                            limit: 100
+                        }).then(function (data) {
+                            try {
+                                var simpleUser = server.getSoundbounceUser();
 
-                    //console.log("[top-up] " + room.name.yellow, "offset: ", offset);
-                    server.spotify.getPlaylistTracks(userId, playlistId, {
-                        offset: offset,
-                        limit: 100
-                    }).then(function (data) {
-                        try {
-                            var simpleUser = server.getSoundbounceUser();
+                                var tracksToAdd = _.first(_.shuffle(data.items), TOP_UP_TRACKS_TO_ADD);
 
-                            var tracksToAdd = _.first(_.shuffle(data.items), TOP_UP_TRACKS_TO_ADD);
-
-                            var trackIds = [];
-                            _.each(tracksToAdd, function (spotifyTrackAdd) {
-                                var spotifyTrack = spotifyTrackAdd.track;
-                                try {
-                                    var simpleTrack = soundbounceShared.simpleTrack(spotifyTrack);
+                                var trackIds = [];
+                                _.each(tracksToAdd, function (spotifyTrackAdd) {
+                                    var spotifyTrack = spotifyTrackAdd.track;
+                                    try {
+                                        var simpleTrack = soundbounceShared.simpleTrack(spotifyTrack);
 
 
-                                    if (_.find(room.tracks, function (t) {
-                                            return t.id == simpleTrack.id;
-                                        }) != null) {
-                                        // track is already in room, so skip
-                                        return;
+                                        if (_.find(room.tracks, function (t) {
+                                                return t.id == simpleTrack.id;
+                                            }) != null) {
+                                            // track is already in room, so skip
+                                            return;
+                                        }
+
+                                        // is it already in add list (i.e. a dupe in the top-up list)?
+                                        if (!_.contains(trackIds, simpleTrack.id)) {
+                                            trackIds.push(simpleTrack.id);
+                                        }
+                                    } catch (err) {
+                                        // issue with particular track, ignore
                                     }
+                                });
 
-                                    // is it already in add list (i.e. a dupe in the top-up list)?
-                                    if (!_.contains(trackIds, simpleTrack.id)) {
-                                        trackIds.push(simpleTrack.id);
+                                if (!_.isEmpty(trackIds)) {
+                                    if (offset > 0) {
+                                        //         console.log("[top-up] ".green, room.name.yellow, "1st: "+data.items[0].track.name);
                                     }
-                                } catch (err) {
-                                    // issue with particular track, ignore
+                                    server.processAdds(room, simpleUser, trackIds);
                                 }
-                            });
-
-                            if (!_.isEmpty(trackIds)) {
-                                if (offset > 0) {
-                                    //         console.log("[top-up] ".green, room.name.yellow, "1st: "+data.items[0].track.name);
-                                }
-                                server.processAdds(room, simpleUser, trackIds);
                             }
-                        }
-                        catch
-                            (err) {
-                            console.log("error topping up " + room.name + ": " + err);
-                            console.log(err.stack);
-                        }
-                    });
+                            catch
+                                (err) {
+                                console.log("error topping up " + room.name + ": " + err);
+                                console.log(err.stack);
+                            }
+                        });
+                    }, 100+ Math.random()*100);
                 },
                 function (err) {
-                    console.log('Error: Topup Playlist', '[' + playlistURI + ']', "for", room.name + " not found.", err);
+                    console.log('topup:', '[' + playlistURI + ']', "for room: ", room.name + ".", err);
                 }
             );
         }
