@@ -180,6 +180,7 @@ var RoomPage = React.createClass({
         eventbus.off("preview-start");
         eventbus.off("preview-stop");
         eventbus.off("click-artist");
+        eventbus.off("vote-to-skip-track");
 
         clearInterval(this.intervalId);
     },
