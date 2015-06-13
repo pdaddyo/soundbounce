@@ -290,24 +290,24 @@ var soundbounceServer = {
         });
 
         // send admin message to all people in rooms
-        /*  app.get('/adminmessage', function (req, res) {
-         if (!_.contains(soundbounceServer.superAdmins, req.session.user.id)) {
-         req.send("you're not super admin!");
-         return;
-         }
-         _.keys(soundbounceServer.sockets).forEach(function (key) {
-         var socket = soundbounceServer.sockets[key];
-         try {
-         socket.send(JSON.stringify([{type: "announce", payload: req.query.message}]));
-         }
-         catch (er) {
-         console.error("error sending admin message: ", er);
-         }
-         });
+          app.get('/adminmessage', function (req, res) {
+             if (!_.contains(soundbounceServer.superAdmins, req.session.user.id)) {
+             req.send("you're not super admin!");
+             return;
+             }
+             _.keys(soundbounceServer.sockets).forEach(function (key) {
+             var socket = soundbounceServer.sockets[key];
+             try {
+             socket.send(JSON.stringify([{type: "announce", payload: req.query.message}]));
+             }
+             catch (er) {
+             console.error("error sending admin message: ", er);
+             }
+             });
 
-         console.log("sent admin message -->", req.query.message);
-         res.send("sent to " + _.keys(soundbounceServer.sockets.length) + " users");
-         });*/
+             console.log("sent admin message -->", req.query.message);
+               res.send("sent to " + _.keys(soundbounceServer.sockets.length) + " users");
+             });
 
         // web sockets handle all communication with the <Room />
         var wss = new WebSocketServer({server: httpServer});
@@ -462,20 +462,26 @@ var soundbounceServer = {
             });
         });
 
+        //server.deleteUnusedRooms();
+
         console.log('Startup OK'.green);
 
         // top up rooms every 15 mins
         setInterval(function () {
-            console.log("[topup]".green + " topping up rooms....");
             server.topUpRooms();
         }, 1000 * 60 * 15);
 
-        // save data every hour  (saves pretty reliably on crashes anyway, has never failed to)
+        // save data every X minutes
         setInterval(function () {
             console.log("[backup]".green + "saving data....");
-            server.saveDataAsync();
-            console.log("[backup]".green + " done");
-        }, 1000 * 60 * 60);
+        //    server.saveDataAsync();
+            try {
+                server.saveData();
+                console.log("[backup]".green + " done");
+            }catch(err){
+                console.log("[backup]".green + " error".red,err);
+            }
+        }, 1000 * 60 * 30);
 
         // update playlists every 10 seconds so all tracks recycle properly
         setInterval(function () {
@@ -484,10 +490,34 @@ var soundbounceServer = {
             });
         }, 1000 * 10);
 
-        // topup on launch
-        server.topUpRooms();
+        // topup in 15 seconds, once lists have recycled tracks as appropriate
+        _.delay(function() {
+            server.topUpRooms();
+        }, 15000);
     },
 
+    deleteUnusedRooms: function () {
+        var server = this;
+        var roomsToRemove = [];
+
+        _.each(server.rooms, function (room){
+            // if it's not auto-topping up, has not had many visits or adds...
+            if(!room.topUpURI && (room.visits<15 || room.chat.length<15)){
+                roomsToRemove.push(room);
+            }
+        });
+
+        _.each(roomsToRemove, function (room){
+            console.log("will remove "+room.name+"...");
+            var roomIndex = server.rooms.indexOf(room);
+
+            var removedRoom = server.rooms.splice(roomIndex, 1);
+            console.log("done - removed (index "+roomIndex+", "+removedRoom.name+")");
+        });
+
+        console.log("removed "+roomsToRemove.length+" rooms");
+
+    },
 
     deleteRoom: function (room, user) {
         var server = this;
@@ -648,38 +678,41 @@ var soundbounceServer = {
                 //  console.log("adding track... " + track.name + "");
                 server.processAdds(room, track.addedBy, [track.id], true);
                 //  console.log(room.name.green + " re-added " + track.name + "");
-            }, 2000);
+
+            }, 2000+(Math.random()*3000)); // random delay to top up
         }
     },
 
     topUpRooms: function () {
         var server = this;
+        console.log("[topup]".green + " topping up rooms....");
+
         // always update playlists
         _.forEach(server.rooms, function (room) {
             soundbounceShared.updatePlaylist(room, server);
         });
 
+        console.log("[topup]".green + " auto topping up only empty rooms or rooms with listeners");
+
         var rateLimitDelay = 0;
-        console.log("rateLimitDelay = ", rateLimitDelay);
 
         // automatically top up rooms using linked playlists
-        server.spotify.clientCredentialsGrant()
-            .then(function (data) {
-                server.spotifyAccessToken = data['access_token'];
-                server.spotify.setAccessToken(server.spotifyAccessToken);
 
-                _.forEach(server.rooms, function (room) {
-                    if (!_.isEmpty(room.topUpURI)) {
-                        var theRoom = room;
-                        setTimeout(function () {
-                            server.topUpRoomWithPlaylist(theRoom, theRoom.topUpURI);
-                        }, rateLimitDelay += 300);
-                    }
-                });
-            }, function (err) {
-                console.log('Something went wrong when retrieving an access token', err);
+        _.forEach(server.rooms, function (room) {
+
+            // only top up if it has listeners or 0 tracks
+            if (!_.isEmpty(room.topUpURI) && (room.listeners.length > 0 || room.tracks.length==0)) {
+                var theRoom = room;
+//                console.log("[topup]".green + " will top up "+theRoom.name);
+
+                setTimeout(function () {
+                    console.log("[topup]".green + " topping up "+theRoom.name);
+
+                    server.topUpRoomWithPlaylist(theRoom, theRoom.topUpURI);
+                }, rateLimitDelay += 500);
             }
-        );
+        });
+
     },
 
     topUpRoomWithPlaylist: function (room, playlistURI) {
@@ -689,6 +722,7 @@ var soundbounceServer = {
         if (_.isEmpty(playlistURI)) {
             return;
         }
+
 
         if (room.tracks.length < server.TOP_UP_WHEN_TRACKS_BELOW) {
             // we need to top up! go get the playlist
@@ -701,68 +735,75 @@ var soundbounceServer = {
                 return;
             }
 
-            //  console.log("[top-up] ".green, room.name, room.tracks.length);
-            server.spotify.getPlaylistTracks(userId, playlistId)
+
+            server.spotify.clientCredentialsGrant()
                 .then(function (data) {
+                    server.spotifyAccessToken = data['access_token'];
+                    server.spotify.setAccessToken(server.spotifyAccessToken);
 
-                    // console.log("[top-up] ".green, room.name, room.tracks.length, data.total);
-                    var offset = 0;
-                    if (data.total > 100) {
-                        offset = server.getRandomInt(0, data.total - 100);
-                    }
-                    _.delay(function () {
-                        //console.log("[top-up] " + room.name.yellow, "offset: ", offset);
-                        server.spotify.getPlaylistTracks(userId, playlistId, {
-                            offset: offset,
-                            limit: 100
-                        }).then(function (data) {
-                            try {
-                                var simpleUser = server.getSoundbounceUser();
+                    //  console.log("[top-up] ".green, room.name, room.tracks.length);
+                    server.spotify.getPlaylistTracks(userId, playlistId)
+                        .then(function (data) {
 
-                                var tracksToAdd = _.first(_.shuffle(data.items), TOP_UP_TRACKS_TO_ADD);
-
-                                var trackIds = [];
-                                _.each(tracksToAdd, function (spotifyTrackAdd) {
-                                    var spotifyTrack = spotifyTrackAdd.track;
+                            // console.log("[top-up] ".green, room.name, room.tracks.length, data.total);
+                            var offset = 0;
+                            if (data.total > 100) {
+                                offset = server.getRandomInt(0, data.total - 100);
+                            }
+                            _.delay(function () {
+                                //console.log("[top-up] " + room.name.yellow, "offset: ", offset);
+                                server.spotify.getPlaylistTracks(userId, playlistId, {
+                                    offset: offset,
+                                    limit: 100
+                                }).then(function (data) {
                                     try {
-                                        var simpleTrack = soundbounceShared.simpleTrack(spotifyTrack);
+                                        var simpleUser = server.getSoundbounceUser();
+
+                                        var tracksToAdd = _.first(_.shuffle(data.items), TOP_UP_TRACKS_TO_ADD);
+
+                                        var trackIds = [];
+                                        _.each(tracksToAdd, function (spotifyTrackAdd) {
+                                            var spotifyTrack = spotifyTrackAdd.track;
+                                            try {
+                                                var simpleTrack = soundbounceShared.simpleTrack(spotifyTrack);
 
 
-                                        if (_.find(room.tracks, function (t) {
-                                                return t.id == simpleTrack.id;
-                                            }) != null) {
-                                            // track is already in room, so skip
-                                            return;
+                                                if (_.find(room.tracks, function (t) {
+                                                        return t.id == simpleTrack.id;
+                                                    }) != null) {
+                                                    // track is already in room, so skip
+                                                    return;
+                                                }
+
+                                                // is it already in add list (i.e. a dupe in the top-up list)?
+                                                if (!_.contains(trackIds, simpleTrack.id)) {
+                                                    trackIds.push(simpleTrack.id);
+                                                }
+                                            } catch (err) {
+                                                // issue with particular track, ignore
+                                            }
+                                        });
+
+                                        if (!_.isEmpty(trackIds)) {
+                                            if (offset > 0) {
+                                                //         console.log("[top-up] ".green, room.name.yellow, "1st: "+data.items[0].track.name);
+                                            }
+                                            server.processAdds(room, simpleUser, trackIds);
                                         }
-
-                                        // is it already in add list (i.e. a dupe in the top-up list)?
-                                        if (!_.contains(trackIds, simpleTrack.id)) {
-                                            trackIds.push(simpleTrack.id);
-                                        }
-                                    } catch (err) {
-                                        // issue with particular track, ignore
+                                    }
+                                    catch
+                                        (err) {
+                                        console.log("error topping up " + room.name + ": " + err);
+                                        console.log(err.stack);
                                     }
                                 });
-
-                                if (!_.isEmpty(trackIds)) {
-                                    if (offset > 0) {
-                                        //         console.log("[top-up] ".green, room.name.yellow, "1st: "+data.items[0].track.name);
-                                    }
-                                    server.processAdds(room, simpleUser, trackIds);
-                                }
-                            }
-                            catch
-                                (err) {
-                                console.log("error topping up " + room.name + ": " + err);
-                                console.log(err.stack);
-                            }
-                        });
-                    }, 100+ Math.random()*100);
-                },
-                function (err) {
-                    console.log('topup:', '[' + playlistURI + ']', "for room: ", room.name + ".", err);
-                }
-            );
+                            }, 100+ Math.random()*200);
+                        },
+                        function (err) {
+                            console.log('topup:', '[' + playlistURI + ']', "for room: ", room.name + ".", err);
+                        }
+                    );
+                });
         }
     },
 
