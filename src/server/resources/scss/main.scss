@@ -156,10 +156,7 @@ h1 {
 
 .list-group .list-group-item .row-content {
 	min-height: 0;
-}
-
-.list-group .list-group-item .row-content {
-	width: calc(100% - 100px);
+	width: calc(100% - 72px);
 }
 
 .list-group {
@@ -391,12 +388,60 @@ i.mdi-action-search {
 	padding:16px;
 	border-bottom: 1px solid #e9e9e9;
 	cursor:pointer;
-
-}
-
-.playlist {
 	box-shadow: 0 -1px 0 #e5e5e5,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+	transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+	width:100%;
+	height:87px;
+	margin-left:0;
 }
+
+/*
+.play-list-item:active{
+	width: 110%;
+	margin-left: -5%;
+	height: 120px;
+}*/
+
+.play-list-item .track-title-container {
+	display:flex;
+	h4 {
+		float:left;
+		width:auto;
+		overflow:hidden;
+		flex-grow:2;
+	}
+	.track-title-icons{
+		order:2;
+		display:none;
+		position:relative;
+		right:-7px;
+		i {
+			position:relative;
+			top: 3px;
+			font-size:22px;
+			display:inline;
+			padding:5px;
+			color:#aaa;
+		}
+
+		i.active{
+
+		}
+		i.fa{
+			font-size:20px;
+			top:1px;
+		}
+		i:hover {
+			color:rgba(0, 0, 0, 0.9);
+		}
+	}
+}
+
+.play-list-item:hover .track-title-container .track-title-icons{
+	display:block;
+}
+
+
 
 .track-icons .btn {
 	width: 20px;

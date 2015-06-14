@@ -67,7 +67,7 @@ var PlaylistItem = React.createClass({
             <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result play-list-item":"play-list-item"} style={{display:this.props.visible?"block":"none"}}>
                 <div className="list-group-item">
                     <div className="row-picture">
- <span style={{display:'block'}}>
+ <span style={{display:'none'}}>
                         <div className="track-icons">
                             <span className="hover-hide">
                             <a href="javascript:void(0)" onClick={this.onClickRemoveTrack} className={'btn btn-fab btn-spotify fa fa-trash'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Remove track" style={{
@@ -95,7 +95,13 @@ var PlaylistItem = React.createClass({
                         <img className="circle art" src={this.props.track.img} alt="icon" onMouseDown={this.previewStart} onMouseUp={this.previewStop} onMouseOut={this.previewStop} data-toggle="tooltip" data-placement="top" data-original-title="Click and hold to preview" />
                     </div>
                     <div className="row-content">
-                        <h4 className="list-group-item-heading hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.name}} />
+                        <div className="track-title-container">
+                            <h4 className="list-group-item-heading hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.name}} />
+                            <div className="track-title-icons">
+                                <i onClick={this.onClickVote} className={'fa fa-level-up ' + (this.props.canVote ? '' : 'hide')} data-toggle="tooltip" data-placement="top" title="" data-original-title="Vote" data-delay="400" ></i>
+                                <i className="mdi-navigation-more-vert" />
+                            </div>
+                        </div>
                         <p className="list-group-item-text" >
 
                                 <ArtistList artists={this.props.track.artists} />

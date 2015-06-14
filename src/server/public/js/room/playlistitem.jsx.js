@@ -67,7 +67,7 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
             React.createElement("div", {id: 'track' + this.props.track.id, className: this.props.canAdd?"spotify-result play-list-item":"play-list-item", style: {display:this.props.visible?"block":"none"}}, 
                 React.createElement("div", {className: "list-group-item"}, 
                     React.createElement("div", {className: "row-picture"}, 
- React.createElement("span", {style: {display:'block'}}, 
+ React.createElement("span", {style: {display:'none'}}, 
                         React.createElement("div", {className: "track-icons"}, 
                             React.createElement("span", {className: "hover-hide"}, 
                             React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickRemoveTrack, className: 'btn btn-fab btn-spotify fa fa-trash', "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": "Remove track", style: {
@@ -95,7 +95,13 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
                         React.createElement("img", {className: "circle art", src: this.props.track.img, alt: "icon", onMouseDown: this.previewStart, onMouseUp: this.previewStop, onMouseOut: this.previewStop, "data-toggle": "tooltip", "data-placement": "top", "data-original-title": "Click and hold to preview"})
                     ), 
                     React.createElement("div", {className: "row-content"}, 
-                        React.createElement("h4", {className: "list-group-item-heading hide-overflow", dangerouslySetInnerHTML: {__html:this.props.track.name}}), 
+                        React.createElement("div", {className: "track-title-container"}, 
+                            React.createElement("h4", {className: "list-group-item-heading hide-overflow", dangerouslySetInnerHTML: {__html:this.props.track.name}}), 
+                            React.createElement("div", {className: "track-title-icons"}, 
+                                React.createElement("i", {onClick: this.onClickVote, className: 'fa fa-level-up ' + (this.props.canVote ? '' : 'hide'), "data-toggle": "tooltip", "data-placement": "top", title: "", "data-original-title": "Vote", "data-delay": "400"}), 
+                                React.createElement("i", {className: "mdi-navigation-more-vert"})
+                            )
+                        ), 
                         React.createElement("p", {className: "list-group-item-text"}, 
 
                                 React.createElement(ArtistList, {artists: this.props.track.artists}), 
