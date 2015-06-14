@@ -5,3 +5,4 @@ node_modules/
 tmp/
 config.js
 json/
+json/history/

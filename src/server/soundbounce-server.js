@@ -490,7 +490,7 @@ var soundbounceServer = {
             });
         }, 1000 * 10);
 
-        // topup in 15 seconds, once lists have recycled tracks as appropriate
+        // topup in 15 seconds after startup, once lists have recycled tracks as appropriate
         _.delay(function() {
             server.topUpRooms();
         }, 15000);
