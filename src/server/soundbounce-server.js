@@ -577,6 +577,10 @@ var soundbounceServer = {
             if (!_.contains(room.tracks[0].votesToSkip, user.id)) {
                 room.tracks[0].votesToSkip.push(user.id);
             }
+            else{
+                // already voted to skip
+                return;
+            }
 
             var trackToSkip = room.tracks[0];
 
