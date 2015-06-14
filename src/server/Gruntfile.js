@@ -139,6 +139,10 @@ module.exports = function(grunt) {
                 files: config.src.scripts + '/**/*.js',
                 tasks: ['scripts']
             },
+            react:{
+                files: config.src.react + '/**/*.jsx',
+                tasks: ['compile']
+            },
             copy: {
                 files: [
                     config.src.images + '/**/*',
