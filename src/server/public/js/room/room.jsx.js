@@ -158,6 +158,7 @@ var RoomPage = React.createClass({displayName: "RoomPage",
     componentWillUnmount: function () {
 
         this.pauseTrack();
+
         // close websocket
         if (this.socket) {
             this.socket.close(1000, "normal close");
@@ -180,6 +181,7 @@ var RoomPage = React.createClass({displayName: "RoomPage",
         eventbus.off("preview-start");
         eventbus.off("preview-stop");
         eventbus.off("click-artist");
+        eventbus.off("vote-to-skip-track");
 
         clearInterval(this.intervalId);
     },
@@ -684,9 +686,9 @@ var RoomPage = React.createClass({displayName: "RoomPage",
                                     React.createElement("i", {className: "mdi-content-clear", onClick: this.clearSearch, style: {display: this.state.search.length > 0 ? "block" : "none"}})
                                 ), 
 
-                                React.createElement("div", {className: "well playlist", style: {display: tracksForRoomPlaylist.length == 0 ? "none" : "block"}}, 
+                                React.createElement("div", {className: "playlist", style: {display: tracksForRoomPlaylist.length == 0 ? "none" : "block"}}, 
                                        emptyPlaylistMessage, 
-                                    React.createElement("div", {className: "list-group"}, 
+                                    React.createElement("div", {className: "list-group play-list-group"}, 
                                               this.state.room.tracks.map(function (track, index, arr) {
 
                                                   var canVote = !_.contains(track.votes.map(function (v) {
@@ -709,7 +711,7 @@ var RoomPage = React.createClass({displayName: "RoomPage",
 
                                 React.createElement("div", {id: "spotifyResultsContainer", style: {display: component.state.spotifySearchResults.length == 0 ? "none" : "block"}}, 
                                     React.createElement("p", null, "Add new tracks to this room:"), 
-                                    React.createElement("div", {className: "well playlist"}, 
+                                    React.createElement("div", {className: "playlist"}, 
 
                                         React.createElement("div", {className: "list-group"}, 
                                               _.filter(component.state.spotifySearchResults, function (t) {

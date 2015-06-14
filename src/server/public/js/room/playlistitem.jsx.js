@@ -64,13 +64,13 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
         }
 
         return (
-            React.createElement("div", {id: 'track' + this.props.track.id, className: this.props.canAdd?"spotify-result":"", style: {display:this.props.visible?"block":"none"}}, 
+            React.createElement("div", {id: 'track' + this.props.track.id, className: this.props.canAdd?"spotify-result play-list-item":"play-list-item", style: {display:this.props.visible?"block":"none"}}, 
                 React.createElement("div", {className: "list-group-item"}, 
                     React.createElement("div", {className: "row-picture"}, 
-
+ React.createElement("span", {style: {display:'block'}}, 
                         React.createElement("div", {className: "track-icons"}, 
                             React.createElement("span", {className: "hover-hide"}, 
-                                React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickRemoveTrack, className: 'btn btn-fab btn-spotify fa fa-trash', "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": "Remove track", style: {
+                            React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickRemoveTrack, className: 'btn btn-fab btn-spotify fa fa-trash', "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": "Remove track", style: {
                                     overflow: 'visible',
                                     backgroundColor: this.props.color,
                                     display:this.props.canRemove?"inline-block":"none"
@@ -79,6 +79,7 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
                                 overflow: 'visible',
                                 backgroundColor: this.props.color
                             }, "data-delay": "{\"show\": 500, \"hide\": 0}"}), 
+
                             React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickVote, className: 'btn btn-fab btn-vote mdi-file-file-upload ' + (this.props.canVote ? '' : 'hide'), "data-toggle": "tooltip", "data-placement": "top", title: "", "data-original-title": "Vote", style: {
                                 overflow: 'visible',
                                 backgroundColor: this.props.color
@@ -89,7 +90,8 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
                                 backgroundColor: this.props.color
                             }, "data-delay": "{\"show\": 500, \"hide\": 0}"})
 
-                        ), 
+                        )
+      ), 
                         React.createElement("img", {className: "circle art", src: this.props.track.img, alt: "icon", onMouseDown: this.previewStart, onMouseUp: this.previewStop, onMouseOut: this.previewStop, "data-toggle": "tooltip", "data-placement": "top", "data-original-title": "Click and hold to preview"})
                     ), 
                     React.createElement("div", {className: "row-content"}, 
@@ -101,8 +103,7 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
                                 React.createElement(TrackVoteDisplay, {votes: this.props.track.votes, color: this.props.color, addedBy: this.props.track.addedBy})
                         )
                     )
-                ), 
-                React.createElement("div", {className: "list-group-separator", style: {display:this.props.isLast?"none":"block"}})
+                )
             )
 
         );

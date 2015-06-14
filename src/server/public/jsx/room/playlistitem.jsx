@@ -64,13 +64,13 @@ var PlaylistItem = React.createClass({
         }
 
         return (
-            <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result":""} style={{display:this.props.visible?"block":"none"}}>
+            <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result play-list-item":"play-list-item"} style={{display:this.props.visible?"block":"none"}}>
                 <div className="list-group-item">
                     <div className="row-picture">
-
+ <span style={{display:'block'}}>
                         <div className="track-icons">
                             <span className="hover-hide">
-                                <a href="javascript:void(0)" onClick={this.onClickRemoveTrack} className={'btn btn-fab btn-spotify fa fa-trash'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Remove track" style={{
+                            <a href="javascript:void(0)" onClick={this.onClickRemoveTrack} className={'btn btn-fab btn-spotify fa fa-trash'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Remove track" style={{
                                     overflow: 'visible',
                                     backgroundColor: this.props.color,
                                     display:this.props.canRemove?"inline-block":"none"
@@ -79,6 +79,7 @@ var PlaylistItem = React.createClass({
                                 overflow: 'visible',
                                 backgroundColor: this.props.color
                             }} data-delay='{"show": 500, "hide": 0}'></a>
+
                             <a href="javascript:void(0)" onClick={this.onClickVote} className={'btn btn-fab btn-vote mdi-file-file-upload ' + (this.props.canVote ? '' : 'hide')}  data-toggle="tooltip" data-placement="top" title="" data-original-title="Vote" style={{
                                 overflow: 'visible',
                                 backgroundColor: this.props.color
@@ -90,6 +91,7 @@ var PlaylistItem = React.createClass({
                             }} data-delay='{"show": 500, "hide": 0}'></a>
 
                         </div>
+      </span>
                         <img className="circle art" src={this.props.track.img} alt="icon" onMouseDown={this.previewStart} onMouseUp={this.previewStop} onMouseOut={this.previewStop} data-toggle="tooltip" data-placement="top" data-original-title="Click and hold to preview" />
                     </div>
                     <div className="row-content">
@@ -102,7 +104,6 @@ var PlaylistItem = React.createClass({
                         </p>
                     </div>
                 </div>
-                <div className="list-group-separator" style={{display:this.props.isLast?"none":"block"}}></div>
             </div>
 
         );

@@ -155,7 +155,7 @@ h1 {
 }
 
 .list-group .list-group-item .row-content {
-	min-height: 60px;
+	min-height: 0;
 }
 
 .list-group .list-group-item .row-content {
@@ -386,6 +386,18 @@ i.mdi-action-search {
 	border-radius: 5px;
 }
 
+.play-list-item {
+	background:white;
+	padding:16px;
+	border-bottom: 1px solid #e9e9e9;
+	cursor:pointer;
+
+}
+
+.playlist {
+	box-shadow: 0 -1px 0 #e5e5e5,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+}
+
 .track-icons .btn {
 	width: 20px;
 	height: 20px;
@@ -396,7 +408,7 @@ i.mdi-action-search {
 	margin-left: 10px;
 	box-shadow: none;
 	opacity: 0;
-	transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.78s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.68s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: none !important;
 }
 
 .track-icons .btn.btn-add {
@@ -469,13 +481,13 @@ i.mdi-action-search {
 
 .list-group-item .art {
 	cursor: pointer;
-	transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+	/*transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);*/
 }
 
 .list-group-item:hover .art {
-	border-radius: 0 !important;
+/*	border-radius: 0 !important;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.23), 0 5px 15px rgba(0, 0, 0, 0.19);
-
+*/
 }
 
 .padlock {

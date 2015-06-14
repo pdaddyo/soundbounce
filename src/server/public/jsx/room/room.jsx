@@ -158,6 +158,7 @@ var RoomPage = React.createClass({
     componentWillUnmount: function () {
 
         this.pauseTrack();
+
         // close websocket
         if (this.socket) {
             this.socket.close(1000, "normal close");
@@ -685,9 +686,9 @@ var RoomPage = React.createClass({
                                     <i className="mdi-content-clear" onClick={this.clearSearch} style={{display: this.state.search.length > 0 ? "block" : "none"}} />
                                 </div>
 
-                                <div className="well playlist" style={{display: tracksForRoomPlaylist.length == 0 ? "none" : "block"}}>
+                                <div className="playlist" style={{display: tracksForRoomPlaylist.length == 0 ? "none" : "block"}}>
                                        {emptyPlaylistMessage}
-                                    <div className="list-group">
+                                    <div className="list-group play-list-group">
                                               {this.state.room.tracks.map(function (track, index, arr) {
 
                                                   var canVote = !_.contains(track.votes.map(function (v) {
@@ -710,7 +711,7 @@ var RoomPage = React.createClass({
 
                                 <div id="spotifyResultsContainer" style={{display: component.state.spotifySearchResults.length == 0 ? "none" : "block"}}>
                                     <p>Add new tracks to this room:</p>
-                                    <div className="well playlist">
+                                    <div className="playlist">
 
                                         <div className="list-group">
                                               {_.filter(component.state.spotifySearchResults, function (t) {
