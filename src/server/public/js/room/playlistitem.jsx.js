@@ -46,6 +46,18 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
         }
     },
 
+    onClickStarTrack: function (e) {
+        eventbus.trigger("star-track", this.props.track);
+    },
+
+    onClickLastFM: function (e) {
+        eventbus.trigger('open-url', 'http://www.last.fm/search?q='+escape(this.props.track.artists[0].name+' '+this.props.track.name));
+    },
+
+    onClickYouTube: function (e) {
+        eventbus.trigger('open-url', 'https://www.youtube.com/results?search_query='+escape(this.props.track.artists[0].name+' '+this.props.track.name));
+    },
+
     previewStart: function () {
         this.isPreviewing = true;
         eventbus.trigger("preview-start", this.props.track);
@@ -58,6 +70,17 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
         }
     },
 
+    clickDropDown: function () {
+
+        // not react-friendly but gets the menu staying visible when no longer hovering
+        $('.play-list-item').removeClass('selected');
+        $('#track' + this.props.track.id).addClass('selected');
+        $('body').on('click.trackdropdowndismiss', function () {
+            $('body').off('click.trackdropdowndismiss');
+            $('.play-list-item').removeClass('selected');
+        })
+    },
+
     render: function () {
         if (this.props.track == null) {
             return React.createElement("div", null);
@@ -67,39 +90,27 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
             React.createElement("div", {id: 'track' + this.props.track.id, className: this.props.canAdd?"spotify-result play-list-item":"play-list-item", style: {display:this.props.visible?"block":"none"}}, 
                 React.createElement("div", {className: "list-group-item"}, 
                     React.createElement("div", {className: "row-picture"}, 
- React.createElement("span", {style: {display:'none'}}, 
-                        React.createElement("div", {className: "track-icons"}, 
-                            React.createElement("span", {className: "hover-hide"}, 
-                            React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickRemoveTrack, className: 'btn btn-fab btn-spotify fa fa-trash', "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": "Remove track", style: {
-                                    overflow: 'visible',
-                                    backgroundColor: this.props.color,
-                                    display:this.props.canRemove?"inline-block":"none"
-                                }, "data-delay": "{\"show\": 500, \"hide\": 0}"}), 
-                            React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickOpenSpotify, className: 'btn btn-fab btn-spotify fa fa-spotify', "data-toggle": "tooltip", "data-placement": "top", title: "", "data-original-title": "Show in Spotify", style: {
-                                overflow: 'visible',
-                                backgroundColor: this.props.color
-                            }, "data-delay": "{\"show\": 500, \"hide\": 0}"}), 
-
-                            React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickVote, className: 'btn btn-fab btn-vote mdi-file-file-upload ' + (this.props.canVote ? '' : 'hide'), "data-toggle": "tooltip", "data-placement": "top", title: "", "data-original-title": "Vote", style: {
-                                overflow: 'visible',
-                                backgroundColor: this.props.color
-                            }, "data-delay": "{\"show\": 500, \"hide\": 0}"})
-                                ), 
-                            React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickAdd, className: 'btn btn-fab btn-add mdi-av-playlist-add ' + (this.props.canAdd ? '' : 'hide'), "data-toggle": "tooltip", "data-placement": "top", title: "", "data-original-title": "Add to room", style: {
-                                overflow: 'visible',
-                                backgroundColor: this.props.color
-                            }, "data-delay": "{\"show\": 500, \"hide\": 0}"})
-
-                        )
-      ), 
                         React.createElement("img", {className: "circle art", src: this.props.track.img, alt: "icon", onMouseDown: this.previewStart, onMouseUp: this.previewStop, onMouseOut: this.previewStop, "data-toggle": "tooltip", "data-placement": "top", "data-original-title": "Click and hold to preview"})
                     ), 
                     React.createElement("div", {className: "row-content"}, 
                         React.createElement("div", {className: "track-title-container"}, 
                             React.createElement("h4", {className: "list-group-item-heading hide-overflow", dangerouslySetInnerHTML: {__html:this.props.track.name}}), 
                             React.createElement("div", {className: "track-title-icons"}, 
-                                React.createElement("i", {onClick: this.onClickVote, className: 'fa fa-level-up ' + (this.props.canVote ? '' : 'hide'), "data-toggle": "tooltip", "data-placement": "top", title: "", "data-original-title": "Vote", "data-delay": "400"}), 
-                                React.createElement("i", {className: "mdi-navigation-more-vert"})
+                                React.createElement("i", {onClick: this.onClickAdd, className: 'mdi-av-playlist-add ' + (this.props.canAdd ? '' : 'hide'), "data-toggle": "tooltip", "data-placement": "top", title: "", "data-original-title": "Add to room", "data-delay": "{\"show\": 500, \"hide\": 0}"}), 
+                                React.createElement("i", {onClick: this.onClickVote, className: 'fa fa-level-up ' + (this.props.canVote ? '' : 'hide'), "data-toggle": "tooltip", "data-placement": "top", title: "", "data-original-title": "Vote", "data-delay": "{\"show\": 500, \"hide\": 0}"}), 
+                                React.createElement("div", {className: "dropdown"}, 
+                                    React.createElement("i", {className: "mdi-navigation-more-vert more-menu", "data-toggle": "dropdown", onClick:  this.clickDropDown}), 
+                                    React.createElement("ul", {className: "dropdown-menu dropdown-left", role: "menu"}, 
+                                        React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", onClick: this.onClickOpenSpotify}, React.createElement("i", {className: "fa fa-spotify"}), " Open in Spotify")), 
+                                        React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", onClick: this.onClickStarTrack}, React.createElement("i", {className: "fa fa-star"}), " Add to starred list")), 
+                                        React.createElement("li", {className: "divider"}), 
+                                        React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", onClick: this.onClickYouTube}, React.createElement("i", {className: "fa fa-youtube"}), " Find on YouTube")), 
+                                        React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", onClick: this.onClickLastFM}, React.createElement("i", {className: "fa fa-lastfm"}), " Find on Last.fm")), 
+                                        React.createElement("li", {className: "divider", style: {display:this.props.canRemove?"block":"none"}}), 
+                                        React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", onClick: this.onClickRemoveTrack, style: {display:this.props.canRemove?"block":"none"}}, React.createElement("i", {className: "fa fa-trash"}), " Remove"))
+
+                                    )
+                                )
                             )
                         ), 
                         React.createElement("p", {className: "list-group-item-text"}, 

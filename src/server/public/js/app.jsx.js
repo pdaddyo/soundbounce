@@ -150,7 +150,9 @@ $(function () {
 
 
     eventbus.on("open-url", function (url) {
+        console.log("opening "+url);
         try {
+
             spotifyBrowserApi.openUrl(url);
         } catch (err) {
             console.warn("No spotifyBrowserApi found!? ", err);
