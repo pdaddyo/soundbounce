@@ -2,6 +2,12 @@ var PlaylistItem = React.createClass({
 
     isPreviewing:false,
 
+    getInitialState: function() {
+        return {
+
+        };
+    },
+
     componentDidMount: function () {
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -11,25 +17,27 @@ var PlaylistItem = React.createClass({
     },
 
     onClickVote: function () {
-  //      $('.tooltip').remove();
-
         var track = this.props.track;
+        // hacky
+        $('.play-list-item').removeClass('details');
+
         _.defer(function () {
             eventbus.trigger("track-vote", track);
         });
     },
 
     onClickAdd: function () {
+        // hacky
+        $('.play-list-item').removeClass('details');
 
         var track = this.props.track;
         _.defer(function () {
             eventbus.trigger("track-add", track);
         });
     },
+
     onClickOpenSpotify: function () {
         eventbus.trigger("open-in-spotify", this.props.track);
-        //  document.location = 'spotify:track:'+this.props.track.id;
-
     },
 
     onClickRemoveTrack: function (e) {
@@ -56,6 +64,33 @@ var PlaylistItem = React.createClass({
 
     onClickYouTube: function (e) {
         eventbus.trigger('open-url', 'https://www.youtube.com/results?search_query='+escape(this.props.track.artists[0].name+' '+this.props.track.name));
+    },
+
+    onClickAlbum: function (e){
+        eventbus.trigger('open-url', this.state.albumUri);
+    },
+
+    toggleDetails: function (e){
+        var component = this;
+        if($('#track' + this.props.track.id).hasClass('details')){
+            $('.play-list-item').removeClass('details');
+        }
+        else{
+            $('.play-list-item').removeClass('details');
+            $('#track' + this.props.track.id).addClass('details');
+
+            // load track then album details from spotify API and populate...
+            $.getJSON( 'https://api.spotify.com/v1/tracks/'+this.props.track.id, function( trackData ) {
+                $.getJSON( 'https://api.spotify.com/v1/albums/'+trackData.album.id, function( albumData ) {
+                    $('#track' + component.props.track.id + ' .track-album').html('<span>Track '+trackData.track_number+' on <span class="hov">'+trackData.album.name+'</span></span>');
+                    component.setState({albumUri:albumData.uri});
+
+                    $('#track' + component.props.track.id + ' .year-label').html("&copy; " + albumData.copyrights[0].text);
+                });
+            });
+        }
+
+        // todo: handle all this properly using react instead of jquery
     },
 
     previewStart: function () {
@@ -87,14 +122,14 @@ var PlaylistItem = React.createClass({
         }
 
         return (
-            <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result play-list-item":"play-list-item"} style={{display:this.props.visible?"block":"none"}}>
+            <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result play-list-item":"play-list-item"} style={{display:this.props.visible?"block":"none"}} >
                 <div className="list-group-item">
                     <div className="row-picture">
                         <img className="circle art" src={this.props.track.img} alt="icon" onMouseDown={this.previewStart} onMouseUp={this.previewStop} onMouseOut={this.previewStop} data-toggle="tooltip" data-placement="top" data-original-title="Click and hold to preview" />
                     </div>
                     <div className="row-content">
                         <div className="track-title-container">
-                            <h4 className="list-group-item-heading hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.name}} />
+                            <h4 className="list-group-item-heading hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.name}} onClick={this.toggleDetails} />
                             <div className="track-title-icons">
                                 <i onClick={this.onClickAdd} className={'mdi-av-playlist-add ' + (this.props.canAdd ? '' : 'hide')}  data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to room" data-delay='{"show": 500, "hide": 0}'></i><i onClick={this.onClickVote} className={'fa fa-level-up ' + (this.props.canVote ? '' : 'hide')} data-toggle="tooltip" data-placement="top" title="" data-original-title="Vote"  data-delay='{"show": 500, "hide": 0}' ></i><div className="dropdown">
                                     <i className="mdi-navigation-more-vert more-menu" data-toggle="dropdown" onClick={ this.clickDropDown }/>
@@ -117,6 +152,10 @@ var PlaylistItem = React.createClass({
 
                                 <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} addedBy={this.props.track.addedBy} />
                         </p>
+                        <div className="extra-details">
+                            <p className="list-group-item-text track-album" onClick={this.onClickAlbum}>&nbsp;</p>
+                            <p className="list-group-item-text year-label">Loading details...</p>
+                        </div>
                     </div>
                 </div>
             </div>
