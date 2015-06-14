@@ -412,6 +412,7 @@ i.mdi-action-search {
 		width: auto;
 		overflow: hidden;
 		flex-grow: 2;
+		display:inline-block;
 	}
 	.track-title-icons > i, .track-title-icons .more-menu {
 		position: relative;
@@ -439,6 +440,8 @@ i.mdi-action-search {
 		display: none;
 		position: relative;
 		right: -8px;
+		white-space:nowrap;
+		flex-shrink:0;
 
 		.dropdown {
 			display: inline-block;

@@ -96,9 +96,7 @@ var PlaylistItem = React.createClass({
                         <div className="track-title-container">
                             <h4 className="list-group-item-heading hide-overflow" dangerouslySetInnerHTML={{__html:this.props.track.name}} />
                             <div className="track-title-icons">
-                                <i onClick={this.onClickAdd} className={'mdi-av-playlist-add ' + (this.props.canAdd ? '' : 'hide')}  data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to room" data-delay='{"show": 500, "hide": 0}'></i>
-                                <i onClick={this.onClickVote} className={'fa fa-level-up ' + (this.props.canVote ? '' : 'hide')} data-toggle="tooltip" data-placement="top" title="" data-original-title="Vote"  data-delay='{"show": 500, "hide": 0}' ></i>
-                                <div className="dropdown">
+                                <i onClick={this.onClickAdd} className={'mdi-av-playlist-add ' + (this.props.canAdd ? '' : 'hide')}  data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to room" data-delay='{"show": 500, "hide": 0}'></i><i onClick={this.onClickVote} className={'fa fa-level-up ' + (this.props.canVote ? '' : 'hide')} data-toggle="tooltip" data-placement="top" title="" data-original-title="Vote"  data-delay='{"show": 500, "hide": 0}' ></i><div className="dropdown">
                                     <i className="mdi-navigation-more-vert more-menu" data-toggle="dropdown" onClick={ this.clickDropDown }/>
                                     <ul className="dropdown-menu dropdown-left" role="menu" >
                                         <li><a role="menuitem" tabindex="-1" href="#" onClick={this.onClickOpenSpotify}><i className="fa fa-spotify"></i> Open in Spotify</a></li>
