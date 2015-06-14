@@ -388,6 +388,12 @@ var soundbounceServer = {
 
                 soundbounceShared.updatePlaylist(room, server);
 
+                // if we're the first joiner, update top-up list
+                if(room.listeners.length==1 && room.topUpURI){
+                    console.log("topping up room for first joiner "+room.name);
+                    server.topUpRoomWithPlaylist(room, room.topUpURI);
+                }
+
                 // send initial sync of room state and user info
                 try {
                     socket.send(JSON.stringify([server.createSyncMessage(room, user)]));
