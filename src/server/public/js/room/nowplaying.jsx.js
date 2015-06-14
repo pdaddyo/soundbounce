@@ -1,7 +1,7 @@
 var NowPlaying = React.createClass({displayName: "NowPlaying",
     componentDidMount: function () {
         var component = this;
-        eventbus.on("track-position-update", function (newPosition){
+        eventbus.on("track-position-update", function (newPosition) {
             component.setState({trackPosition: newPosition});
         });
     },
@@ -11,7 +11,7 @@ var NowPlaying = React.createClass({displayName: "NowPlaying",
     },
 
     getInitialState: function () {
-        return {trackPosition:0};
+        return {trackPosition: 0};
     },
 
     onClickOpenSpotify: function () {
@@ -27,11 +27,19 @@ var NowPlaying = React.createClass({displayName: "NowPlaying",
         eventbus.trigger("vote-to-skip-track", this.props.track);
     },
 
+    onClickLastFM: function (e) {
+        eventbus.trigger('open-url', 'http://www.last.fm/search?q=' + escape(this.props.track.artists[0].name + ' ' + this.props.track.name));
+    },
+
+    onClickYouTube: function (e) {
+        eventbus.trigger('open-url', 'https://www.youtube.com/results?search_query=' + escape(this.props.track.artists[0].name + ' ' + this.props.track.name));
+    },
+
+
     onClickRemoveTrack: function (e) {
         var component = this;
 
-        if(e.ctrlKey)
-        {
+        if (e.ctrlKey) {
             eventbus.trigger("remove-track", component.props.track);
         }
         else {
@@ -41,14 +49,14 @@ var NowPlaying = React.createClass({displayName: "NowPlaying",
         }
     },
 
-    minSec: function(ms){
-        var min = Math.floor(ms/1000/60),
-            sec = Math.floor((ms/1000) % 60);
+    minSec: function (ms) {
+        var min = Math.floor(ms / 1000 / 60),
+            sec = Math.floor((ms / 1000) % 60);
 
-        if(sec<10)
-            sec = "0"+sec;
+        if (sec < 10)
+            sec = "0" + sec;
 
-        return min+":"+sec;
+        return min + ":" + sec;
     },
 
     render: function () {
@@ -65,42 +73,57 @@ var NowPlaying = React.createClass({displayName: "NowPlaying",
                             ), 
                             React.createElement("div", {className: "row-content"}, 
                                 React.createElement("div", {className: "track-icons"}, 
-                                    
-                                    React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickRemoveTrack, className: 'btn btn-fab btn-spotify fa fa-trash', "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": "Remove track", style: {
-                                        overflow: 'visible',
-                                        backgroundColor: this.props.color,
-                                        display:this.props.canRemove?"inline-block":"none"
-                                    }, "data-delay": "{\"show\": 500, \"hide\": 0}"}), 
-                                    
-                                    React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickOpenSpotify, className: 'btn btn-fab btn-spotify fa fa-spotify', "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": "Show in Spotify", style: {
-                                        overflow: 'visible',
-                                        backgroundColor: this.props.color
-                                    }, "data-delay": "{\"show\": 500, \"hide\": 0}"}), 
-                                    
-                                    React.createElement("span", {className: "skip-button-holder"}, 
-                                        React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickVoteToSkipTrack, className: 'btn btn-fab btn-remove mdi-action-highlight-remove', "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-html": "true", "data-original-title": "Vote to skip track", style: {
-                                            overflow: 'visible',
-                                            backgroundColor: this.props.color
-                                        }, "data-delay": "{\"show\": 500, \"hide\": 0}"})
-                                    ), 
-                                    
-                                    React.createElement("span", {className: "star-button-holder"}, 
-                                        React.createElement("a", {href: "javascript:void(0)", onClick: this.onClickStarTrack, className: 'btn btn-fab btn-star mdi-action-grade', "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-html": "true", "data-original-title": "Add to Starred list in Spotify", style: {
-                                            overflow: 'visible',
-                                            backgroundColor: this.props.color
-                                        }, "data-delay": "{\"show\": 500, \"hide\": 0}"})
+                                    React.createElement("div", {className: "track-title-icons"}, 
+
+                                        React.createElement("div", {className: "dropdown"}, 
+                                            React.createElement("i", {className: "mdi-navigation-more-vert more-menu", "data-toggle": "dropdown", 
+                                               onClick:  this.clickDropDown}), 
+                                            React.createElement("ul", {className: "dropdown-menu dropdown-left", role: "menu"}, 
+                                                React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", 
+                                                       onClick: this.onClickOpenSpotify}, React.createElement("i", {
+                                                    className: "fa fa-spotify"}), " Open in Spotify")), 
+                                                React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", 
+                                                       onClick: this.onClickStarTrack}, 
+                                                    React.createElement("i", {className: "fa fa-star"}), " Add to starred list")), 
+                                                React.createElement("li", {className: "divider"}), 
+                                                React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", 
+                                                       onClick: this.onClickVoteToSkipTrack}, 
+                                                    React.createElement("i", {className: "fa fa-thumbs-o-down"}), " Vote to skip")), 
+                                                React.createElement("li", {className: "divider"}), 
+                                                React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", 
+                                                       onClick: this.onClickYouTube}, 
+                                                    React.createElement("i", {className: "fa fa-youtube"}), " Find on YouTube")), 
+                                                React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", 
+                                                       onClick: this.onClickLastFM}, 
+                                                    React.createElement("i", {className: "fa fa-lastfm"}), " Find on Last.fm")), 
+
+                                                React.createElement("li", {className: "divider", 
+                                                    style: {display:this.props.canRemove?"block":"none"}}), 
+                                                React.createElement("li", null, React.createElement("a", {role: "menuitem", tabindex: "-1", href: "#", 
+                                                       onClick: this.onClickRemoveTrack, 
+                                                       style: {display:this.props.canRemove?"block":"none"}}, React.createElement("i", {
+                                                    className: "fa fa-trash"}), " Remove"))
+
+                                            )
+                                        )
                                     )
+
                                 ), 
-                                React.createElement("h4", {className: "list-group-item-heading", dangerouslySetInnerHTML: {__html: this.props.track.name}}), 
+                                React.createElement("h4", {className: "list-group-item-heading", 
+                                    dangerouslySetInnerHTML: {__html: this.props.track.name}}), 
+
                                 React.createElement("p", {className: "list-group-item-text hide-overflow"}, 
                                     React.createElement(ArtistList, {artists: this.props.track.artists})
                                 ), 
-                                React.createElement(TrackVoteDisplay, {votes: this.props.track.votes, color: this.props.color, addedBy: this.props.track.addedBy})
+                                React.createElement(TrackVoteDisplay, {votes: this.props.track.votes, color: this.props.color, 
+                                                  addedBy: this.props.track.addedBy})
                             )
                         )
                     ), 
                     React.createElement("div", {className: "bs-component"}, 
-                        React.createElement("div", {className: "progress progress-striped  active", "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": this.minSec(this.props.track.length-this.state.trackPosition)+ " remaining"}, 
+                        React.createElement("div", {className: "progress progress-striped  active", "data-toggle": "tooltip", "data-placement": "bottom", 
+                             title: "", 
+                             "data-original-title": this.minSec(this.props.track.length-this.state.trackPosition)+ " remaining"}, 
                             React.createElement("div", {className: "progress-bar progress-bar-success", style: {
                                 width: (this.state.trackPosition / this.props.track.length * 100) + '%',
                                 backgroundColor: this.props.color

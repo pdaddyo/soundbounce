@@ -1,7 +1,7 @@
 var NowPlaying = React.createClass({
     componentDidMount: function () {
         var component = this;
-        eventbus.on("track-position-update", function (newPosition){
+        eventbus.on("track-position-update", function (newPosition) {
             component.setState({trackPosition: newPosition});
         });
     },
@@ -11,7 +11,7 @@ var NowPlaying = React.createClass({
     },
 
     getInitialState: function () {
-        return {trackPosition:0};
+        return {trackPosition: 0};
     },
 
     onClickOpenSpotify: function () {
@@ -27,11 +27,19 @@ var NowPlaying = React.createClass({
         eventbus.trigger("vote-to-skip-track", this.props.track);
     },
 
+    onClickLastFM: function (e) {
+        eventbus.trigger('open-url', 'http://www.last.fm/search?q=' + escape(this.props.track.artists[0].name + ' ' + this.props.track.name));
+    },
+
+    onClickYouTube: function (e) {
+        eventbus.trigger('open-url', 'https://www.youtube.com/results?search_query=' + escape(this.props.track.artists[0].name + ' ' + this.props.track.name));
+    },
+
+
     onClickRemoveTrack: function (e) {
         var component = this;
 
-        if(e.ctrlKey)
-        {
+        if (e.ctrlKey) {
             eventbus.trigger("remove-track", component.props.track);
         }
         else {
@@ -41,14 +49,14 @@ var NowPlaying = React.createClass({
         }
     },
 
-    minSec: function(ms){
-        var min = Math.floor(ms/1000/60),
-            sec = Math.floor((ms/1000) % 60);
+    minSec: function (ms) {
+        var min = Math.floor(ms / 1000 / 60),
+            sec = Math.floor((ms / 1000) % 60);
 
-        if(sec<10)
-            sec = "0"+sec;
+        if (sec < 10)
+            sec = "0" + sec;
 
-        return min+":"+sec;
+        return min + ":" + sec;
     },
 
     render: function () {
@@ -61,50 +69,65 @@ var NowPlaying = React.createClass({
                     <div className="list-group">
                         <div className="list-group-item">
                             <div className="row-picture">
-                                <img className="" src={this.props.track.img} alt="icon" />
+                                <img className="" src={this.props.track.img} alt="icon"/>
                             </div>
                             <div className="row-content">
                                 <div className="track-icons">
-                                    
-                                    <a href="javascript:void(0)" onClick={this.onClickRemoveTrack} className={'btn btn-fab btn-spotify fa fa-trash'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Remove track" style={{
-                                        overflow: 'visible',
-                                        backgroundColor: this.props.color,
-                                        display:this.props.canRemove?"inline-block":"none"
-                                    }} data-delay='{"show": 500, "hide": 0}'></a>
-                                    
-                                    <a href="javascript:void(0)" onClick={this.onClickOpenSpotify} className={'btn btn-fab btn-spotify fa fa-spotify'}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Show in Spotify" style={{
-                                        overflow: 'visible',
-                                        backgroundColor: this.props.color
-                                    }} data-delay='{"show": 500, "hide": 0}'></a>
-                                    
-                                    <span className="skip-button-holder">
-                                        <a href="javascript:void(0)" onClick={this.onClickVoteToSkipTrack} className={'btn btn-fab btn-remove mdi-action-highlight-remove'}  data-toggle="tooltip" data-placement="bottom" title=""  data-html="true" data-original-title="Vote to skip track" style={{
-                                            overflow: 'visible',
-                                            backgroundColor: this.props.color
-                                        }} data-delay='{"show": 500, "hide": 0}'></a>
-                                    </span>
-                                    
-                                    <span className="star-button-holder">
-                                        <a href="javascript:void(0)" onClick={this.onClickStarTrack} className={'btn btn-fab btn-star mdi-action-grade'}  data-toggle="tooltip" data-placement="bottom" title=""  data-html="true" data-original-title="Add to Starred list in Spotify" style={{
-                                            overflow: 'visible',
-                                            backgroundColor: this.props.color
-                                        }} data-delay='{"show": 500, "hide": 0}'></a>
-                                    </span>
+                                    <div className="track-title-icons">
+
+                                        <div className="dropdown">
+                                            <i className="mdi-navigation-more-vert more-menu" data-toggle="dropdown"
+                                               onClick={ this.clickDropDown }/>
+                                            <ul className="dropdown-menu dropdown-left" role="menu">
+                                                <li><a role="menuitem" tabindex="-1" href="#"
+                                                       onClick={this.onClickOpenSpotify}><i
+                                                    className="fa fa-spotify"></i> Open in Spotify</a></li>
+                                                <li><a role="menuitem" tabindex="-1" href="#"
+                                                       onClick={this.onClickStarTrack}>
+                                                    <i className="fa fa-star"></i> Add to starred list</a></li>
+                                                <li className="divider"></li>
+                                                <li><a role="menuitem" tabindex="-1" href="#"
+                                                       onClick={this.onClickVoteToSkipTrack}>
+                                                    <i className="fa fa-thumbs-o-down"></i> Vote to skip</a></li>
+                                                <li className="divider"></li>
+                                                <li><a role="menuitem" tabindex="-1" href="#"
+                                                       onClick={this.onClickYouTube}>
+                                                    <i className="fa fa-youtube"></i> Find on YouTube</a></li>
+                                                <li><a role="menuitem" tabindex="-1" href="#"
+                                                       onClick={this.onClickLastFM}>
+                                                    <i className="fa fa-lastfm"></i> Find on Last.fm</a></li>
+
+                                                <li className="divider"
+                                                    style={{display:this.props.canRemove?"block":"none"}}></li>
+                                                <li><a role="menuitem" tabindex="-1" href="#"
+                                                       onClick={this.onClickRemoveTrack}
+                                                       style={{display:this.props.canRemove?"block":"none"}}><i
+                                                    className="fa fa-trash"></i> Remove</a></li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <h4 className="list-group-item-heading" dangerouslySetInnerHTML={{__html: this.props.track.name}} />
-                                <p className="list-group-item-text hide-overflow" >
-                                    <ArtistList artists={this.props.track.artists} />
+                                <h4 className="list-group-item-heading"
+                                    dangerouslySetInnerHTML={{__html: this.props.track.name}}/>
+
+                                <p className="list-group-item-text hide-overflow">
+                                    <ArtistList artists={this.props.track.artists}/>
                                 </p>
-                                <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} addedBy={this.props.track.addedBy} />
+                                <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color}
+                                                  addedBy={this.props.track.addedBy}/>
                             </div>
                         </div>
                     </div>
                     <div className="bs-component">
-                        <div className="progress progress-striped  active"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title={this.minSec(this.props.track.length-this.state.trackPosition)+ " remaining"} >
+                        <div className="progress progress-striped  active" data-toggle="tooltip" data-placement="bottom"
+                             title=""
+                             data-original-title={this.minSec(this.props.track.length-this.state.trackPosition)+ " remaining"}>
                             <div className="progress-bar progress-bar-success" style={{
                                 width: (this.state.trackPosition / this.props.track.length * 100) + '%',
                                 backgroundColor: this.props.color
-                            }}  ></div>
+                            }}></div>
                         </div>
                     </div>
                 </div>
