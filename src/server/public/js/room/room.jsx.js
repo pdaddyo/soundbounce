@@ -612,6 +612,10 @@ var RoomPage = React.createClass({displayName: "RoomPage",
         eventbus.trigger("open-url", "http://app.soundbounce.org/youtube?room="+escape(this.state.room.name));
     },
 
+    toggleChatPanel: function () {
+        $('#room').toggleClass('chat-on-screen');
+    },
+
     render: function () {
         var component = this;
         if (_.isEmpty(this.state.room)) {
@@ -774,6 +778,7 @@ var RoomPage = React.createClass({displayName: "RoomPage",
                             )
                         ), 
                         React.createElement("div", {className: "toolbar"}, 
+                            React.createElement("i", {className: "mdi-communication-forum", id: "chatToggle", onClick: this.toggleChatPanel}), 
                             React.createElement("i", {className: "mdi-navigation-close", id: "roomClose", title: "Back to room list", onClick: this.handleRoomCloseClick, "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": "Back to room list", "data-delay": "500"})
                         )
                     )

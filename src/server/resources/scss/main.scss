@@ -1534,3 +1534,71 @@ body > .dropdown-menu li:hover a {
 	height: 40px;
 }
 
+
+#chatToggle { display:none;}
+
+/* mobile */
+@media ( max-width:700px ) {
+
+
+	#chatToggle{
+		display:block;
+		float:left;
+		top: 6px;
+		position: relative;
+	}
+	.chat-panel {
+		width: 100%;
+		right:-100%;
+
+		transition: all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	#room.chat-on-screen {
+		.chat-panel{
+			right:0;
+		}
+
+		#nowplayingcontainer, #playlistcontainer{
+			left:-100%;
+		}
+
+	}
+
+	.room-description{
+		display:none;
+	}
+	.room-name{
+		width: 50%;
+		font-size:18px;
+	}
+
+	#nowplayingcontainer, #playlistcontainer{
+		width:100%;
+		transition: all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+		left:0;
+	}
+
+
+	.play-pause-container {
+		padding-left:0;
+	}
+	#nowplayingcontainer{
+		padding: 20px 28px 0;
+		position:relative;
+	}
+	.playlistpadder{
+		padding:4px 8px 4px 16px;
+	}
+
+	.play-list-item.details {
+		width: calc(100% + 16px);
+		margin-left: -8px;
+	}
+
+	.track-title-icons {
+		display:block !important;
+	}
+
+
+}
