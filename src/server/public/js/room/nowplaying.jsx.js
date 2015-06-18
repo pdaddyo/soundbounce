@@ -19,7 +19,7 @@ var NowPlaying = React.createClass({displayName: "NowPlaying",
     },
 
     onClickStarTrack: function (e) {
-        $('.now-playing .star-button-holder').fadeOut('slow');
+        $('.now-playing .star-button-holder').addClass('clicked');
         eventbus.trigger("star-track", this.props.track);
     },
 
@@ -74,6 +74,9 @@ var NowPlaying = React.createClass({displayName: "NowPlaying",
                             React.createElement("div", {className: "row-content"}, 
                                 React.createElement("div", {className: "track-icons"}, 
                                     React.createElement("div", {className: "track-title-icons"}, 
+
+                                        React.createElement("span", {className: "star-button-holder"}, React.createElement("i", {className: "fa fa-star", onClick: this.onClickStarTrack})
+                                        ), 
 
                                         React.createElement("div", {className: "dropdown"}, 
                                             React.createElement("i", {className: "mdi-navigation-more-vert more-menu", "data-toggle": "dropdown", 

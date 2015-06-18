@@ -130,7 +130,6 @@ var RoomPage = React.createClass({
         });
 
         eventbus.on("playing-track-is-starred", function () {
-            $('.now-playing .star-button-holder').hide();
         });
 
         eventbus.on("remove-track", function (track) {
@@ -226,8 +225,6 @@ var RoomPage = React.createClass({
                     console.log("calling spotifyBrowserApi.playTrack for track " + newTrackId);
                     this.lastPlayedTrackId = newTrackId;
                     component.playTrack(newTrackId, this.state.room.currentTrackPosition);
-                    $('.now-playing .star-button-holder').show();
-                    $('.now-playing .skip-button-holder').show();
                 }
             }
         } else {

@@ -19,7 +19,7 @@ var NowPlaying = React.createClass({
     },
 
     onClickStarTrack: function (e) {
-        $('.now-playing .star-button-holder').fadeOut('slow');
+        $('.now-playing .star-button-holder').addClass('clicked');
         eventbus.trigger("star-track", this.props.track);
     },
 
@@ -74,6 +74,9 @@ var NowPlaying = React.createClass({
                             <div className="row-content">
                                 <div className="track-icons">
                                     <div className="track-title-icons">
+
+                                        <span className="star-button-holder"><i className="fa fa-star" onClick={this.onClickStarTrack}></i>
+                                        </span>
 
                                         <div className="dropdown">
                                             <i className="mdi-navigation-more-vert more-menu" data-toggle="dropdown"

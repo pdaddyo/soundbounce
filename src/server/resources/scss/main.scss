@@ -176,6 +176,14 @@ h1 {
 .list-group .artists,
 .list-group .artist {
 	color: #333;
+
+}
+
+.list-group .artists{
+	height: 21px;
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .list-group .artist:hover {
@@ -358,7 +366,7 @@ i.mdi-action-search {
 	line-height: 1.2;
 	text-overflow: ellipsis;
 	text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-	width: 90%;
+	width: calc(100% - 47px);
 }
 
 .now-playing .list-group .list-group-item .row-picture img {
@@ -374,6 +382,7 @@ i.mdi-action-search {
 .track-icons {
 	position: absolute;
 	right: 0;
+	top:19px;
 }
 
 .now-playing .track-icons {
@@ -507,6 +516,8 @@ i.mdi-action-search {
 
 	.dropdown {
 		display: inline-block;
+
+
 		i {
 			font-size: 22px;
 			color: #aaa;
@@ -515,6 +526,13 @@ i.mdi-action-search {
 				color: rgba(0, 0, 0, 0.9);
 			}
 		}
+
+		&>i{
+			font-size: 24px;
+			position:relative;
+			top:3px;
+		}
+
 		.dropdown-menu {
 			right: 0;
 			left: auto;
@@ -1537,6 +1555,37 @@ body > .dropdown-menu li:hover a {
 
 #chatToggle { display:none;}
 
+
+
+
+.star-button-holder {
+
+	transition: all 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+	opacity:1;
+	transform: scale(1);
+	&.clicked{
+		opacity:0;
+		transform: scale(2.5);
+	}
+
+	i {
+		width:26px;
+		font-size:20px;
+		color:#ccc;
+		cursor:pointer;
+		&:hover{
+			color:#333;
+		}
+	}
+}
+
+
+.now-playing:hover .star-button-holder{
+	display:inline;
+}
+
+
+
 /* mobile */
 @media ( max-width:700px ) {
 
@@ -1599,6 +1648,4 @@ body > .dropdown-menu li:hover a {
 	.track-title-icons {
 		display:block !important;
 	}
-
-
 }
