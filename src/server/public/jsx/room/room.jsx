@@ -219,6 +219,8 @@ var RoomPage = React.createClass({
 
             if (newTrackId != prevTrackId) {
 
+                // track changed
+                $('.now-playing .star-button-holder').removeClass('clicked');
                 if (!component.state.userPaused) {
                     component.setState({playing: true});
 
