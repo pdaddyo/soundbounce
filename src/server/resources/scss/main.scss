@@ -409,7 +409,7 @@ i.mdi-action-search {
 	cursor: default;
 	box-shadow: 0 -1px 0 #e5e5e5, 0 0 2px rgba(0, 0, 0, .22), 0 2px 4px rgba(0, 0, 0, .34);
 	width: 100%;
-	height: 86px;
+	height: 87px;
 	margin-left: 0;
 	transition: all 0.14s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -485,7 +485,7 @@ i.mdi-action-search {
 		order: 2;
 		display: none;
 		position: relative;
-		right: -8px;
+		right: -5px;
 		flex-shrink: 0;
 		white-space: nowrap;
 	}
@@ -623,8 +623,9 @@ body .dropdown-menu {
 
 .votes {
 	position: absolute;
-	right: 1px;
-	top: 40px;
+	right: 24px;
+	top: 35px;
+	font-size: 19px;
 	overflow: visible;
 }
 
@@ -1648,4 +1649,22 @@ body > .dropdown-menu li:hover a {
 	.track-title-icons {
 		display:block !important;
 	}
+}
+
+.who-added> img{
+	position: absolute;
+	right: 2px;
+	height: 18px;
+	border-radius: 50%;
+	top: 35px;
+	/* border: 1px solid rgba(100, 100, 100, 0.3); */
+	opacity: 0.3;
+}
+
+.play-list-item:hover .who-added>img{
+	opacity: 0.7;
+}
+
+.list-group-item-text {
+
 }

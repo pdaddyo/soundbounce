@@ -152,6 +152,12 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
 
                                 React.createElement(TrackVoteDisplay, {votes: this.props.track.votes, color: this.props.color, addedBy: this.props.track.addedBy})
                         ), 
+                        React.createElement("p", {className: "who-added"}, 
+React.createElement("img", {src: this.props.track.addedBy.img, "data-toggle": "tooltip", "data-placement": "bottom", title: "", "data-original-title": '<p class="top-line">'+('Added by')+'</p>'+
+(this.props.track.addedBy.id==1?'':'<img src=' + this.props.track.addedBy.img + '/>')
++'<p>'+this.props.track.addedBy.name+'</p>', "data-html": "true", "data-delay": "{\"show\": 50, \"hide\": 0}"})
+                        ), 
+
                         React.createElement("div", {className: "extra-details"}, 
                             React.createElement("p", {className: "list-group-item-text track-album", onClick: this.onClickAlbum}, " "), 
                             React.createElement("p", {className: "list-group-item-text year-label"}, "Loading details...")

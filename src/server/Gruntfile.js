@@ -48,14 +48,15 @@ module.exports = function(grunt) {
         sass: {
             options: {
                 sourceMap: true,
-                style: 'expanded'
+                style: 'expanded',
+                debugInfo: true
             },
             dist: {
                 cwd: config.src.styles,
                 ext: '.css',
                 expand: true,
                 src: ['main.scss'],
-                dest: config.tmp.styles
+                dest: config.dist.styles
             }
         },
         cssmin: {
@@ -158,7 +159,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('server', ['express']);
     grunt.registerTask('compile', ['react']);
-    grunt.registerTask('styles', ['sass', 'cssmin', 'notify:styles']);
+    grunt.registerTask('styles', ['sass', /*'cssmin',*/ 'notify:styles']);
     // grunt.registerTask('scripts', ['jshint', 'concat', 'uglify', 'notify:scripts']);
     grunt.registerTask('build', ['clean', 'concurrent:build', 'notify:build']);
     grunt.registerTask('dev', ['build', 'server', 'watch']);

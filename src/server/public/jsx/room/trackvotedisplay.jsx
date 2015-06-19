@@ -20,8 +20,8 @@ var TrackVoteDisplay = React.createClass({
                                         var useOutline = index>0 || vote.id!=component.props.addedBy.id;
 
                                         var iconClasses = React.addons.classSet({
-                                            'mdi-social-person-outline':useOutline,
-                                            'mdi-social-person':!useOutline,
+                                            //'mdi-social-person-outline':useOutline,
+                                            'mdi-social-person':true,//!useOutline,
                                             'text-success':true,
                                             'pull-right':true
                                         });
