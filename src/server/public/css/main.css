@@ -2258,9 +2258,14 @@ body .dropdown-menu .divider {
 .votes {
   position: absolute;
   right: 24px;
-  top: 35px;
-  font-size: 19px;
+  top: 37px;
+  font-size: 16px;
   overflow: visible; }
+  .votes i {
+    opacity: 0.4; }
+
+.play-list-item:hover .votes i {
+  opacity: 0.8; }
 
 .now-playing .votes {
   right: 16px;
@@ -3084,7 +3089,7 @@ body > .dropdown-menu .active a, body > .dropdown-menu li:hover a {
   height: 18px;
   border-radius: 50%;
   top: 35px;
-  /* border: 1px solid rgba(100, 100, 100, 0.3); */
+  border: 1px solid rgba(100, 100, 100, 0.3);
   opacity: 0.3; }
 
 .play-list-item:hover .who-added > img {

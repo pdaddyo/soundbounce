@@ -17,7 +17,7 @@ var TrackVoteDisplay = React.createClass({displayName: "TrackVoteDisplay",
             React.createElement("span", {className: "votes"}, 
                                     this.props.votes.map(function (vote) {
 
-                                        var useOutline = index>0 || vote.id!=component.props.addedBy.id;
+                                        var useOutline = true;// index>0 || vote.id!=component.props.addedBy.id;
 
                                         var iconClasses = React.addons.classSet({
                                             //'mdi-social-person-outline':useOutline,
