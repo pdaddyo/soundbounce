@@ -623,7 +623,7 @@ body .dropdown-menu {
 
 .votes {
 	position: absolute;
-	right: 24px;
+	right: 3px;
 	top: 37px;
 	font-size: 16px;
 	overflow: visible;
@@ -637,8 +637,11 @@ body .dropdown-menu {
 }
 
 .now-playing .votes {
-	right: 16px;
-	top: 93px;
+	right: 18px;
+	top: 88px;
+	& i {
+		opacity:1;
+	}
 }
 
 .list-group-item:hover .track-icons {
@@ -1660,16 +1663,39 @@ body > .dropdown-menu li:hover a {
 
 .who-added> img{
 	position: absolute;
-	right: 2px;
-	height: 18px;
-	border-radius: 50%;
-	top: 35px;
-	 border: 1px solid rgba(100, 100, 100, 0.3);
-	opacity: 0.3;
+	left: -3px;
+	height: 24px;
+	border-radius: 50% 50% 50% 50%;
+	top: 33px;
+	border: 1px solid rgba(200, 200, 200, 0.5);
+	opacity: 1;
+	box-shadow: 1px -1px 1px 0px rgba(100, 100, 100, 0.2);
+	transition: all 0.14s cubic-bezier(0.4, 0, 0.2, 1);
+
+}
+
+.play-list-item.details .who-added>img{
+	left: 1px;
+	top: 87px;
+	height: 32px;
+	border-radius: 0;
+	border: none;
+	border-right: 1px solid  rgba(200, 200, 200, 0.5);
+	border-top: 1px solid  rgba(200, 200, 200, 0.5);
+	box-shadow: none;
+
+}
+
+.spotify-result .who-added{
+	display:none;
+}
+
+.who-added.soundbounce{
+	display:none;
 }
 
 .play-list-item:hover .who-added>img{
-	opacity: 0.7;
+
 }
 
 .list-group-item-text {

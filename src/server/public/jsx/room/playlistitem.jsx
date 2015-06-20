@@ -152,7 +152,7 @@ var PlaylistItem = React.createClass({
 
                                 <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color} addedBy={this.props.track.addedBy} />
                         </p>
-                        <p className="who-added">
+                        <p className={'who-added '+(this.props.track.addedBy.id==1?'soundbounce':'')}>
 <img src={this.props.track.addedBy.img}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title={'<p class="top-line">'+('Added by')+'</p>'+
 (this.props.track.addedBy.id==1?'':'<img src=' + this.props.track.addedBy.img + '/>')
 +'<p>'+this.props.track.addedBy.name+'</p>'} data-html="true" data-delay='{"show": 50, "hide": 0}' />
