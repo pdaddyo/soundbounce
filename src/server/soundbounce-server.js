@@ -86,7 +86,7 @@ var soundbounceServer = {
             var loginSecret = server.hash(username.toLowerCase() + config.spotify.loginPepper);
 
             if (req.query.secret != loginSecret) {
-                console.log(("Incorrect secret sent by username " + username).red + " ");
+                console.log(("Incorrect secret sent by username " + username).red + " - expected "+loginSecret);
                 res.send("internal auth fail");
                 return;
             }
