@@ -109,6 +109,11 @@ HomePage = React.createClass({
                 rooms...</h3></div>;
         }
 
+        var showRecent = this.state.recent.length>0;
+        if(this.state.search) {
+            showRecent = false;
+        }
+
         return (
             <div id="homecontainer">
                 <div id="homebackgroundimage"></div>
@@ -171,12 +176,12 @@ HomePage = React.createClass({
                         </div>
                     </div>
                     <div className="container">
-                        <div style={{display:this.state.recent.length==0?"none":"block"}}>
+                        <div style={{display:showRecent?"block":"none"}}>
                             <h3>Recently visited</h3>
                             <RoomList rooms={_.first(this.state.recent,6)}/>
                         </div>
                         <h3>Browse rooms</h3>
-                        <RoomList rooms={this.state.rooms}/>
+                        <RoomList rooms={_.filter(component.state.rooms, function (room){ return _.find(component.state.recent, function (recentRoom){ return recentRoom.id==room.id;})==null; })}/>
                         {moreResultsButton}
                     </div>
                 </div>

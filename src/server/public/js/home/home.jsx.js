@@ -109,6 +109,11 @@ HomePage = React.createClass({displayName: "HomePage",
                 "rooms..."));
         }
 
+        var showRecent = this.state.recent.length>0;
+        if(this.state.search) {
+            showRecent = false;
+        }
+
         return (
             React.createElement("div", {id: "homecontainer"}, 
                 React.createElement("div", {id: "homebackgroundimage"}), 
@@ -171,12 +176,12 @@ HomePage = React.createClass({displayName: "HomePage",
                         )
                     ), 
                     React.createElement("div", {className: "container"}, 
-                        React.createElement("div", {style: {display:this.state.recent.length==0?"none":"block"}}, 
+                        React.createElement("div", {style: {display:showRecent?"block":"none"}}, 
                             React.createElement("h3", null, "Recently visited"), 
                             React.createElement(RoomList, {rooms: _.first(this.state.recent,6)})
                         ), 
                         React.createElement("h3", null, "Browse rooms"), 
-                        React.createElement(RoomList, {rooms: this.state.rooms}), 
+                        React.createElement(RoomList, {rooms: _.filter(component.state.rooms, function (room){ return _.find(component.state.recent, function (recentRoom){ return recentRoom.id==room.id;})==null; })}), 
                         moreResultsButton
                     )
                 )
