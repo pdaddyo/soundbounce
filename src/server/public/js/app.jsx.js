@@ -166,7 +166,8 @@ $(function () {
     var handleBackgroundChangedEvent = function (url) {
         var newBgImage = lastBgImageSet == 1 ? 2 : 1;
 
-        $('#homebackgroundimage'+lastBgImageSet).removeClass('visible');
+        _.delay($('#homebackgroundimage'+lastBgImageSet).removeClass('visible'),250);
+
         $('#homebackgroundimage'+newBgImage).css({backgroundImage: "url(" + url + ")"});
 
         $('#homebackgroundimage'+newBgImage).addClass('visible');
@@ -174,7 +175,7 @@ $(function () {
         lastBgImageSet = newBgImage;
     };
 
-    eventbus.on("update-background-image", _.debounce(handleBackgroundChangedEvent, 500));
+    eventbus.on("update-background-image", _.throttle(_.debounce(handleBackgroundChangedEvent, 500), 2000));
 
 });
 

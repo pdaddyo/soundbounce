@@ -770,35 +770,33 @@ body .dropdown-menu {
 	height: calc(100% - 97px);
 }
 
-#roombackgroundimage {
-	position: fixed;
-	left: -5%;
-	top: -5%;
-	width: 110%;
-	height: 110%;
-	z-index: 0;
-	background-image: url(../img/backgrounds/1.jpg);
 
-	-webkit-filter: blur(20px);
-	background-size: cover;
+#pt-main{
+	background-color:#000;
 }
 
 .backgroundimage{
 	position: fixed;
 	left: 0;
 	top: 0;
+	margin:0;
 	width: 100%;
 	height: 100%;
-	transform:scale(1.1);
 	z-index: 0;
+	transform: scale(1.1);
 	background-image: url(../img/backgrounds/1.jpg);
-	transition: opacity 3.0s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: opacity 4.0s cubic-bezier(0.4, 0, 0.2, 1);
 	opacity:0;
 	background-size: cover;
 	&.visible{
 		opacity:1;
 	}
-	-webkit-filter: blur(10px);
+	-webkit-filter: blur(20px);
+
+}
+
+#homebackgroundimage0{
+	-webkit-filter: blur(20px);
 }
 
 
