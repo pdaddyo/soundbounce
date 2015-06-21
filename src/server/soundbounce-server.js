@@ -30,6 +30,7 @@ var soundbounceServer = {
     RECYCLE_TRACKS_WHEN_PLAYLIST_HAS_LESS_THAN: 200,
     TOP_UP_WHEN_TRACKS_BELOW: 130,
     ROOM_MAX_TRACKS: 300,
+    MAX_RECENT_ROOMS: 10,
 
     spotify: new spotifyApi({
         clientId: config.spotify.webAPI.clientID,
@@ -368,6 +369,8 @@ var soundbounceServer = {
 
                 console.log(("--> " + user.name + " connected to room ").cyan + room.name.green);
 
+                server.updateRecentRoomList(user, room);
+
                 // remove this listener from the room if they're already here (e.g. after a connection issue)
                 room.listeners = _.filter(room.listeners, function (listener) {
                     return listener.id != user.id;
@@ -524,6 +527,23 @@ var soundbounceServer = {
 
         console.log("removed "+roomsToRemove.length+" rooms");
 
+    },
+
+    updateRecentRoomList: function (user, room){
+
+        if(_.isUndefined(user.recentRooms)){
+            user.recentRooms = [];
+        }
+
+        // remove entry if already present
+        user.recentRooms = _.filter(user.recentRooms, function (recent){ return recent.id==roomid;});
+
+        // push to front
+        user.recentRooms.push( {id: room.id, timestamp: new Date() });
+
+        if(user.recentRooms.length>MAX_RECENT_ROOMS){
+            user.recentRooms = _.first(user.recentRooms, MAX_RECENT_ROOMS);
+        }
     },
 
     deleteRoom: function (room, user) {
