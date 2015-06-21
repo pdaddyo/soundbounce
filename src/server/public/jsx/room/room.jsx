@@ -1,3 +1,5 @@
+//var MagicMove = require('./react-magic-move');
+
 var RoomPage = React.createClass({
     UPDATE_STATE_DELAY: 1000,
     socket: null,
@@ -692,23 +694,23 @@ var RoomPage = React.createClass({
                                 <div className="playlist" style={{display: tracksForRoomPlaylist.length == 0 ? "none" : "block"}}>
                                        {emptyPlaylistMessage}
                                     <div className="list-group play-list-group">
-                                              {this.state.room.tracks.map(function (track, index, arr) {
+                                          {this.state.room.tracks.map(function (track, index, arr) {
 
-                                                  var canVote = !_.contains(track.votes.map(function (v) {
-                                                      return v.id;
-                                                  }), component.state.user.id);
+                                              var canVote = !_.contains(track.votes.map(function (v) {
+                                                  return v.id;
+                                              }), component.state.user.id);
 
-                                                  return <PlaylistItem
-                                                      track={track}
-                                                      key={track.id}
-                                                      color={component.state.room.color}
-                                                      canVote={canVote}
-                                                      canAdd={false}
-                                                      canRemove={component.isCurrentUserRoomAdmin() || (track.addedBy.id == component.state.user.id)}
-                                                      isLast={index == arr.length - 1}
-                                                      visible={_.contains(tracksForRoomPlaylist, track)}
-                                                  />
-                                              })}
+                                              return <PlaylistItem
+                                                  track={track}
+                                                  key={track.id}
+                                                  color={component.state.room.color}
+                                                  canVote={canVote}
+                                                  canAdd={false}
+                                                  canRemove={component.isCurrentUserRoomAdmin() || (track.addedBy.id == component.state.user.id)}
+                                                  isLast={index == arr.length - 1}
+                                                  visible={_.contains(tracksForRoomPlaylist, track)}
+                                              />
+                                          })}
                                     </div>
                                 </div>
 

@@ -122,7 +122,7 @@ var PlaylistItem = React.createClass({displayName: "PlaylistItem",
         }
 
         return (
-            React.createElement("div", {id: 'track' + this.props.track.id, className: this.props.canAdd?"spotify-result play-list-item":"play-list-item", style: {display:this.props.visible?"block":"none"}}, 
+            React.createElement("div", {id: 'track' + this.props.track.id, className: this.props.canAdd?"spotify-result play-list-item":"play-list-item", style: {display:this.props.visible?"block":"none"}, key: this.props.track.id}, 
                 React.createElement("div", {className: "list-group-item"}, 
                     React.createElement("div", {className: "row-picture"}, 
                         React.createElement("img", {className: "circle art", src: this.props.track.img, alt: "icon", onMouseDown: this.previewStart, onMouseUp: this.previewStop, onMouseOut: this.previewStop, "data-toggle": "tooltip", "data-placement": "top", "data-original-title": "Click and hold to preview"})

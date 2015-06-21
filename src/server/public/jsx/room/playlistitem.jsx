@@ -122,7 +122,7 @@ var PlaylistItem = React.createClass({
         }
 
         return (
-            <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result play-list-item":"play-list-item"} style={{display:this.props.visible?"block":"none"}} >
+            <div id={'track' + this.props.track.id} className={this.props.canAdd?"spotify-result play-list-item":"play-list-item"} style={{display:this.props.visible?"block":"none"}} key={this.props.track.id} >
                 <div className="list-group-item">
                     <div className="row-picture">
                         <img className="circle art" src={this.props.track.img} alt="icon" onMouseDown={this.previewStart} onMouseUp={this.previewStop} onMouseOut={this.previewStop} data-toggle="tooltip" data-placement="top" data-original-title="Click and hold to preview" />

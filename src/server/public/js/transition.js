@@ -14,6 +14,9 @@ var onEndAnimation = function( $outpage, $inpage ) {
     isAnimating = false;
 };
 
+
+
+
 exports = module.exports = function($currPage, $nextPage, animationId) {
 
     if ($currPage[0] === $nextPage[0])

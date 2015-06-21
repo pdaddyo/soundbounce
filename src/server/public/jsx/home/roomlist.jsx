@@ -24,7 +24,7 @@ RoomList = React.createClass({
                 <div className="row">
                     <div className="container">
                             {_.map(rooms, function (room) {
-                                return <div className="col-sm-6 col-md-4 col-lg-3 " key={room.id}>
+                                return <div className="col-sm-6 col-md-4 col-lg-3 room-list-item-container" key={room.id}>
                                     <div className="room-list-item" onClick={function (e) {
                                         component.setState({loading:room.id});
                                         router.navigate('room/' + room.id + '/' + room.color.substr(1, 10), {trigger: true});
