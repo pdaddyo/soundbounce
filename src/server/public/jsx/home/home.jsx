@@ -2,6 +2,8 @@ HomePage = React.createClass({
 
     downloadedRooms: [],
 
+    recentRoomsToDisplay: 6,
+
     componentDidMount: function () {
         var component = this;
         this.updateRoomList(false);
@@ -50,7 +52,7 @@ HomePage = React.createClass({
     setRoomList: function (search) {
         var component = this;
         if (this.state.search == '') {
-            this.setState({rooms: this.downloadedRooms, recent: this.downloadedRecentRooms, search: search});
+            this.setState({rooms: this.downloadedRooms, recent:  _.first(this.downloadedRecentRooms, this.recentRoomsToDisplay), search: search});
         }
         else {
             if (!this.state.hasLoadedFullList) {
@@ -61,7 +63,7 @@ HomePage = React.createClass({
                         return (r.name.toLowerCase().indexOf(search.toLowerCase()) != -1);
                     }
                 ),
-                recent: this.downloadedRecentRooms,
+                recent: _.first(this.downloadedRecentRooms, this.recentRoomsToDisplay),
                 search: search
             });
         }
@@ -169,7 +171,7 @@ HomePage = React.createClass({
                     <div className="container">
                         <div style={{display:showRecent?"block":"none"}}>
                             <h3>Recently visited</h3>
-                            <RoomList rooms={_.first(this.state.recent,6)}/>
+                            <RoomList rooms={this.state.recent}/>
                         </div>
                         <h3>Browse rooms  <span className="home-stats">
                             <i className={'mdi-social-person'}

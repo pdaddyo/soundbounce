@@ -2956,7 +2956,7 @@ body > .dropdown-menu .active a, body > .dropdown-menu li:hover a {
   color: inherit; }
 
 .home-stats {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   padding-top: 4px;
   font-size: 14px;
   margin-left: 2px; }

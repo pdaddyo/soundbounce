@@ -2,6 +2,8 @@ HomePage = React.createClass({displayName: "HomePage",
 
     downloadedRooms: [],
 
+    recentRoomsToDisplay: 6,
+
     componentDidMount: function () {
         var component = this;
         this.updateRoomList(false);
@@ -50,7 +52,7 @@ HomePage = React.createClass({displayName: "HomePage",
     setRoomList: function (search) {
         var component = this;
         if (this.state.search == '') {
-            this.setState({rooms: this.downloadedRooms, recent: this.downloadedRecentRooms, search: search});
+            this.setState({rooms: this.downloadedRooms, recent:  _.first(this.downloadedRecentRooms, this.recentRoomsToDisplay), search: search});
         }
         else {
             if (!this.state.hasLoadedFullList) {
@@ -61,7 +63,7 @@ HomePage = React.createClass({displayName: "HomePage",
                         return (r.name.toLowerCase().indexOf(search.toLowerCase()) != -1);
                     }
                 ),
-                recent: this.downloadedRecentRooms,
+                recent: _.first(this.downloadedRecentRooms, this.recentRoomsToDisplay),
                 search: search
             });
         }
@@ -169,7 +171,7 @@ HomePage = React.createClass({displayName: "HomePage",
                     React.createElement("div", {className: "container"}, 
                         React.createElement("div", {style: {display:showRecent?"block":"none"}}, 
                             React.createElement("h3", null, "Recently visited"), 
-                            React.createElement(RoomList, {rooms: _.first(this.state.recent,6)})
+                            React.createElement(RoomList, {rooms: this.state.recent})
                         ), 
                         React.createElement("h3", null, "Browse rooms  ", React.createElement("span", {className: "home-stats"}, 
                             React.createElement("i", {className: 'mdi-social-person', 
