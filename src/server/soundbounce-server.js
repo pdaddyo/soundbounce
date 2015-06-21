@@ -54,7 +54,9 @@ var soundbounceServer = {
             r.listeners = [];
             trackCount += r.tracks.length;
             // filter null tracks
-            r.tracks = r.tracks.filter(function(n){ return n != undefined });
+            r.tracks = r.tracks.filter(function (n) {
+                return n != undefined
+            });
         });
 
 
@@ -87,7 +89,7 @@ var soundbounceServer = {
             var loginSecret = server.hash(username.toLowerCase() + config.spotify.loginPepper);
 
             if (req.query.secret != loginSecret) {
-                console.log(("Incorrect secret sent by username " + username).red + " - expected "+loginSecret);
+                console.log(("Incorrect secret sent by username " + username).red + " - expected " + loginSecret);
                 res.send("internal auth fail");
                 return;
             }
@@ -124,35 +126,37 @@ var soundbounceServer = {
 
         // simple room list for the home screen
         app.get('/roomlist', function (req, res) {
+
+            // check we're logged in
+            if (req.session.user == null){
+                res.send(JSON.stringify({rooms: [{id: 0, name: 'ERROR: NOT AUTHORISED', listeners: 0}], recent: recentRooms}));
+                return;
+            }
             server.rooms.forEach(function (r) {
                 soundbounceShared.updatePlaylist(r, server);
             });
 
+            var simpleRoomList = _.map(server.rooms, server.getSimpleRoom);
 
-            var simpleRoomList = _.map(server.rooms, function (room) {
-                return {
-                    id: room.id,
-                    name: room.name,
-                    listeners: room.listeners.length,
-                    nowPlaying: room.tracks.length > 0 ? room.tracks[0] : null,
-                    color: room.color,
-                    description: room.description,
-                    visits: room.visits ? room.visits : 0
-                }
-            });
-
-            var orderedRoomList = _(simpleRoomList).chain().sortBy( function (r) {
+            var orderedRoomList = _(simpleRoomList).chain().sortBy(function (r) {
                 return -r.visits;
-            }).sortBy( function(r){
+            }).sortBy(function (r) {
                 return -r.listeners;
             }).value();
 
-            var top30 = _.first(orderedRoomList , 30);
+            var top30 = _.first(orderedRoomList, 30);
 
-            if (req.session.user != null)
-                res.send(JSON.stringify(req.query["top30"] ? top30 : orderedRoomList));
-            else
-                res.send(JSON.stringify([{id: 0, name: 'ERROR: NOT AUTHORISED', listeners: 0}]));
+            var recentRooms = [];
+
+            var user = server.findUserById(req.session.user.id);
+            if(user.recentRooms){
+                recentRooms = user.recentRooms.map(function (recentRoom){
+                    return server.getSimpleRoom(server.findRoomById(recentRoom.id));
+                });
+            }
+
+            res.send(JSON.stringify({rooms: req.query["top30"] ? top30 : orderedRoomList, recent: recentRooms }));
+
         });
 
         // create / edit room
@@ -199,9 +203,7 @@ var soundbounceServer = {
                 // save changes
 
                 // find room
-                var room = _.find(server.rooms, function (room) {
-                    return room.id == req.query.id;
-                });
+                var room = server.findRoomById(req.query.id);
 
                 if (!_.contains(room.admins, req.session.user.id)) {
                     console.warn("attempted edit on room " + room.name.yellow + " by non-admin " + req.session.user.name);
@@ -266,8 +268,8 @@ var soundbounceServer = {
             }).forEach(function (r) {
                 result += ('<h2>' + r.name + '</h2>');
                 result += r.listeners.map(function (l) {
-                    return "<img src='" + l.img + "'/> ";
-                }).join('') + "<br/>";
+                        return "<img src='" + l.img + "'/> ";
+                    }).join('') + "<br/>";
 
                 if (r.listeners.length > 0) {
                     result += ('<h4>' + (r.listeners.map(function (l) {
@@ -291,24 +293,24 @@ var soundbounceServer = {
         });
 
         // send admin message to all people in rooms
-          app.get('/adminmessage', function (req, res) {
-             if (!_.contains(soundbounceServer.superAdmins, req.session.user.id)) {
-             req.send("you're not super admin!");
-             return;
-             }
-             _.keys(soundbounceServer.sockets).forEach(function (key) {
-             var socket = soundbounceServer.sockets[key];
-             try {
-             socket.send(JSON.stringify([{type: "announce", payload: req.query.message}]));
-             }
-             catch (er) {
-             console.error("error sending admin message: ", er);
-             }
-             });
+        app.get('/adminmessage', function (req, res) {
+            if (!_.contains(soundbounceServer.superAdmins, req.session.user.id)) {
+                req.send("you're not super admin!");
+                return;
+            }
+            _.keys(soundbounceServer.sockets).forEach(function (key) {
+                var socket = soundbounceServer.sockets[key];
+                try {
+                    socket.send(JSON.stringify([{type: "announce", payload: req.query.message}]));
+                }
+                catch (er) {
+                    console.error("error sending admin message: ", er);
+                }
+            });
 
-             console.log("sent admin message -->", req.query.message);
-               res.send("sent to " + _.keys(soundbounceServer.sockets.length) + " users");
-             });
+            console.log("sent admin message -->", req.query.message);
+            res.send("sent to " + _.keys(soundbounceServer.sockets.length) + " users");
+        });
 
         // web sockets handle all communication with the <Room />
         var wss = new WebSocketServer({server: httpServer});
@@ -392,8 +394,8 @@ var soundbounceServer = {
                 soundbounceShared.updatePlaylist(room, server);
 
                 // if we're the first joiner, update top-up list
-                if(room.listeners.length==1 && room.topUpURI){
-                    console.log("topping up room for first joiner "+room.name);
+                if (room.listeners.length == 1 && room.topUpURI) {
+                    console.log("topping up room for first joiner " + room.name);
                     server.topUpRoomWithPlaylist(room, room.topUpURI);
                 }
 
@@ -483,12 +485,12 @@ var soundbounceServer = {
         // save data every X minutes
         setInterval(function () {
             console.log("[backup]".green + "saving data....");
-        //    server.saveDataAsync();
+            //    server.saveDataAsync();
             try {
                 server.saveData();
                 console.log("[backup]".green + " done");
-            }catch(err){
-                console.log("[backup]".green + " error".red,err);
+            } catch (err) {
+                console.log("[backup]".green + " error".red, err);
             }
         }, 1000 * 60 * 30);
 
@@ -500,7 +502,7 @@ var soundbounceServer = {
         }, 1000 * 10);
 
         // topup in 15 seconds after startup, once lists have recycled tracks as appropriate
-        _.delay(function() {
+        _.delay(function () {
             server.topUpRooms();
         }, 15000);
     },
@@ -510,40 +512,71 @@ var soundbounceServer = {
         var server = this;
         var roomsToRemove = [];
 
-        _.each(server.rooms, function (room){
+        _.each(server.rooms, function (room) {
             // if it's not auto-topping up, has not had many visits or adds...
-            if(!room.topUpURI && (room.visits<15 || room.chat.length<15)){
+            if (!room.topUpURI && (room.visits < 15 || room.chat.length < 15)) {
                 roomsToRemove.push(room);
             }
         });
 
-        _.each(roomsToRemove, function (room){
-            console.log("will remove "+room.name+"...");
+        _.each(roomsToRemove, function (room) {
+            console.log("will remove " + room.name + "...");
             var roomIndex = server.rooms.indexOf(room);
 
             var removedRoom = server.rooms.splice(roomIndex, 1);
-            console.log("done - removed (index "+roomIndex+", "+removedRoom.name+")");
+            console.log("done - removed (index " + roomIndex + ", " + removedRoom.name + ")");
         });
 
-        console.log("removed "+roomsToRemove.length+" rooms");
+        console.log("removed " + roomsToRemove.length + " rooms");
 
     },
 
-    updateRecentRoomList: function (user, room){
+    getSimpleRoom: function (room) {
+        return {
+            id: room.id,
+            name: room.name,
+            listeners: room.listeners.length,
+            nowPlaying: room.tracks.length > 0 ? room.tracks[0] : null,
+            color: room.color,
+            description: room.description,
+            visits: room.visits ? room.visits : 0
+        };
+    },
 
-        if(_.isUndefined(user.recentRooms)){
+    findRoomById: function (roomId) {
+        var server = this;
+        return _.find(server.rooms, function (room) {
+            return room.id == roomId;
+        });
+    },
+
+    findUserById: function (userId) {
+        var server = this;
+        return _.find(server.users, function (user) {
+            return user.id == userId;
+        });
+    },
+
+    updateRecentRoomList: function (userParam, room) {
+        var user = this.findUserById(userParam.id);
+        if (_.isUndefined(user.recentRooms)) {
+           // console.log("updateRecentRoomList undefined");
             user.recentRooms = [];
         }
 
         // remove entry if already present
-        user.recentRooms = _.filter(user.recentRooms, function (recent){ return recent.id==roomid;});
+        user.recentRooms = _.filter(user.recentRooms, function (recent) {
+            return recent.id != room.id;
+        });
 
-        // push to front
-        user.recentRooms.push( {id: room.id, timestamp: new Date() });
+        // insert at front of list
+        user.recentRooms.splice(0,0,{id: room.id, timestamp: new Date()});
 
-        if(user.recentRooms.length>MAX_RECENT_ROOMS){
-            user.recentRooms = _.first(user.recentRooms, MAX_RECENT_ROOMS);
+        if (user.recentRooms.length > this.MAX_RECENT_ROOMS) {
+            user.recentRooms = _.first(user.recentRooms, this.MAX_RECENT_ROOMS);
         }
+      //  console.log("updateRecentRoomList done - ",user.recentRooms);
+
     },
 
     deleteRoom: function (room, user) {
@@ -592,8 +625,7 @@ var soundbounceServer = {
     processVoteToSkip: function (room, user, trackId) {
         console.log("processVoteToSkip for trackId " + trackId + " in room " + room.name);
 
-        if( ! room.tracks[0].votesToSkip )
-        {
+        if (!room.tracks[0].votesToSkip) {
             room.tracks[0].votesToSkip = [];
         }
 
@@ -604,7 +636,7 @@ var soundbounceServer = {
             if (!_.contains(room.tracks[0].votesToSkip, user.id)) {
                 room.tracks[0].votesToSkip.push(user.id);
             }
-            else{
+            else {
                 // already voted to skip
                 return;
             }
@@ -614,7 +646,7 @@ var soundbounceServer = {
             var chatmsg = {
                 type: "chat",
                 id: shortId(),
-                message: user.name + " voted to skip " + trackToSkip.name +".",
+                message: user.name + " voted to skip " + trackToSkip.name + ".",
                 timestamp: (new Date()),
                 user: soundbounceServer.getSoundbounceUser(),
                 context: trackToSkip
@@ -625,8 +657,7 @@ var soundbounceServer = {
             soundbounceServer.broadcast(room, [{type: "chat", payload: chatmsg}]);
 
             // If there are now more votes to skip than there were votes to play this track, skip it
-            if( trackToSkip.votesToSkip.length > trackToSkip.votes.length )
-            {
+            if (trackToSkip.votesToSkip.length > trackToSkip.votes.length) {
                 // Move the currently playing track to end of room playlist
                 var skippedTrack = room.tracks.shift();
                 skippedTrack.votes = []; // strip votes
@@ -710,7 +741,7 @@ var soundbounceServer = {
                 server.processAdds(room, track.addedBy, [track.id], true);
                 //  console.log(room.name.green + " re-added " + track.name + "");
 
-            }, 2000+(Math.random()*3000)); // random delay to top up
+            }, 2000 + (Math.random() * 3000)); // random delay to top up
         }
     },
 
@@ -732,12 +763,12 @@ var soundbounceServer = {
         _.forEach(server.rooms, function (room) {
 
             // only top up if it has listeners or 0 tracks
-            if (!_.isEmpty(room.topUpURI) && (room.listeners.length > 0 || room.tracks.length==0)) {
+            if (!_.isEmpty(room.topUpURI) && (room.listeners.length > 0 || room.tracks.length == 0)) {
                 var theRoom = room;
 //                console.log("[topup]".green + " will top up "+theRoom.name);
 
                 setTimeout(function () {
-                    console.log("[topup]".green + " topping up "+theRoom.name);
+                    console.log("[topup]".green + " topping up " + theRoom.name);
 
                     server.topUpRoomWithPlaylist(theRoom, theRoom.topUpURI);
                 }, rateLimitDelay += 500);
@@ -828,7 +859,7 @@ var soundbounceServer = {
                                         console.log(err.stack);
                                     }
                                 });
-                            }, 100+ Math.random()*200);
+                            }, 100 + Math.random() * 200);
                         },
                         function (err) {
                             console.log('topup:', '[' + playlistURI + ']', "for room: ", room.name + ".", err);
@@ -950,7 +981,7 @@ var soundbounceServer = {
             return;
         }
 
-        if(message.indexOf("/deleteuser ") == 0 && _.contains(server.superAdmins, user.id)){
+        if (message.indexOf("/deleteuser ") == 0 && _.contains(server.superAdmins, user.id)) {
 
             var params = message.substr(12).trim();
 
@@ -958,7 +989,7 @@ var soundbounceServer = {
                 return l.spotifyUsername.toLowerCase() == params.toLowerCase();
             });
 
-            if(!userToDelete) {
+            if (!userToDelete) {
                 this.sendPrivateChat(room, user.id, "Unknown user: " + params);
                 return;
             }
@@ -1021,8 +1052,8 @@ var soundbounceServer = {
         server.sendPrivateChat(room, user.id, "Admins of '" + room.name + "'");
         room.admins.map(function (adminId) {
             server.sendPrivateChat(room, user.id, " - " + _.find(server.users, function (u) {
-                return u.id == adminId;
-            }).name);
+                    return u.id == adminId;
+                }).name);
         });
     },
 
@@ -1459,8 +1490,13 @@ var soundbounceServer = {
         var usersJson = JSON.stringify(this.users, null, "\t");
         var roomsJson = JSON.stringify(this.rooms);
 
-        fs.writeFileSync(this.getNewHistoryFileName("users"), usersJson);
-        fs.writeFileSync(this.getNewHistoryFileName("rooms"), roomsJson);
+        // don't worry about saving history errors on local builds
+        try {
+            fs.writeFileSync(this.getNewHistoryFileName("users"), usersJson);
+            fs.writeFileSync(this.getNewHistoryFileName("rooms"), roomsJson);
+        }catch(historyErr){
+
+        }
 
         fs.writeFileSync(this.userStoreFileName, usersJson);
         fs.writeFileSync(this.roomStoreFileName, roomsJson);
