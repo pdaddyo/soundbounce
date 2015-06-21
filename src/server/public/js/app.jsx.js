@@ -162,6 +162,7 @@ $(function () {
         }
     });
 
+    /* background image fading */
     var lastBgImageSet = 1;
     var lastImageUrl = null;
     var handleBackgroundChangedEvent = function (url) {
