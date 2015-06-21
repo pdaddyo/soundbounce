@@ -118,6 +118,12 @@ var NowPlaying = React.createClass({
                                 <p className="list-group-item-text hide-overflow">
                                     <ArtistList artists={this.props.track.artists}/>
                                 </p>
+
+                                <p className={'who-added '+(this.props.track.addedBy.id==1?'soundbounce':'')}>
+                                    <img src={this.props.track.addedBy.img}  data-toggle="tooltip" data-placement="bottom" title="" data-original-title={'<p class="top-line">'+('Added by')+'</p>'+
+(this.props.track.addedBy.id==1?'':'<img src=' + this.props.track.addedBy.img + '/>')
++'<p>'+this.props.track.addedBy.name+'</p>'} data-html="true" data-delay='{"show": 50, "hide": 0}' />
+                                </p>
                                 <TrackVoteDisplay votes={this.props.track.votes} color={this.props.color}
                                                   addedBy={this.props.track.addedBy}/>
                             </div>

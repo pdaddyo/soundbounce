@@ -434,7 +434,7 @@ i.mdi-action-search {
 		opacity: 0;
 		transition: all 0.14s cubic-bezier(0.4, 0, 0.2, 1);
 
-		margin-top: 27px;
+
 		p {
 			font-size: 12px;
 			white-space: nowrap;
@@ -468,6 +468,7 @@ i.mdi-action-search {
 		width: calc(100% - 138px);
 	}
 	.extra-details {
+		margin-top: 27px;
 		opacity: 1;
 	}
 
@@ -1655,18 +1656,23 @@ body > .dropdown-menu li:hover a {
 	opacity: 1;
 	box-shadow: 1px -1px 1px 0px rgba(100, 100, 100, 0.2);
 	transition: all 0.14s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
+.now-playing .who-added > img {
+	left: 0px;
+	top: 79px;
+	height: 41px;
+	border-radius: 0 100% 0 0;
+	border: none;
+	box-shadow: 1px -1px 1px 0px rgba(100, 100, 100, 0.2);
 }
 
 .play-list-item.details .who-added > img {
 	left: 1px;
-	top: 87px;
-	height: 32px;
-	border-radius: 0;
+	top: 78px;
+	height: 41px;
+	border-radius: 0 100% 0 0;
 	border: none;
-	border-right: 1px solid rgba(200, 200, 200, 0.5);
-	border-top: 1px solid rgba(200, 200, 200, 0.5);
-	box-shadow: none;
 }
 
 .spotify-result .who-added {
