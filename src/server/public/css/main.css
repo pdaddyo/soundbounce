@@ -2377,9 +2377,9 @@ body .dropdown-menu .divider {
   width: 100%;
   height: 100%;
   z-index: 0;
-  transform: scale(1.1);
+  /*	transform: scale(1.1);*/
   background-image: url(../img/backgrounds/1.jpg);
-  transition: opacity 4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
   background-size: cover;
   -webkit-filter: blur(20px); }
@@ -2387,7 +2387,7 @@ body .dropdown-menu .divider {
     opacity: 1; }
 
 #homebackgroundimage0 {
-  -webkit-filter: blur(20px); }
+  display: none; }
 
 #homeheader {
   background-color: rgba(255, 255, 255, 0.5); }

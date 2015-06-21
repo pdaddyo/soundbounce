@@ -163,9 +163,14 @@ $(function () {
     });
 
     var lastBgImageSet = 1;
+    var lastImageUrl = null;
     var handleBackgroundChangedEvent = function (url) {
-        var newBgImage = lastBgImageSet == 1 ? 2 : 1;
 
+        if(lastImageUrl == url)
+            return;
+
+        lastImageUrl = url;
+        var newBgImage = lastBgImageSet == 1 ? 2 : 1;
         _.delay($('#homebackgroundimage'+lastBgImageSet).removeClass('visible'),250);
 
         $('#homebackgroundimage'+newBgImage).css({backgroundImage: "url(" + url + ")"});
@@ -175,7 +180,7 @@ $(function () {
         lastBgImageSet = newBgImage;
     };
 
-    eventbus.on("update-background-image", _.throttle(_.debounce(handleBackgroundChangedEvent, 500), 2000));
+    eventbus.on("update-background-image", _.debounce(handleBackgroundChangedEvent, 1000));
 
 });
 
