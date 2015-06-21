@@ -9,12 +9,12 @@ HomePage = React.createClass({displayName: "HomePage",
 
         eventbus.on("update-room-list", function () {
             component.updateRoomList();
-            component.randomBg();
+          //  component.randomBg();
         });
     },
 
     randomBg: function () {
-        $('#homebackgroundimage').css({backgroundImage: "url(img/backgrounds/" + (Math.floor(Math.random() * 10) + 1) + ".jpg)"});
+        $('#homebackgroundimage1').css({backgroundImage: "url(img/backgrounds/" + (Math.floor(Math.random() * 10) + 1) + ".jpg)"});
     },
 
     componentWillUnmount: function () {
@@ -116,8 +116,7 @@ HomePage = React.createClass({displayName: "HomePage",
 
         return (
             React.createElement("div", {id: "homecontainer"}, 
-                React.createElement("div", {id: "homebackgroundimage"}), 
-                React.createElement("div", {id: "homebackgroundcover"}), 
+
                 React.createElement("div", {className: "jumbotron", id: "homeheader"}, 
                     React.createElement("div", {className: "container"}, 
                         React.createElement("div", {className: "col-sm-8"}, 
@@ -155,12 +154,8 @@ HomePage = React.createClass({displayName: "HomePage",
                         )
                     ), 
 
-                    React.createElement("div", {className: "row "}, 
+                    React.createElement("div", {className: "row ", style: {marginBottom:-40}}, 
                         React.createElement("div", {className: "container"}, 
-                            React.createElement("div", {className: "col-sm-8 home-stats"}, 
-                                React.createElement("i", {className: 'mdi-social-person', 
-                                   style: {position: 'relative',top: 1}}), " ", totalUsers, " listeners online"
-                            ), 
                             React.createElement("div", {className: "col-xs-12 col-sm-4 col-lg-3 pull-right room-search-container"}, 
                                 React.createElement("div", {className: "form-control-wrapper"}, 
                                     React.createElement("i", {className: "mdi-action-search"}), 
@@ -168,10 +163,6 @@ HomePage = React.createClass({displayName: "HomePage",
                                            onChange: this.onSearchChange, onKeyDown: this.handleKeyDown, 
                                            value: this.state.search})
                                 )
-                            ), 
-                            React.createElement("div", {className: "col-sm-12", 
-                                 style: {display: this.state.rooms.length == 0 ? 'block' : 'none'}}, 
-                                React.createElement("h2", {className: "home-title"}, "Sorry, no rooms match '", this.state.search, "':")
                             )
                         )
                     ), 
@@ -180,9 +171,16 @@ HomePage = React.createClass({displayName: "HomePage",
                             React.createElement("h3", null, "Recently visited"), 
                             React.createElement(RoomList, {rooms: _.first(this.state.recent,6)})
                         ), 
-                        React.createElement("h3", null, "Browse rooms"), 
+                        React.createElement("h3", null, "Browse rooms  ", React.createElement("span", {className: "home-stats"}, 
+                            React.createElement("i", {className: 'mdi-social-person', 
+                               style: {position: 'relative',top: 1}}), " ", totalUsers, " listeners online"
+                        )), 
                         React.createElement(RoomList, {rooms: _.filter(component.state.rooms, function (room){ return _.find(component.state.recent, function (recentRoom){ return recentRoom.id==room.id;})==null; })}), 
-                        moreResultsButton
+                        moreResultsButton, 
+                        React.createElement("div", {className: "col-sm-12", 
+                             style: {display: (this.state.rooms.length == 0 && this.state.search.length>0)? 'block' : 'none'}}, 
+                            React.createElement("h2", {className: "home-title"}, "Sorry, no rooms match '", this.state.search, "':")
+                        )
                     )
                 )
             )

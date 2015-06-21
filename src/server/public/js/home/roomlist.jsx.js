@@ -2,8 +2,10 @@ RoomList = React.createClass({displayName: "RoomList",
 
     currentlyPreviewing: null,
 
-    handleMouseOver: function (e) {
-
+    handleMouseOver: function (nowPlaying) {
+        if(!nowPlaying)
+            return;
+        eventbus.trigger('update-background-image', nowPlaying.img);
     },
 
     handleMouseOut: function (e) {
@@ -29,7 +31,7 @@ RoomList = React.createClass({displayName: "RoomList",
                                         component.setState({loading:room.id});
                                         router.navigate('room/' + room.id + '/' + room.color.substr(1, 10), {trigger: true});
                                         _.delay(function () { component.setState({loading:null});}, 1500);
-                                    }, style: {backgroundColor: room.color}, onMouseEnter: component.handleMouseOver, onMouseLeave: component.handleMouseOut, "data-trackid": room.nowPlaying ? room.nowPlaying.id : null}, 
+                                    }, style: {backgroundColor: room.color}, onMouseEnter: component.handleMouseOver.bind(this,room.nowPlaying), onMouseLeave: component.handleMouseOut, "data-trackid": room.nowPlaying ? room.nowPlaying.id : null}, 
                                         React.createElement("div", {className: "img-holder"}, 
                                             React.createElement("img", {src: room.nowPlaying ? room.nowPlaying.img : "", style: {display: room.nowPlaying ? "block" : "none"}})
                                         ), 

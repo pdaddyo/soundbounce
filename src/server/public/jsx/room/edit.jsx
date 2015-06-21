@@ -148,7 +148,7 @@ var RoomEdit = React.createClass({
                                 </div>
 
 
-                                <div class="alert alert-dismissable alert-info" style={{display: this.state.room.id != null ? "none" : "block"}} >
+                                <div className="alert alert-dismissable alert-info" style={{display: this.state.room.id != null ? "none" : "block"}} >
 
                                     <strong>Heads up!</strong> Currently, all rooms are publicly visible.  Private rooms coming soon...
                                 </div>

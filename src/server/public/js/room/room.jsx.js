@@ -223,6 +223,9 @@ var RoomPage = React.createClass({displayName: "RoomPage",
 
                 // track changed
                 $('.now-playing .star-button-holder').removeClass('clicked');
+
+                eventbus.trigger('update-background-image', this.state.room.tracks[0].img);
+
                 if (!component.state.userPaused) {
                     component.setState({playing: true});
 
@@ -657,10 +660,10 @@ var RoomPage = React.createClass({displayName: "RoomPage",
         }
 
 
-        var roomImageStyle = {};
+       /* var roomImageStyle = {};
         if (this.state.room.tracks.length > 0) {
             roomImageStyle.backgroundImage = 'url(' + this.state.room.tracks[0].img + ')'
-        }
+        }*/
 
         var moreResultsButton = React.createElement("span", null);
 
@@ -672,8 +675,7 @@ var RoomPage = React.createClass({displayName: "RoomPage",
         return (
             React.createElement("div", {id: "room", onDrop: this.handleDrop, onDragOver: this.dragOver, onDragEnter: this.dragOver, onKeyDown: this.handleKeyDown}, 
 
-                React.createElement("div", {id: "roombackgroundimage", style: roomImageStyle}), 
-                React.createElement("div", {id: "roombackgroundcover"}), 
+
                 React.createElement("div", {id: "nowplayingcontainer"}, 
                     React.createElement(NowPlaying, {
                         track: this.state.room.tracks.length > 0 ? this.state.room.tracks[0] : null, 

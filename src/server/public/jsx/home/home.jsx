@@ -9,12 +9,12 @@ HomePage = React.createClass({
 
         eventbus.on("update-room-list", function () {
             component.updateRoomList();
-            component.randomBg();
+          //  component.randomBg();
         });
     },
 
     randomBg: function () {
-        $('#homebackgroundimage').css({backgroundImage: "url(img/backgrounds/" + (Math.floor(Math.random() * 10) + 1) + ".jpg)"});
+        $('#homebackgroundimage1').css({backgroundImage: "url(img/backgrounds/" + (Math.floor(Math.random() * 10) + 1) + ".jpg)"});
     },
 
     componentWillUnmount: function () {
@@ -116,8 +116,7 @@ HomePage = React.createClass({
 
         return (
             <div id="homecontainer">
-                <div id="homebackgroundimage"></div>
-                <div id="homebackgroundcover"></div>
+
                 <div className="jumbotron" id="homeheader">
                     <div className="container">
                         <div className="col-sm-8">
@@ -155,12 +154,8 @@ HomePage = React.createClass({
                         </div>
                     </div>
 
-                    <div className="row " >
+                    <div className="row " style={{marginBottom:-40}} >
                         <div className="container">
-                            <div className="col-sm-8 home-stats">
-                                <i className={'mdi-social-person'}
-                                   style={{position: 'relative',top: 1}}></i> {totalUsers} listeners online
-                            </div>
                             <div className="col-xs-12 col-sm-4 col-lg-3 pull-right room-search-container">
                                 <div className="form-control-wrapper">
                                     <i className="mdi-action-search"/>
@@ -169,10 +164,6 @@ HomePage = React.createClass({
                                            value={this.state.search}/>
                                 </div>
                             </div>
-                            <div className="col-sm-12"
-                                 style={{display: this.state.rooms.length == 0 ? 'block' : 'none'}}>
-                                <h2 className="home-title">Sorry, no rooms match '{this.state.search}':</h2>
-                            </div>
                         </div>
                     </div>
                     <div className="container">
@@ -180,9 +171,16 @@ HomePage = React.createClass({
                             <h3>Recently visited</h3>
                             <RoomList rooms={_.first(this.state.recent,6)}/>
                         </div>
-                        <h3>Browse rooms</h3>
+                        <h3>Browse rooms  <span className="home-stats">
+                            <i className={'mdi-social-person'}
+                               style={{position: 'relative',top: 1}}></i> {totalUsers} listeners online
+                        </span></h3>
                         <RoomList rooms={_.filter(component.state.rooms, function (room){ return _.find(component.state.recent, function (recentRoom){ return recentRoom.id==room.id;})==null; })}/>
                         {moreResultsButton}
+                        <div className="col-sm-12"
+                             style={{display: (this.state.rooms.length == 0 && this.state.search.length>0)? 'block' : 'none'}}>
+                            <h2 className="home-title">Sorry, no rooms match '{this.state.search}':</h2>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -96,19 +96,17 @@ $(function () {
         room: function (id, color) {
 
             // prevents re-loading room before transition has ended
-            if(isAnimating){
+            if (isAnimating) {
                 router.navigate("home");
                 return;
             }
 
-            if(this.currentRoomId!=id)
-            {
+            if (this.currentRoomId != id) {
                 this.currentRoomId = id;
                 React.unmountComponentAtNode(roomNode);
                 React.render(React.createElement(RoomPage, {roomid: id, color: '#' + color}), roomNode);
             }
-            else
-            {
+            else {
                 // same room that's playing, so just animate back in
                 transition($('.home-page'), $('.room-page'), 54);
             }
@@ -116,13 +114,13 @@ $(function () {
             ga('send', 'pageview');
         },
 
-        alert: function (message, title){
-            if(!title)
-                title="Soundbounce";
+        alert: function (message, title) {
+            if (!title)
+                title = "Soundbounce";
             this.showModal(React.createElement(AlertMessage, {message: message, title: title}));
         },
 
-        confirm: function (message, title, ok, cancel){
+        confirm: function (message, title, ok, cancel) {
             this.showModal(React.createElement(ConfirmMessage, {message: message, title: title, ok: ok, cancel: cancel}));
         },
 
@@ -155,7 +153,7 @@ $(function () {
 
 
     eventbus.on("open-url", function (url) {
-        console.log("opening "+url);
+        console.log("opening " + url);
         try {
 
             spotifyBrowserApi.openUrl(url);
@@ -164,6 +162,19 @@ $(function () {
         }
     });
 
+    var lastBgImageSet = 1;
+    var handleBackgroundChangedEvent = function (url) {
+        var newBgImage = lastBgImageSet == 1 ? 2 : 1;
+
+        $('#homebackgroundimage'+lastBgImageSet).removeClass('visible');
+        $('#homebackgroundimage'+newBgImage).css({backgroundImage: "url(" + url + ")"});
+
+        $('#homebackgroundimage'+newBgImage).addClass('visible');
+
+        lastBgImageSet = newBgImage;
+    };
+
+    eventbus.on("update-background-image", _.debounce(handleBackgroundChangedEvent, 500));
 
 });
 
