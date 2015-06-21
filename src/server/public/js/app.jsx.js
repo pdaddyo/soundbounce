@@ -16,6 +16,11 @@ var onEndAnimation = function ($outpage, $inpage) {
 
 var transition = function ($currPage, $nextPage, animationId) {
 
+    // animations stopped for now until we can sort performance issues
+    $currPage.removeClass('pt-page-current');
+    $nextPage.addClass('pt-page-current');
+    return;
+
     if ($currPage[0] === $nextPage[0])
         return;
 
