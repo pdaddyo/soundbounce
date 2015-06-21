@@ -502,6 +502,7 @@ var soundbounceServer = {
         }, 15000);
     },
 
+    // WARNING: don't activate this again until it has a check to not delete very new rooms that haven't been used much yet
     deleteUnusedRooms: function () {
         var server = this;
         var roomsToRemove = [];
