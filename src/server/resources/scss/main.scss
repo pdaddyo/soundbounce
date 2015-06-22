@@ -433,7 +433,6 @@ i.mdi-action-search {
 		opacity: 0;
 		transition: all 0.14s cubic-bezier(0.4, 0, 0.2, 1);
 
-
 		p {
 			font-size: 12px;
 			white-space: nowrap;
@@ -446,7 +445,6 @@ i.mdi-action-search {
 			cursor: pointer;
 		}
 	}
-
 
 }
 
@@ -484,7 +482,7 @@ i.mdi-action-search {
 		flex-grow: 2;
 		display: inline-block;
 	}
-	h4:hover{
+	h4:hover {
 
 	}
 	.track-title-icons {
@@ -770,42 +768,39 @@ body .dropdown-menu {
 	height: calc(100% - 97px);
 }
 
-
-#pt-main{
-	background-color:#000;
+#pt-main {
+	background-color: #000;
 }
 
-.backgroundimage{
+.backgroundimage {
 	position: fixed;
 	left: 0;
 	top: 0;
-	margin:0;
+	margin: 0;
 	width: 100%;
 	height: 100%;
 	z-index: 0;
-/*	transform: scale(1.1);*/
+	/*	transform: scale(1.1);*/
 	background-image: url(../img/backgrounds/1.jpg);
 	transition: opacity 2.0s cubic-bezier(0.4, 0, 0.2, 1);
-	opacity:0;
+	opacity: 0;
 	background-size: cover;
-	&.visible{
-		opacity:1;
+	&.visible {
+		opacity: 1;
 	}
 	-webkit-filter: blur(20px);
 
 }
 
-#homebackgroundimage0{
-	display:none;
+#homebackgroundimage0 {
+	display: none;
 }
-
 
 #homeheader {
 	background-color: rgba(255, 255, 255, 0.5);
 }
 
 #homebackgroundcover {
-
 
 	position: fixed;
 	left: 0;
@@ -1072,7 +1067,7 @@ body .dropdown-menu {
 
 #room {
 	height: calc(100% - 97px);
-/*	background-color: #ddd;*/
+	/*	background-color: #ddd;*/
 }
 
 #playlistcontainer {
@@ -1494,8 +1489,8 @@ body > .dropdown-menu li:hover a {
 .home-stats {
 	color: rgba(255, 255, 255, 0.7);
 	padding-top: 4px;
-	font-size:14px;
-	margin-left:2px;
+	font-size: 14px;
+	margin-left: 2px;
 }
 
 .userlist {
@@ -1691,8 +1686,26 @@ body > .dropdown-menu li:hover a {
 
 }
 
-#homecontainer h3{
+#homecontainer h3 {
 	margin-left: 15px;
-	margin-top:5px;
+	margin-top: 5px;
 	color: rgba(250, 250, 250, 0.7);
+}
+
+.chat-preview-image-container {
+	.chat-preview-image {
+
+	}
+
+	.hide-link {
+		font-size: 10px;
+		color: #aaa;
+		&:hover {
+			color: #333;
+			text-decoration: underline;
+		}
+
+		display:block;
+		text-align:right;
+	}
 }
