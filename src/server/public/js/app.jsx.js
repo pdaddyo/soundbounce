@@ -172,7 +172,7 @@ $(function () {
 
         lastImageUrl = url;
         var newBgImage = lastBgImageSet == 1 ? 2 : 1;
-        _.delay($('#homebackgroundimage'+lastBgImageSet).removeClass('visible'),250);
+        $('#homebackgroundimage'+lastBgImageSet).removeClass('visible');
 
         $('#homebackgroundimage'+newBgImage).css({backgroundImage: "url(" + url + ")"});
 

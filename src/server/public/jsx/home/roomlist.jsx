@@ -31,7 +31,7 @@ RoomList = React.createClass({
                                         component.setState({loading:room.id});
                                         router.navigate('room/' + room.id + '/' + room.color.substr(1, 10), {trigger: true});
                                         _.delay(function () { component.setState({loading:null});}, 1500);
-                                    }} style={{backgroundColor: room.color}} onMouseEnter={component.handleMouseOver.bind(this,room.nowPlaying)} onMouseLeave={component.handleMouseOut} data-trackid={room.nowPlaying ? room.nowPlaying.id : null} >
+                                    }} style={{backgroundColor: room.color}} onMouseEnter={component.handleMouseOver.bind(component,room.nowPlaying)} onMouseLeave={component.handleMouseOut} data-trackid={room.nowPlaying ? room.nowPlaying.id : null} >
                                         <div className="img-holder">
                                             <img src={room.nowPlaying ? room.nowPlaying.img : ""} style={{display: room.nowPlaying ? "block" : "none"}} />
                                         </div>
