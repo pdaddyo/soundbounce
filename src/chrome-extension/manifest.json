@@ -1,0 +1,30 @@
+{
+  "name": "Soundbounce",
+  "description": "Allows Soundbounce to play back using play.spotify.com",
+  "version": "0.1",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "permissions": [
+    "tabs", "http://*/*", "https://*/*"
+  ],
+  "browser_action": {
+      "default_title": "Soundbounce",
+      "default_icon": "soundbounce-icon.png"
+  },
+  "content_scripts" : [{
+    "matches" : [ "http://app.soundbounce.org/*"],
+    "js" : ["browser-api.js"],
+    "run_at": "document_end"
+  }],
+  "externally_connectable": {
+    "ids": [
+      "*"
+    ],
+    "matches": [
+      "http://app.soundbounce.org/*", "https://app.soundbounce.org/*"
+    ]
+  },
+  "manifest_version": 2
+}
