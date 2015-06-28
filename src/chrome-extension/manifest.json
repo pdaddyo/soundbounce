@@ -1,4 +1,5 @@
 {
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr+mfyLftCj1ahCvkkl2Zc+IvxLDQkfVLk53WuiOE+HQFjbCn8nuwyN/bxW5WBZjQn2VXZNb/q7qPUyFfkSX4qB+FnAG2dyT6Wc3fQC7/Iw356q6P5A/iJ2DSyNV0uz991if+uQZS10OU/8vo/DGCoGUyejs9NlowxcRCKJaSX4+1s2g1XcrX8GJ3g28o5HvsfjZ5e76BACY1kzYsScsj4VFs3xelZfnZy7Jbo65kay/nZCJ2mDBXJkxgAx/oTSOjN297Uw0ek4P3wFvFm2ieGbMNKOkgC9QCEh93XYRotKSfkKlR/vKcWEqFYu+g/k0JsgfdolB1n/A4MRd2KIzChwIDAQAB",
   "name": "Soundbounce",
   "description": "Allows Soundbounce to play back using play.spotify.com",
   "version": "0.1",

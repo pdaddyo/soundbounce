@@ -10,11 +10,11 @@ var actualCode = '(' + function() {
             },
             playTrack: function (trackId, position) {
                 console.log('spotifyBrowserApi.playTrack ',trackId,position);
-                chrome.runtime.sendMessage("mjndakefgffimaecklbkcadckoacmaaj", {action: "play", trackId:trackId, position:position});
+                chrome.runtime.sendMessage("mkcinhfcfnlfmlnhagologndhhamamkb", {action: "play", trackId:trackId, position:position});
                 console.log('done spotifyBrowserApi.playTrack ',trackId,position);
             },
             pauseTrack: function () {
-                chrome.runtime.sendMessage("mjndakefgffimaecklbkcadckoacmaaj", {action: "pause"});
+                chrome.runtime.sendMessage("mkcinhfcfnlfmlnhagologndhhamamkb", {action: "pause"});
             },
             starTrack: function (trackId){
 
@@ -24,6 +24,7 @@ var actualCode = '(' + function() {
             },
             openInSpotify: function(trackId){
                 //gui.Shell.openExternal("spotify:track:"+trackId+"?action=browse");
+                window.open("spotify:track:"+trackId+"?action=browse");
             }
         };
 

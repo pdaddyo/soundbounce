@@ -6,7 +6,7 @@ var alertError = function (tab) {
 
 var spotifyTab = null;
 
-var eventId = 9999999;
+var eventId = ((new Date()).getTime());
 
 chrome.browserAction.onClicked.addListener(function(tab) {
 
@@ -51,9 +51,16 @@ chrome.runtime.onMessageExternal.addListener( function(request, sender, sendResp
         var evalString = 'window.top.postMessage(JSON.stringify({"type":"cosmos-request","resolver":1,"id":"cosmos_'+nextEventId()+'","name":"cosmos_request_create",      "payload":{"action":"POST","uri":"sp://player/v1/main","headers":{},                "body":JSON.stringify({"action":"play","context":"spotify:track:'+trackId+'","tracks":["spotify:track:'+trackId+'"],                    "options":{"repeat":false,"shuffle":false,"can_repeat":true,"can_shuffle":true,"can_skip_prev":true,"can_skip_next":true,"can_seek":true,"use_dmca_rules":false},                    "play_origin":{"source":"unknown","reason":"playbtn","referrer":"spotify:app:now-playing-recs","referrer_version":"2.2.2","referrer_vendor":"com.spotify"}})}}), "*")';
         executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('"+evalString+"');");
 
-        // seek if we've already waited
+        // seek if needed
         if(request.position>3000){
+            setTimeout(function () {
+                var seekString = 'window.top.postMessage(JSON.stringify({"type":"bridge_request","id":' + nextEventId() + ',"name":"player_seek","args":["main", ' + (Math.floor(request.position)) + '],"appVendor":"com.spotify","appVersion":"4.2.0"}), "*");'
 
+                console.log("seeking!");
+                console.log(seekString);
+                executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('" + seekString + "');");
+
+            }, 1500);
         }
     }
 
@@ -61,7 +68,4 @@ chrome.runtime.onMessageExternal.addListener( function(request, sender, sendResp
         executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('window.top.postMessage(JSON.stringify({\"type\":\"bridge_request\",\"id\":"+nextEventId()+",\"name\":\"player_pause\",\"args\":[\"main\"],\"appVendor\":\"com.spotify\",\"appVersion\":\"4.2.0\"}), \"*\");');");
     }
 
-
-
-//    sendResponse("bar");
 });
