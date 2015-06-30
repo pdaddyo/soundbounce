@@ -17,7 +17,7 @@ var actualCode = '(' + function() {
                 chrome.runtime.sendMessage("apbdfongpgacifbamjfogfncjjhkaeih", {action: "pause"});
             },
             starTrack: function (trackId){
-
+                chrome.runtime.sendMessage("apbdfongpgacifbamjfogfncjjhkaeih", {action: "star", trackId: trackId});
             },
             openUrl: function (url){
                 window.open(url);

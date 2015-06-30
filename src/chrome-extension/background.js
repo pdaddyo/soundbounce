@@ -5,6 +5,7 @@ var alertError = function (tab) {
 }
 
 var spotifyTab = null;
+var spotifyUsername = null;
 
 var eventId = ((new Date()).getTime());
 
@@ -48,7 +49,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     chrome.tabs.executeScript(tab.id,
       //  {code: cr + "var usernameToken = ',\"username\":\"';   for(var scriptId in document.getElementsByTagName('script')) {   var scriptEl = document.getElementsByTagName('script')[scriptId];    var js = scriptEl.text;   if(!js)continue; if(js.indexOf('new Spotify.Web.Login')>-1 && js.indexOf(usernameToken)>-1) {	var username = js.substr(js.indexOf(usernameToken)+usernameToken.length ); 	username = username.substr(0,username.indexOf('\"')); 	console.log(username); window.open('http://app.soundbounce.org/spotify-login/'+username + '?secret=' + hsh(username + 'hirdTurn42'+'+'+'pa$tCover39=latBlade62') + '&version=ChromeExtension0.1', 'soundbounce');}}"});
 
-        {code: cr + "var username=null; for(var key in localStorage){ if(key.indexOf('notifications-')==0) username = (key.substr('notifications-'.length));}	console.log(username); if(!username){alert('Error: failed to find spotify user...'); }else{ window.open('http://app.soundbounce.org/spotify-login/'+username + '?secret=' + hsh(username + 'hirdTurn42'+'+'+'pa$tCover39=latBlade62') + '&version=ChromeExtension0.1', 'soundbounce');}"});
+        {code: cr + "var username=null; for(var key in localStorage){ if(key.indexOf('notifications-')==0) username = (key.substr('notifications-'.length));}	console.log(username); if(!username){alert('Error: failed to find spotify user...'); }else{ window.open('http://app.soundbounce.org/spotify-login/'+username + '?secret=' + hsh(username + 'hirdTurn42'+'+'+'pa$tCover39=latBlade62') + '&version=ChromeExtension0.1', 'soundbounce');  chrome.runtime.sendMessage('apbdfongpgacifbamjfogfncjjhkaeih', {action: 'username', username:username}); }"});
 
 });
 
@@ -60,9 +61,22 @@ var nextEventId = function(){
     return ++eventId;
 }
 
+chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
+    console.log("background.js got a message")
+    console.log(request);
+    console.log(sender);
+
+    if(request.action=="username"){
+        // need to save the username for starring requests later
+        console.log("username from spotify: "+request.username);
+        spotifyUsername = request.username;
+    }
+});
+
+
 // listen for commands from soundbounce website
 chrome.runtime.onMessageExternal.addListener( function(request, sender, sendResponse) {
-    console.log("background.js got a message")
+    console.log("background.js got an external message")
     console.log(request);
     console.log(sender);
 
@@ -85,12 +99,13 @@ chrome.runtime.onMessageExternal.addListener( function(request, sender, sendResp
         }
     }
 
+
     if(request.action=="pause") {
         executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('window.top.postMessage(JSON.stringify({\"type\":\"bridge_request\",\"id\":"+nextEventId()+",\"name\":\"player_pause\",\"args\":[\"main\"],\"appVendor\":\"com.spotify\",\"appVersion\":\"4.2.0\"}), \"*\");');");
     }
 
     if(request.action =="star"){
-        var starString = 'window.top.postMessage(JSON.stringify({"type":"bridge_request","id":' + nextEventId() + ',"name":"player_seek","args":["main"],"appVendor":"com.spotify","appVersion":"4.2.0"}), "*");'
+        var starString = 'window.top.postMessage(JSON.stringify({"type":"bridge_request","id":'+nextEventId()+',"name":"library_star","args":["spotify:user:'+spotifyUsername +'","spotify:track:'+request.trackId+'"],"appVendor":"com.spotify","appVersion":"3.6.0"}), "*");'
         console.log("starring!");
         console.log(starString);
         executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('" + starString + "');");
