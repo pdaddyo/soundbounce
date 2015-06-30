@@ -5,13 +5,9 @@
 
 A synchronised, collaborative Spotify client.
 
-**Now available as a Chrome Extension!**
-
-https://github.com/pdaddyo/soundbounce/wiki/Soundbounce-Chrome-Extension
+**Now available as a Chrome Extension!** https://github.com/pdaddyo/soundbounce/wiki/Soundbounce-Chrome-Extension
 
 http://soundbounce.org/
-
-Also now in beta for OSX, check the releases page!
 
 
 [![Stories in Ready](https://badge.waffle.io/pdaddyo/soundbounce.png?label=ready&title=Ready)](https://waffle.io/pdaddyo/soundbounce)
