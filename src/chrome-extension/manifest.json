@@ -1,8 +1,8 @@
 {
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr+mfyLftCj1ahCvkkl2Zc+IvxLDQkfVLk53WuiOE+HQFjbCn8nuwyN/bxW5WBZjQn2VXZNb/q7qPUyFfkSX4qB+FnAG2dyT6Wc3fQC7/Iw356q6P5A/iJ2DSyNV0uz991if+uQZS10OU/8vo/DGCoGUyejs9NlowxcRCKJaSX4+1s2g1XcrX8GJ3g28o5HvsfjZ5e76BACY1kzYsScsj4VFs3xelZfnZy7Jbo65kay/nZCJ2mDBXJkxgAx/oTSOjN297Uw0ek4P3wFvFm2ieGbMNKOkgC9QCEh93XYRotKSfkKlR/vKcWEqFYu+g/k0JsgfdolB1n/A4MRd2KIzChwIDAQAB",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqh5MiS6XjqmXonk330rLz7uBzECpnDHXt/SwaWmr8/K27CcyBAiSjxZ7+cEbcUBDpRblJ6xvBXsujEHxP4nN4PJXfDsLtv3PN85yE6xXFrSouCmsLTrMemgeV0IyGkTYvtzKKiJqLlkz9Xe4HbKQebMh3lVuqxMQBPQH7G5hCAGvy0M/wR5/1dbMtiHT3RSdORLPmZ+h6wyu84uwFh7jUJo1qs3/6cPVW6hiauaABo6uU6UqqGQaatkirARPoNMZZ28ljcI5VB6lbCZ6sXFJf9YgqTiLgv2bUA0VW635kn6+tcxSCoX5xvVkzQ/sVIATGs8C8MVplrxwm7dRV9uSbwIDAQAB",
   "name": "Soundbounce",
-  "description": "Allows Soundbounce to play back using play.spotify.com",
-  "version": "0.1",
+  "description": "Listen to Spotify in sync with users around the world",
+  "version": "0.4",
   "background": {
     "scripts": ["background.js"],
     "persistent": true
@@ -12,8 +12,9 @@
   ],
   "browser_action": {
       "default_title": "Soundbounce",
-      "default_icon": "soundbounce-icon.png"
+      "default_icon": "soundbounce-icon-128.png"
   },
+  "icons": { "128": "soundbounce-icon-128.png"},
   "content_scripts" : [{
     "matches" : [ "http://app.soundbounce.org/*"],
     "js" : ["browser-api.js"],
