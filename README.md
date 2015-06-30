@@ -3,11 +3,12 @@
 
 ###Music sounds better together.
 
-A synchronised, collaborative Spotify client, now available for Windows users with Spotify Premium accounts.
+A synchronised, collaborative Spotify client.
 
-Also now in beta for OSX, check the releases page!
+**Now available as a Chrome Extension!** https://github.com/pdaddyo/soundbounce/wiki/Soundbounce-Chrome-Extension
 
 http://soundbounce.org/
+
 
 [![Stories in Ready](https://badge.waffle.io/pdaddyo/soundbounce.png?label=ready&title=Ready)](https://waffle.io/pdaddyo/soundbounce)
 Features
