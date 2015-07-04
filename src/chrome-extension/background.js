@@ -1,7 +1,6 @@
-
 var alertError = function (tab) {
     chrome.tabs.executeScript(tab.id,
-        {code:"alert('Please log into the spotify player at play.spotify.com first, then try again from there...');"});
+        {code: "alert('Please log into the spotify player at play.spotify.com first, then try again from the spotify tab...');"});
 }
 
 var spotifyTab = null;
@@ -25,18 +24,17 @@ var findSpotifyTab = function (callback) {
 };
 
 
-
-chrome.browserAction.onClicked.addListener(function(tab) {
+chrome.browserAction.onClicked.addListener(function (tab) {
 
     console.log("click soundbounce");
 
     // only inject into spotify
-    if(tab.url.indexOf("https://play.spotify.com/")!=0 && tab.url.indexOf("https://player.spotify.com/")!=0) {
+    if (tab.url.indexOf("https://play.spotify.com/") != 0 && tab.url.indexOf("https://player.spotify.com/") != 0) {
         alertError(tab);
     }
 
     // do nothing on soundbounce itself
-    if(tab.url.indexOf("http://app.soundbounce.org")==0) {
+    if (tab.url.indexOf("http://app.soundbounce.org") == 0) {
         return;
     }
 
@@ -47,68 +45,83 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
     // log into soundbounce
     chrome.tabs.executeScript(tab.id,
-      //  {code: cr + "var usernameToken = ',\"username\":\"';   for(var scriptId in document.getElementsByTagName('script')) {   var scriptEl = document.getElementsByTagName('script')[scriptId];    var js = scriptEl.text;   if(!js)continue; if(js.indexOf('new Spotify.Web.Login')>-1 && js.indexOf(usernameToken)>-1) {	var username = js.substr(js.indexOf(usernameToken)+usernameToken.length ); 	username = username.substr(0,username.indexOf('\"')); 	console.log(username); window.open('http://app.soundbounce.org/spotify-login/'+username + '?secret=' + hsh(username + 'hirdTurn42'+'+'+'pa$tCover39=latBlade62') + '&version=ChromeExtension0.1', 'soundbounce');}}"});
+        //  {code: cr + "var usernameToken = ',\"username\":\"';   for(var scriptId in document.getElementsByTagName('script')) {   var scriptEl = document.getElementsByTagName('script')[scriptId];    var js = scriptEl.text;   if(!js)continue; if(js.indexOf('new Spotify.Web.Login')>-1 && js.indexOf(usernameToken)>-1) {	var username = js.substr(js.indexOf(usernameToken)+usernameToken.length ); 	username = username.substr(0,username.indexOf('\"')); 	console.log(username); window.open('http://app.soundbounce.org/spotify-login/'+username + '?secret=' + hsh(username + 'hirdTurn42'+'+'+'pa$tCover39=latBlade62') + '&version=ChromeExtension0.1', 'soundbounce');}}"});
 
         {code: cr + "var username=null; for(var key in localStorage){ if(key.indexOf('notifications-')==0) username = (key.substr('notifications-'.length));}	console.log(username); if(!username){var usernameToken = ',\"username\":\"';   for(var scriptId in document.getElementsByTagName('script')) {   var scriptEl = document.getElementsByTagName('script')[scriptId];    var js = scriptEl.text;   if(!js)continue; if(js.indexOf('new Spotify.Web.Login')>-1 && js.indexOf(usernameToken)>-1) {	var username = js.substr(js.indexOf(usernameToken)+usernameToken.length ); 	username = username.substr(0,username.indexOf('\"')); }}} if(!username){alert('Error: failed to find spotify user...try clicking your notifications (bell) icon bottom left and try again...'); }else{ window.open('http://app.soundbounce.org/spotify-login/'+username + '?secret=' + hsh(username + 'hirdTurn42'+'+'+'pa$tCover39=latBlade62') + '&version=ChromeExtension0.1', 'soundbounce');  chrome.runtime.sendMessage('apbdfongpgacifbamjfogfncjjhkaeih', {action: 'username', username:username}); }"});
 
 });
 
-var executeOnSpotifyPlayer = function(code){
-    chrome.tabs.executeScript(spotifyTab.id, {code:code});
+var tryFindSpotifyTab = function () {
+    // todo - search tabs for spotify player
+
 };
 
-var nextEventId = function(){
+var executeOnSpotifyPlayer = function (code) {
+    if(spotifyTab==null){
+        tryFindSpotifyTab();
+    }
+    if(spotifyTab==null){
+        alert("Can't find spotify player tab...?");
+    }
+
+    chrome.tabs.executeScript(spotifyTab.id, {
+        code: "(function () {  var playerFrame = document.getElementById('app-player');  if(!playerFrame){ playerFrame = document.getElementById('main'); }  if(!playerFrame){ alert('Unable to find player?'); return; } "
+        + " playerFrame.contentWindow.window.eval('" + code.replace('\'', '\\\'') + "');  }());"
+    });
+};
+
+var nextEventId = function () {
     return ++eventId;
 }
 
-chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log("background.js got a message")
     console.log(request);
     console.log(sender);
 
-    if(request.action=="username"){
+    if (request.action == "username") {
         // need to save the username for starring requests later
-        console.log("username from spotify: "+request.username);
+        console.log("username from spotify: " + request.username);
         spotifyUsername = request.username;
     }
 });
 
 
 // listen for commands from soundbounce website
-chrome.runtime.onMessageExternal.addListener( function(request, sender, sendResponse) {
+chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
     console.log("background.js got an external message")
     console.log(request);
     console.log(sender);
 
-    if(request.action=="play"){
+    if (request.action == "play") {
 
         var trackId = request.trackId;
-        var evalString = 'window.top.postMessage(JSON.stringify({"type":"cosmos-request","resolver":1,"id":"cosmos_'+nextEventId()+'","name":"cosmos_request_create",      "payload":{"action":"POST","uri":"sp://player/v1/main","headers":{},                "body":JSON.stringify({"action":"play","context":"spotify:track:'+trackId+'","tracks":["spotify:track:'+trackId+'"],                    "options":{"repeat":false,"shuffle":false,"can_repeat":true,"can_shuffle":true,"can_skip_prev":true,"can_skip_next":true,"can_seek":true,"use_dmca_rules":false},                    "play_origin":{"source":"unknown","reason":"playbtn","referrer":"spotify:app:now-playing-recs","referrer_version":"2.2.2","referrer_vendor":"com.spotify"}})}}), "*")';
-        executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('"+evalString+"');");
+        var evalString = 'window.top.postMessage(JSON.stringify({"type":"cosmos-request","resolver":1,"id":"cosmos_' + nextEventId() + '","name":"cosmos_request_create",      "payload":{"action":"POST","uri":"sp://player/v1/main","headers":{},                "body":JSON.stringify({"action":"play","context":"spotify:track:' + trackId + '","tracks":["spotify:track:' + trackId + '"],                    "options":{"repeat":false,"shuffle":false,"can_repeat":true,"can_shuffle":true,"can_skip_prev":true,"can_skip_next":true,"can_seek":true,"use_dmca_rules":false},                    "play_origin":{"source":"unknown","reason":"playbtn","referrer":"spotify:app:now-playing-recs","referrer_version":"2.2.2","referrer_vendor":"com.spotify"}})}}), "*")';
+        executeOnSpotifyPlayer(evalString);
 
         // seek if needed
-        if(request.position>3000){
+        if (request.position > 3000) {
             setTimeout(function () {
                 var seekString = 'window.top.postMessage(JSON.stringify({"type":"bridge_request","id":' + nextEventId() + ',"name":"player_seek","args":["main", ' + (Math.floor(request.position)) + '],"appVendor":"com.spotify","appVersion":"4.2.0"}), "*");'
 
                 console.log("seeking!");
                 console.log(seekString);
-                executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('" + seekString + "');");
+                executeOnSpotifyPlayer(seekString);
 
             }, 1500);
         }
     }
 
 
-    if(request.action=="pause") {
-        executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('window.top.postMessage(JSON.stringify({\"type\":\"bridge_request\",\"id\":"+nextEventId()+",\"name\":\"player_pause\",\"args\":[\"main\"],\"appVendor\":\"com.spotify\",\"appVersion\":\"4.2.0\"}), \"*\");');");
+    if (request.action == "pause") {
+        executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('window.top.postMessage(JSON.stringify({\"type\":\"bridge_request\",\"id\":" + nextEventId() + ",\"name\":\"player_pause\",\"args\":[\"main\"],\"appVendor\":\"com.spotify\",\"appVersion\":\"4.2.0\"}), \"*\");');");
     }
 
-    if(request.action =="star"){
-        var starString = 'window.top.postMessage(JSON.stringify({"type":"bridge_request","id":'+nextEventId()+',"name":"library_star","args":["spotify:user:'+spotifyUsername +'","spotify:track:'+request.trackId+'"],"appVendor":"com.spotify","appVersion":"3.6.0"}), "*");'
+    if (request.action == "star") {
+        var starString = 'window.top.postMessage(JSON.stringify({"type":"bridge_request","id":' + nextEventId() + ',"name":"library_star","args":["spotify:user:' + spotifyUsername + '","spotify:track:' + request.trackId + '"],"appVendor":"com.spotify","appVersion":"3.6.0"}), "*");'
         console.log("starring!");
         console.log(starString);
-        executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('" + starString + "');");
+        executeOnSpotifyPlayer(starString);
     }
 
 });

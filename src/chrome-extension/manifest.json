@@ -2,7 +2,7 @@
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqh5MiS6XjqmXonk330rLz7uBzECpnDHXt/SwaWmr8/K27CcyBAiSjxZ7+cEbcUBDpRblJ6xvBXsujEHxP4nN4PJXfDsLtv3PN85yE6xXFrSouCmsLTrMemgeV0IyGkTYvtzKKiJqLlkz9Xe4HbKQebMh3lVuqxMQBPQH7G5hCAGvy0M/wR5/1dbMtiHT3RSdORLPmZ+h6wyu84uwFh7jUJo1qs3/6cPVW6hiauaABo6uU6UqqGQaatkirARPoNMZZ28ljcI5VB6lbCZ6sXFJf9YgqTiLgv2bUA0VW635kn6+tcxSCoX5xvVkzQ/sVIATGs8C8MVplrxwm7dRV9uSbwIDAQAB",
   "name": "Soundbounce",
   "description": "Listen to Spotify in sync with users around the world",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "background": {
     "scripts": ["background.js"],
     "persistent": true
@@ -19,7 +19,12 @@
     "matches" : [ "http://app.soundbounce.org/*"],
     "js" : ["browser-api.js"],
     "run_at": "document_end"
-  }],
+  },
+    {
+      "matches": [ "https://play.spotify.com/*", "https://player.spotify.com/*"],
+    "js" : ["spotify-player-content-script.js"],
+    "all_frames":true}
+  ],
   "externally_connectable": {
     "ids": [
       "*"
