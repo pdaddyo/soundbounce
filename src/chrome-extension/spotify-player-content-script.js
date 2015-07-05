@@ -12,9 +12,11 @@ var actualCode = '(' + function() {
                 if(e.data=="@execute_deferreds" || e.data[0]!="{")
                     return;
                 try {
-                    if (JSON.parse(e.data).name == "client_show_context_ui") {
-                        console.log("[soundbounce] clicked context menu!");
-                        // wait a sec then check the copy spotify link
+                    var data = JSON.parse(e.data);
+                    if (data.name == "client_show_context_ui") {
+                        var uri = data.args[0][0];
+                        console.log("[soundbounce] clicked context menu!", uri);
+
 
                     }
                 }catch(er){

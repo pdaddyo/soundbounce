@@ -20,11 +20,16 @@ var actualCode = '(' + function() {
                 chrome.runtime.sendMessage("apbdfongpgacifbamjfogfncjjhkaeih", {action: "star", trackId: trackId});
             },
             openUrl: function (url){
+                if(url.indexOf('spotify:')==0){
+                    chrome.runtime.sendMessage("apbdfongpgacifbamjfogfncjjhkaeih", {action: "open-spotify-uri", uri:url});
+                    return;
+                }
                 window.open(url);
             },
             openInSpotify: function(trackId){
-                //gui.Shell.openExternal("spotify:track:"+trackId+"?action=browse");
-                window.open("spotify:track:"+trackId+"?action=browse");
+               //gui.Shell.openExternal("spotify:track:"+trackId+"?action=browse");
+                chrome.runtime.sendMessage("apbdfongpgacifbamjfogfncjjhkaeih", {action: "open-spotify-uri", uri: "spotify:track:"+trackId});
+             //   window.open("spotify:track:"+trackId+"?action=browse");
             }
         };
 

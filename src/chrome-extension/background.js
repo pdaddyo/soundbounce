@@ -57,10 +57,10 @@ var tryFindSpotifyTab = function () {
 };
 
 var executeOnSpotifyPlayer = function (code) {
-    if(spotifyTab==null){
+    if (spotifyTab == null) {
         tryFindSpotifyTab();
     }
-    if(spotifyTab==null){
+    if (spotifyTab == null) {
         alert("Can't find spotify player tab...?");
     }
 
@@ -112,9 +112,8 @@ chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResp
         }
     }
 
-
     if (request.action == "pause") {
-        executeOnSpotifyPlayer("document.getElementById('app-player').contentWindow.window.eval('window.top.postMessage(JSON.stringify({\"type\":\"bridge_request\",\"id\":" + nextEventId() + ",\"name\":\"player_pause\",\"args\":[\"main\"],\"appVendor\":\"com.spotify\",\"appVersion\":\"4.2.0\"}), \"*\");');");
+        executeOnSpotifyPlayer('window.top.postMessage(JSON.stringify({\"type\":\"bridge_request\",\"id\":" + nextEventId() + ",\"name\":\"player_pause\",\"args\":[\"main\"],\"appVendor\":\"com.spotify\",\"appVersion\":\"4.2.0\"}), \"*\");');
     }
 
     if (request.action == "star") {
@@ -122,6 +121,16 @@ chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResp
         console.log("starring!");
         console.log(starString);
         executeOnSpotifyPlayer(starString);
+    }
+
+    if (request.action == "open-spotify-uri") {
+        var loadString= 'window.top.postMessage(JSON.stringify({"type":"bridge_request","id":' + nextEventId() + ',"name":"application_open_uri","args":["' + request.uri + '",null],"appVendor":"com.spotify","appVersion":"2.2.2"}), "*");'
+        console.log("loading uri in spotify...");
+        console.log(loadString);
+        executeOnSpotifyPlayer(loadString);
+
+        // select the spotify tab
+        chrome.tabs.update(spotifyTab.id, {active: true});
     }
 
 });
