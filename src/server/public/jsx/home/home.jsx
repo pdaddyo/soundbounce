@@ -139,16 +139,14 @@ HomePage = React.createClass({
                                     <button type="button" className="close pull-right" data-dismiss="modal"
                                             aria-hidden="true" onClick={this.hideMOTD}>×
                                     </button>
-                                    <p>Welcome to Soundbounce, where music sounds better together.</p>
 
-                                    <hr/>
                                     <p>
-                                        Please get involved and suggest features, report bugs and look at future plans
-                                        on our
-                                        <a href="javascript:eventbus.trigger('open-url', 'https://github.com/pdaddyo/soundbounce/issues');">project
-                                            page on Github</a>
-                                        .
+                                        Apologies if you've had issues with audio from the desktop player recently.  We're pretty powerless to fix this since issues are with libspotify, and are apparently not a high priority for Spotify to fix.</p>
+                                    <p>In light of this, I'm happy to announce that we have a very early preview of a web-based version of Soundbounce, running inside Google Chrome (and remote-controlling the Spotify web player instead of using libspotify). </p>
+                                    <p>If you're having audio issues or just feeling intrepid, try our new <a href="javascript:eventbus.trigger('open-url', 'https://github.com/pdaddyo/soundbounce/wiki/Soundbounce-Chrome-Extension');">Chrome Extension</a> today!
+
                                     </p>
+                                    <p>Cheers,  Paul </p>
 
 
                                 </div>

@@ -139,16 +139,14 @@ HomePage = React.createClass({displayName: "HomePage",
                                     React.createElement("button", {type: "button", className: "close pull-right", "data-dismiss": "modal", 
                                             "aria-hidden": "true", onClick: this.hideMOTD}, "×"
                                     ), 
-                                    React.createElement("p", null, "Welcome to Soundbounce, where music sounds better together."), 
 
-                                    React.createElement("hr", null), 
                                     React.createElement("p", null, 
-                                        "Please get involved and suggest features, report bugs and look at future plans" + ' ' +
-                                        "on our", 
-                                        React.createElement("a", {href: "javascript:eventbus.trigger('open-url', 'https://github.com/pdaddyo/soundbounce/issues');"}, "project" + ' ' +
-                                            "page on Github"), 
-                                        "."
-                                    )
+                                        "Apologies if you've had issues with audio from the desktop player recently.  We're pretty powerless to fix this since issues are with libspotify, and are apparently not a high priority for Spotify to fix."), 
+                                    React.createElement("p", null, "In light of this, I'm happy to announce that we have a very early preview of a web-based version of Soundbounce, running inside Google Chrome (and remote-controlling the Spotify web player instead of using libspotify). "), 
+                                    React.createElement("p", null, "If you're having audio issues or just feeling intrepid, try our new ", React.createElement("a", {href: "javascript:eventbus.trigger('open-url', 'https://github.com/pdaddyo/soundbounce/wiki/Soundbounce-Chrome-Extension');"}, "Chrome Extension"), " today!"
+
+                                    ), 
+                                    React.createElement("p", null, "Cheers,  Paul ")
 
 
                                 )
