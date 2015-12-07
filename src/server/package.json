@@ -1,6 +1,12 @@
 {
   "name": "soundbounce-server",
   "version": "1.0.0",
+  "description": "Server to run an instance of Soundbounce.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pdaddyo/soundbounce"
+  },
+  "license": "MIT",
   "dependencies": {
     "colors": "^1.0.3",
     "crypto": "0.0.3",
