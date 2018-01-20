@@ -1,11 +1,16 @@
+This version is no longer maintained - see [soundbounce-v2](https://github.com/pdaddyo/soundbounce-v2)
+=============
+==============
+
+
+
 
 ![Soundbounce](http://soundbounce.org/images/soundbounce-white-bg.png)
 
-###Music sounds better together.
+Music sounds better together.
 
 A synchronised, collaborative Spotify client.
 
-**Now available as a Chrome Extension!** https://github.com/pdaddyo/soundbounce/wiki/Soundbounce-Chrome-Extension
 
 http://soundbounce.org/
 
