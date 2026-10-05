@@ -1307,9 +1307,8 @@ var soundbounceServer = {
                         // which track are we inserting after
                         simpleTrack.insertAfter = soundbounceServer.getTrackIdToInsertAfter(room, simpleTrack.votes.length);
 
-                        simpleTracks.push(simpleTrack);
-
-                        if (canAdd) {
+                        if (canAdd && room.tracks.length < server.ROOM_MAX_TRACKS) {
+                            simpleTracks.push(simpleTrack);
                             // add it to the room on the server
                             soundbounceShared.addTrackToRoom(room, simpleTrack, simpleUser, server);
                         }
